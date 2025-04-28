@@ -1,1 +1,34 @@
+# IntelliJ IDEA specific files
 .idea/
+*.iml
+
+# Maven target directory
+/target/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Eclipse specific files (in case you use Eclipse too)
+.classpath
+.project
+.settings/
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# mvnw/mvnw.cmd wrapper files (optional to ignore, but usually kept)
+/mvnw
+/mvnw.cmd
+
+# Git
+.git/
+.gitattributes
+
+# Environment files
+.env
