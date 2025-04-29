@@ -13,16 +13,10 @@
 
     <form th:action="@{/adduser}" th:object="${user}" method="post">
         <input type="hidden"  th:field="*{id}" />
-        <input type="hidden" id="author" value="AUTHOR" name="role"  />
-
-        <div>
-            <label for="userName">Name:</label>
-            <input type="text" id="userName" th:field="*{userName}" required />
-        </div>
 
         <div>
             <label for="email">Email:</label>
-            <input type="text" id="email" th:field="*{email}" required/>
+            <input type="text" id="email" th:field="*{email}" required />
         </div>
 
         <div>
