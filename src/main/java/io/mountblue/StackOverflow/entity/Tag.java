@@ -1,7 +1,8 @@
 package io.mountblue.StackOverflow.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
+import org.hibernate.validator.constraints.Currency;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class Tag {
     @Column(name = "tag_name")
     private String tagName;
 
-    @CreationTimestamp
+    @CurrentTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
