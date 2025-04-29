@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask a Public Question</title>
+    <link rel="stylesheet" th:href="@{/css/createquestion.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+<div class="question-container">
+
+    <h1>Ask a public question</h1>
+
+    <form th:action="@{/questions/submit}" method="post">
+
+        <div>
+            <label for="title">Title*</label>
+            <div class="subtext">Be specific and imagine you’re asking a question to another person</div>
+            <input type="text" id="title" name="title" placeholder="e.g. Is there an R function for finding the index of an element in a vector?" th:value="${question?.title}">
+        </div>
+
+        <div>
+            <label for="body">Body*</label>
+            <div class="subtext">Include all the information someone would need to answer your question</div>
+            <textarea id="body" name="body" th:text="${question?.body}"></textarea>
+            <div class="code-block-tip">
+                ```code``` &nbsp;&nbsp; **bold** &nbsp;&nbsp; *italic* &nbsp;&nbsp; >quote
+            </div>
+        </div>
+
+        <div>
+            <label for="tags">Tags*</label>
+            <div class="subtext">Add up to 5 tags to describe what your question is about</div>
+            <input type="text" id="tags" name="tags" placeholder="e.g. (spring mysql jwt)" th:value="${question?.tags}">
+        </div>
+
+        <button type="submit" class="ask-btn">Review your question</button>
+    </form>
+</div>
+    <div class="help-section">
+        <div class="help-box">
+            <h2>Step 1: Draft your question</h2>
+            <p>The community is here to help you with specific coding, algorithm, or language problems.</p>
+            <p><strong>Avoid asking opinion-based questions.</strong></p>
+
+            <details class="help-step">
+                <summary>1. Summarize the problem</summary>
+                <div class="step-content">
+                    Explain what you're trying to do and what you expected to happen.
+                </div>
+            </details>
+
+            <details class="help-step">
+                <summary>2. Describe what you’ve tried</summary>
+                <div class="step-content">
+                    Share the research or steps you've taken so far.
+                </div>
+            </details>
+
+            <details class="help-step">
+                <summary>3. Show some code</summary>
+                <div class="step-content">
+                    Add relevant code snippets to illustrate your issue.
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+</body>
+</html>
