@@ -10,37 +10,15 @@ import java.util.List;
 @Repository
 public class UserServiceImpl implements UserService {
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Override
-    public Users createNewUser(Users theUser) {
-     Users newUser = new Users();
-
-        return null;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Users findUserById(Long userId) {
-        return null;
+    public void createNewUser(Users theUser) {
+     userRepository.save(theUser);
     }
 
-    @Override
-    public Users updateUserById(Long userId, Users theUser) {
-        return null;
-    }
-
-    @Override
-    public void deleteUserById(Long userId) {
-
-    }
-
-    @Override
-    public List<Users> findAllUsers() {
-        return List.of();
-    }
-
-    @Override
-    public Users findUserByusername(String username) {
-        return null;
-    }
 }

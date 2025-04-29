@@ -2,6 +2,8 @@ package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.services.UserService.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,11 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Controller
 public class UserController {
     private UserService userService;
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService,BCryptPasswordEncoder passwordEncoder) {
+    public UserController(UserService userService,PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
     }
@@ -28,9 +31,8 @@ public class UserController {
     @PostMapping("/adduser")
     public String addUser(@ModelAttribute("user") Users user){
         user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
         List<String> splitList = List.of(user.getEmail().split("@"));
-        user.setUserName(splitList.get(0));
+        user.setUsername(splitList.get(0));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.createNewUser(user);
         return "redirect:/login";
@@ -39,6 +41,11 @@ public class UserController {
     @GetMapping("/login")
     public String loginForm(){
         return "Login";
+    }
+
+    @GetMapping("/")
+    public String home(){
+        return "Home";
     }
 
 }
