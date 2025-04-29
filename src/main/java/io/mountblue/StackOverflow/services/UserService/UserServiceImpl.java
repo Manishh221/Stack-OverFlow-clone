@@ -5,6 +5,7 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
+
     @Override
     public Users createNewUser(Users theUser) {
         return null;
@@ -16,12 +17,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users updateUser(int userId, Users theUser) {
+    public Users updateUserById(int userId, Users theUser) {
         return null;
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public void deleteUserById(int userId) {
 
     }
 

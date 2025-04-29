@@ -14,10 +14,10 @@ public interface UserService {
     Users findUserById(int userId);
 
     // Update User Profile
-    Users updateUser(int userId, Users theUser);
+    Users updateUserById(int userId, Users theUser);
 
     //  Delete User
-    void deleteUser(Long userId);
+    void deleteUserById(int userId);
 
     //  Get All Users
     List<Users> findAllUsers();
