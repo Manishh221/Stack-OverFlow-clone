@@ -1,6 +1,37 @@
 package io.mountblue.StackOverflow.services.UserService;
 
-import org.apache.catalina.User;
+
+import java.util.List;
 
 public class UserServiceImpl implements UserService {
+
+    @Override
+    public Users createNewUser(Users theUser) {
+        return null;
+    }
+
+    @Override
+    public Users findUserById(int userId) {
+        return null;
+    }
+
+    @Override
+    public Users updateUser(int userId, Users theUser) {
+        return null;
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+
+    }
+
+    @Override
+    public List<Users> findAllUsers() {
+        return List.of();
+    }
+
+    @Override
+    public Users findUserByusername(String username) {
+        return null;
+    }
 }
