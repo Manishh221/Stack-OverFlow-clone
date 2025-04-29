@@ -38,10 +38,6 @@ public class Question {
     )
     private String description;
 
-    //To be implemented
-//    @OneToMany()
-//    private List<Tag> tags;
-
     @Column(name = "upvote")
     private int upvote;
 
