@@ -9,4 +9,6 @@ public interface QuestionService {
 
     Question createNewQuestion(Question question, List<String> tags);
     void deleteQuestionById(Long id);
+    Question updateQuestion (Question question, List<String> tagName);
+    Question findQuestionById (Long id);
 }

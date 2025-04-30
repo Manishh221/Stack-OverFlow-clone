@@ -31,10 +31,8 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     public Question createNewQuestion(Question theQuestion, List<String> tagNames) {
-//       Question theQuestion = new Question();
-//       theQuestion.setTitle(question.getTitle());
-//       theQuestion.setDescription(question.getDescription());
-//       theQuestion.setUser(question.getUser());
+
+
        Question savedQuestion = questionRepository.save(theQuestion);
 
         Set<QuestionTag> questionTagSet = new HashSet<>();
@@ -62,12 +60,21 @@ public class QuestionServiceImpl implements QuestionService{
         return questionRepository.save(savedQuestion);
     }
 
+//    delete the question:
     @Override
     public void deleteQuestionById(Long id) {
        questionRepository.deleteById(id);
     }
 
+//  update the question:
+    @Override
+    public Question updateQuestion(Question question, List<String> tagName) {
 
+        return null;
+    }
 
-
+    @Override
+    public Question findQuestionById(Long id) {
+       return questionRepository.findById(id).get();
+    }
 }
