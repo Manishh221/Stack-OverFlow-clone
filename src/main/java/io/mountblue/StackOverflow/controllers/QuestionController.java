@@ -22,7 +22,7 @@ public class QuestionController {
     private QuestionService questionService;
     private TagService tagService;
 
-//    -----------------injection the bean---------------------------------------------
+//    -----------------bean injection by spring--------------------------------------------
     @Autowired
     public QuestionController(QuestionService questionService, TagService tagService) {
         this.questionService = questionService;
