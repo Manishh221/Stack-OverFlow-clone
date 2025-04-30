@@ -13,8 +13,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tag")
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Tag {
@@ -32,4 +30,36 @@ public class Tag {
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuestionTag> questionTags;
+
+    public Long getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(Long tagId) {
+        this.tagId = tagId;
+    }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Set<QuestionTag> getQuestionTags() {
+        return questionTags;
+    }
+
+    public void setQuestionTags(Set<QuestionTag> questionTags) {
+        this.questionTags = questionTags;
+    }
 }
