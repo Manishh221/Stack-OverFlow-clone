@@ -15,9 +15,8 @@
     <a th:href="@{/}">Home</a>
     <a th:href="@{/login}">Login</a>
     <form th:action="@{/logout}" method="post">
-      <button class="logoutBtn" type="submit">Logout</button>
+    <button class="logoutBtn" type="submit">Logout</button>
     </form>
     <a th:href="@{/signup}">SignUp</a>
-    <a th:if="${user != null}" th:href="@{'/user/' + ${user.id} + '?profiletab=profile'}">Profile</a>
   </div>
 </nav>
