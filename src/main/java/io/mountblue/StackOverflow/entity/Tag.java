@@ -1,17 +1,22 @@
 package io.mountblue.StackOverflow.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CurrentTimestamp;
-import org.hibernate.validator.constraints.Currency;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
 
 @Entity
 @Table(name = "tag")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tag {
 
     @Id
@@ -26,6 +31,5 @@ public class Tag {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuestionTag> questionTags;
-
+    private Set<QuestionTag> questionTags;
 }
