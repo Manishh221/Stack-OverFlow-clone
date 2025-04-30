@@ -103,14 +103,14 @@ public class QuestionController {
     @PostMapping("/review")
     public String reviewQuestion(@Valid @ModelAttribute("question") Question question,
                                  BindingResult br,
-                                 Model model) {
+                                 Model model,@ModelAttribute("tags")List<String> tagNames) {
 
-        model.addAttribute("allTags", DEMO_TAGS);
-        return "ReviewQuestion";           // Post-button is disabled if br.hasErrors()
+        model.addAttribute("allTags", tagNames);
+        return "ReviewQuestion";
     }
 
     /* ---------- STEP 3 : final submit ------------------------------ */
-    @PostMapping("/questions/submit")
+    @PostMapping("/questions-submit")
     public String submitQuestion(@ModelAttribute("question") Question question,
                                  @RequestParam("tags") List<String> tagNames,
                                  SessionStatus status) {
@@ -147,7 +147,6 @@ public class QuestionController {
     public String createQuestion(@ModelAttribute("question")Question question,
                                  @RequestParam("tags") List<String> tags) {
     questionService.createNewQuestion(question, tags);
-
       return "Home";
     }
 
