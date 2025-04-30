@@ -49,9 +49,6 @@ public class QuestionController {
     @PostMapping("/update/Question")
     public String updateQuestion(@ModelAttribute("question") Question question, List<String> tags) {
 
-
-
         return null;
     }
-
 }

@@ -77,6 +77,9 @@ public class QuestionServiceImpl implements QuestionService{
 
            Question savedQuestion = questionRepository.save(theQuestion);
 
+        // ✅ Step 2: Delete old tags linked to this question
+            questionTagRepository.deleteTagsByQuestionId(savedQuestion.getId());
+
            Set<QuestionTag> questionTagSet = new HashSet<>();
 
            for (String tagName: tagNames){
