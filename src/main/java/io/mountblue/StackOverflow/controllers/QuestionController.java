@@ -18,6 +18,8 @@ import java.util.*;
 @Controller
 public class QuestionController {
 
+
+
     private QuestionService questionService;
     private TagService tagService;
 
@@ -27,6 +29,7 @@ public class QuestionController {
         this.tagService = tagService;
     }
 
+//    --------------------------get all Questions-----------------------------------------------
     @GetMapping("/Show-all-questions/{page-number}")
     public String showAllQuestions (@PathVariable("page-number") int pageNumber, Model model) {
         Page<Question> allQuestions = questionService.findAllQuestions(pageNumber);
@@ -36,17 +39,17 @@ public class QuestionController {
         return "Home";
     }
 
+//    ---------------------------finding all tags----------------------------------------------
+    public List<String> allTags() {
+        List<String> tags = new ArrayList<>();
 
-    private static final List<String> DEMO_TAGS = List.of(
-            "java", "javascript", "python", "kotlin",
-            "spring", "spring-boot", "hibernate", "jpa",
-            "reactjs", "next.js", "tailwind-css",
-            "rest", "jwt", "oauth-2.0",
-            "mysql", "postgresql",
-            "docker", "aws", "git"
-    );
+        for (var tag: tagService.findAllTags()) {
+            tags.add(tag.getTagName());
+        }
+        return tags;
+    }
 
-
+//    ----------------ask any Question--------------------------------------------------------
     @GetMapping("/ask-question")
     public String askQuestion(Model model) {
 
@@ -54,10 +57,11 @@ public class QuestionController {
             model.addAttribute("question", new Question());
         }
 
-        model.addAttribute("allTags", DEMO_TAGS);
+        model.addAttribute("allTags", allTags());
         return "CreateQuestion";
     }
 
+//    ---------------------------review before submitting the question-------------------------
     @PostMapping("/review")
     public String reviewQuestion(
             @Valid @ModelAttribute("question") Question question,  // runs JSR-303 validation
@@ -67,7 +71,7 @@ public class QuestionController {
 
         // If there are field errors, bounce back to Ask page so the user can fix them
         if (br.hasErrors()) {
-            model.addAttribute("allTags", DEMO_TAGS);
+            model.addAttribute("allTags", allTags());
             return "CreateQuestion";
         }
         List<String> selectedTags = (tagsCsv == null || tagsCsv.isBlank())
@@ -76,7 +80,7 @@ public class QuestionController {
                 .map(String::trim).filter(s -> !s.isEmpty()).toList();
 
         model.addAttribute("selectedTags", selectedTags);
-        model.addAttribute("allTags", DEMO_TAGS);
+        model.addAttribute("allTags", allTags());
         return "ReviewQuestion";
     }
 
@@ -85,7 +89,7 @@ public class QuestionController {
         return "Home";
     }
 
-
+//    --------------------------storing the Question------------------------------------------
     @PostMapping("/create-question")
     public String createQuestion(@ModelAttribute("question")Question question,
                                  @RequestParam(value = "tags", required = false)
@@ -94,10 +98,11 @@ public class QuestionController {
         return "Home";
     }
 
+
+//    -------------------------update the Question--------------------------------------------
     @GetMapping("/update/form/{id}")
     public String updateForm(@PathVariable("id") Long id, Model model) {
         Question theQuestion = questionService.findQuestionById(id);
-
         List<Tag> theTag = tagService.findAllTagsByQuestionId(theQuestion.getId());
 
         model.addAttribute("question", theQuestion);
@@ -106,10 +111,10 @@ public class QuestionController {
         return "/#";
     }
 
+//    ------------------------storing updated question-----------------------------------------
     @PostMapping("/update/Question")
     public String updateQuestion(@ModelAttribute("question") Question question, List<String> tags) {
 
         return null;
     }
-
 }
