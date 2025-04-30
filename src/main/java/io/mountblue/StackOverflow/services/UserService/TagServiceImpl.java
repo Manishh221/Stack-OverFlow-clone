@@ -30,6 +30,7 @@ public class TagServiceImpl implements TagService{
 
     @Override
     public List<Tag> findAllTagsByQuestionId(Long questionId) {
+
        List<QuestionTag> questionTags = questionTagRepository.findByQuestionId(questionId);
        List<Tag> tags = new ArrayList<>();
 
