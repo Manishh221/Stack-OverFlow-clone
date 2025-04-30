@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Review your question</title>
+    <link th:href="@{/css/review.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Review your question</h1>
+
+<div class="alert alert-info">
+    Please do a final review of your question and then submit it
+    to community members for evaluation.
+</div>
+
+<form th:action="@{/questions/submit}"
+      th:object="${questionForm}" method="post">
+
+    <!-- ---------------- TITLE ---------------- -->
+    <div class="form-group"
+         th:classappend="${#fields.hasErrors('title')} ? 'has-error'">
+        <label>Title</label>
+        <input th:field="*{title}" class="form-control"/>
+        <div class="error-msg"
+             th:if="${#fields.hasErrors('title')}"
+             th:errors="*{title}">Error</div>
+    </div>
+
+    <!-- ---------------- BODY ----------------- -->
+    <div class="form-group"
+         th:classappend="${#fields.hasErrors('body')} ? 'has-error'">
+        <label>Body</label>
+        <textarea th:field="*{body}" class="form-control"></textarea>
+        <div class="error-msg"
+             th:if="${#fields.hasErrors('body')}"
+             th:errors="*{body}">Error</div>
+    </div>
+
+    <!-- ---------------- TAGS ---------------- -->
+    <div class="form-group"
+         th:classappend="${#fields.hasErrors('tags')} ? 'has-error'">
+        <label>Tags</label>
+        <div th:replace="fragments/tags :: tagPicker (~{*{tags}})"></div>
+        <div class="error-msg"
+             th:if="${#fields.hasErrors('tags')}"
+             th:errors="*{tags}">Error</div>
+    </div>
+
+    <!-- OPTIONAL PRIVATE COMMENT ------------- -->
+    <label>Private comment (optional)</label>
+    <textarea name="privateComment" class="form-control"></textarea>
+
+    <button type="submit"  class="btn btn-primary"
+            th:disabled="${hasErrors}">
+        Submit for evaluation
+    </button>
+    <a th:href="@{/questions/ask}" class="btn btn-light">Edit</a>
+</form>
+
+<form th:action="@{/questions/ask}" method="get">
+    <button type="submit" class="link danger mt-3">Discard draft</button>
+</form>
+</body>
+</html>

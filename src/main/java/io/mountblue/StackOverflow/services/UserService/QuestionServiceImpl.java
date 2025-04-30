@@ -7,6 +7,10 @@ import io.mountblue.StackOverflow.repositories.QuestionRepository;
 import io.mountblue.StackOverflow.repositories.QuestionTagRepository;
 import io.mountblue.StackOverflow.repositories.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +25,7 @@ public class QuestionServiceImpl implements QuestionService{
     private QuestionRepository questionRepository;
     private QuestionTagRepository questionTagRepository;
 
+
    @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository,
                                TagRepository tagRepository, QuestionTagRepository questionTagRepository) {
@@ -29,6 +34,19 @@ public class QuestionServiceImpl implements QuestionService{
         this.questionTagRepository = questionTagRepository;
     }
 
+//  --------------  delete the question--------------------------------------
+    @Override
+    public void deleteQuestionById(Long id) {
+        questionRepository.deleteById(id);
+    }
+
+//    ---------------------get question by id------------------------------------
+    @Override
+    public Question findQuestionById(Long id) {
+        return questionRepository.findById(id).get();
+    }
+
+    //  ---------------  create new  Question--------------------------------------
     @Override
     public Question createNewQuestion(Question theQuestion, List<String> tagNames) {
        Question savedQuestion = questionRepository.save(theQuestion);
@@ -58,12 +76,45 @@ public class QuestionServiceImpl implements QuestionService{
         return questionRepository.save(savedQuestion);
     }
 
+// -------------------------update existing question:---------------------------------------
     @Override
-    public void deleteQuestionById(Long id) {
-       questionRepository.deleteById(id);
+    public Question updateQuestion(Question theQuestion, List<String> tagNames) {
+            Question savedQuestion = questionRepository.save(theQuestion);
+
+            questionTagRepository.deleteTagsByQuestionId(savedQuestion.getId());
+
+           Set<QuestionTag> questionTagSet = new HashSet<>();
+
+           for (String tagName: tagNames){
+               Tag tag = tagRepository.findByTagName(tagName.trim())
+                       .orElseGet(() -> {
+                           Tag newTag = new Tag();
+                           newTag.setTagName(tagName.trim());
+                           newTag.setCreatedAt(LocalDateTime.now());
+                           return tagRepository.save(newTag);
+                       });
+
+               QuestionTag questionTag = new QuestionTag();
+               questionTag.setQuestion(savedQuestion);
+               questionTag.setTag(tag);
+               questionTag.setCreatedAt(LocalDateTime.now());
+
+               questionTagSet.add(questionTag);
+           }
+
+           questionTagRepository.saveAll(questionTagSet);
+           savedQuestion.setQuestionTags(questionTagSet);
+
+           return questionRepository.save(savedQuestion);
+       }
+
+//--------------------------find all the questions by page number------------------------------------------
+    @Override
+    public Page<Question> findAllQuestions(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("updatedAt").descending());
+
+        return questionRepository.findAll(pageable);
     }
-
-
-
-
 }
+
+

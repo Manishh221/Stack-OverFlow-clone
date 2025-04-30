@@ -3,13 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
-  <link rel="stylesheet" th:href="@{/css/home.css}">
-  <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <!-- page-specific styles -->
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <!-- icon set for the sidebar -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
 </head>
 <body>
-<div th:replace="~{fragments/header :: header(user=${user} ?: null)}"></div>
+<div th:replace="fragments/header :: header"></div>
 
+<div class="layout">
 
-<h3>Welcome to Stack Overflow</h3>
+    <div th:replace="fragments/Sidebar :: Sidebar"></div>
+
+    <main class="content-wrapper">
+
+        <section class="card welcome-card">
+            <h1>
+                Welcome to Stack Overflow,
+                <span th:text="${username}">Saikat Pattanayak</span>!
+            </h1>
+            <p>Find answers to your technical questions and help others answer theirs.</p>
+            <a class="btn" th:href="@{/ask-question}">Add Question</a>
+        </section>
+
+        <section class="post-list">
+            <h2>Interesting posts for you</h2>
+
+            <article th:each="post : ${posts}" class="post">
+                <div class="post-stats">
+                    <div class="stat"><span th:text="${post.votes}">0</span> votes</div>
+                    <div class="stat"><span th:text="${post.answers}">0</span> answers</div>
+                    <div class="stat"><span th:text="${post.views}">0</span> views</div>
+                </div>
+
+                <div class="post-body">
+                    <a th:href="@{/questions/{id}(id=${post.id})}"
+                       class="post-title" th:text="${post.title}">
+                        Problem when widget is showing image while scrolling
+                    </a>
+
+                    <p class="post-meta">
+                        <span th:text="${post.timeAgo}">asked 1 min ago</span> •
+                        <span th:text="${post.author}">Craig</span>
+                    </p>
+
+                    <div class="tags">
+                            <span th:each="t : ${post.tags}"
+                                  class="tag"
+                                  th:text="${t}">flutter</span>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <!-- right-hand boxes -->
+        <aside class="right-column">
+
+            <div class="card right-box">
+                <h3>The Overflow Blog</h3>
+                <ul>
+                    <li>How self-supervised language revolutionized NLP …</li>
+                    <li>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</li>
+                </ul>
+            </div>
+
+            <div class="card right-box">
+                <h3>Featured on Meta</h3>
+                <ul>
+                    <li>Updates to advertising guidelines</li>
+                    <li>Evolving comments: an experiment in follow-up questions</li>
+                    <li>Policy: Generative AI (e.g. ChatGPT) is banned</li>
+                    <li>What we learned about follow-up questions …</li>
+                </ul>
+            </div>
+
+        </aside>
+    </main>
+
+</div>
+
 </body>
 </html>
