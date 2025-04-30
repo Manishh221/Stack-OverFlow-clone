@@ -1,16 +1,18 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.UserService.UserService;
+import io.mountblue.StackOverflow.services.UserService.UsersServiceDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -72,15 +74,18 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String home(){
+    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
+        if(userInfo.getUser() != null){
+            model.addAttribute("user",userInfo.getUser());
+        }
         return "Home";
     }
 
     @GetMapping("/user/{id}")
-    public String getUser(@PathVariable Long id,Model model){
-       Users user = userService.findUser(id);
-       model.addAttribute("user",user);
-       return "UserProfile";
+    public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab", defaultValue = "profile") String profileTab) {
+        Users user = userService.findUser(id);
+        model.addAttribute("user", user);
+        return "UserProfile";
     }
 
     @GetMapping("/users")
