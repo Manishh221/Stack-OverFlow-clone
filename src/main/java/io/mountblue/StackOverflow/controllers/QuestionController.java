@@ -143,9 +143,9 @@ public class QuestionController {
         this.tagService = tagService;
     }
 
-    @PostMapping("/create/question")
+    @PostMapping("/create-question")
     public String createQuestion(@ModelAttribute("question")Question question,
-                                 @RequestParam("tag") List<String> tags) {
+                                 @RequestParam("tags") List<String> tags) {
     questionService.createNewQuestion(question, tags);
 
       return "Home";
@@ -165,8 +165,6 @@ public class QuestionController {
 
     @PostMapping("/update/Question")
     public String updateQuestion(@ModelAttribute("question") Question question, List<String> tags) {
-
-
 
         return null;
     }
