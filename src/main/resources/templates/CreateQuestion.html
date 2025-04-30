@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <title>Ask a Public Question</title>
 
-    <!-- same stylesheet the review page uses -->
+    <!-- reuse your existing styles -->
     <link rel="stylesheet" th:href="@{/css/createquestion.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
 </head>
 <body>
 
+<!-- site header -->
 <div th:replace="fragments/header :: header"></div>
 
 <div class="container">
@@ -17,9 +18,10 @@
 
         <h1>Ask a public question</h1>
 
-        <!-- draft form -->
+        <!-- ───────── FORM ───────── -->
         <form th:action="@{/review}" th:object="${question}" method="post">
 
+            <!-- TITLE ------------------------------------------------- -->
             <div>
                 <label for="title">Title*</label>
                 <div class="subtext">
@@ -29,6 +31,7 @@
                        placeholder="e.g. How do I find the index of an element in a list?"/>
             </div>
 
+            <!-- DESCRIPTION ------------------------------------------ -->
             <div>
                 <label for="description">Description*</label>
                 <div class="subtext">
@@ -40,13 +43,28 @@
                 </div>
             </div>
 
-            <div th:replace="fragments/QuestionFields :: picker(${allTags}, '')"></div>
+            <!-- TAGS --------------------------------------------------- -->
+            <label for="tagInput">Tags*</label>
+            <div class="subtext">Type to search or add (max 5)</div>
+
+            <div id="tagBox" class="tag-box">
+                <!-- chips are injected here -->
+                <input id="tagInput"
+                       placeholder="start typing…"
+                       autocomplete="off">
+            </div>
+
+            <ul id="tagMenu" class="tag-menu hidden">
+                <li th:each="t : ${allTags}" th:text="${t}" class="item">java</li>
+            </ul>
+
+            <input type="hidden" name="tags" id="tagsHidden">
 
             <button type="submit" class="ask-btn">Review your question</button>
         </form>
     </div>
 
-    <!-- help sidebar (unchanged) ---------------------------------------- -->
+    <!-- help sidebar (unchanged) -->
     <div class="help-section">
         <div class="help-box">
             <h2>Step&nbsp;1: Draft your question</h2>
@@ -77,6 +95,83 @@
     </div>
 </div>
 
-<!-- interactive dropdown JS is loaded by the fragment itself -->
+<!-- ───────── TAG-PICKER JS ───────── -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    (() => {
+        const MAX   = 5;
+        const box   = document.getElementById('tagBox');
+        const input = document.getElementById('tagInput');
+        const menu  = document.getElementById('tagMenu');
+        const items = Array.from(menu.querySelectorAll('.item'));
+        const hidden= document.getElementById('tagsHidden');
+
+        let selected = [];
+
+        /* helpers ------------------------------------------------------- */
+        const syncHidden = () => hidden.value = selected.join(',');
+        const addChip = tag => {
+            const chip = document.createElement('span');
+            chip.className = 'tag-chip';
+            chip.textContent = tag;
+
+            const x = document.createElement('span');
+            x.className = 'x'; x.textContent = '×';
+            x.onclick = () => removeTag(tag);
+            chip.appendChild(x);
+
+            box.insertBefore(chip, input);
+        };
+        const render = () => {
+            box.querySelectorAll('.tag-chip').forEach(c => c.remove());
+            selected.forEach(addChip);
+            syncHidden();
+        };
+        const addTag = tag => {
+            tag = tag.trim().toLowerCase();
+            if (!tag || selected.includes(tag) || selected.length >= MAX) return;
+            selected.push(tag); render();
+        };
+        const removeTag = tag => {
+            selected = selected.filter(t => t !== tag); render();
+        };
+
+        /* dropdown filter ---------------------------------------------- */
+        const filterMenu = q => {
+            let firstVisible = null;
+            items.forEach(li => {
+                const show = li.textContent.includes(q) && !selected.includes(li.textContent);
+                li.style.display = show ? 'block' : 'none';
+                li.classList.remove('active');
+                if (show && !firstVisible) firstVisible = li;
+            });
+            if (firstVisible) firstVisible.classList.add('active');
+            menu.classList.toggle('hidden', !q && firstVisible==null);
+        };
+
+        /* events -------------------------------------------------------- */
+        input.addEventListener('input', e => filterMenu(input.value.toLowerCase()));
+
+        /* add on Enter / comma */
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                addTag(input.value); input.value=''; filterMenu('');
+            }
+            if (e.key === 'ArrowDown') menu.querySelector('.active')?.focus();
+        });
+
+        /* click suggestion */
+        items.forEach(li => li.addEventListener('mousedown', e => {
+            addTag(li.textContent); input.value=''; filterMenu('');
+        }));
+
+        /* close menu on click-away */
+        document.addEventListener('click', e => {
+            if(!box.contains(e.target) && !menu.contains(e.target)) menu.classList.add('hidden');
+        });
+    })();
+    /*]]>*/
+</script>
 </body>
 </html>

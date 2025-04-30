@@ -16,7 +16,7 @@ body{
 
     /* stack children vertically */
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     gap:32px;                  /* space between question & help box */
 }
 
@@ -124,3 +124,33 @@ summary::after{content:" ▼";font-size:10px;}
     border-radius:4px;padding:2px 6px;font-size:.85rem;
 }
 .tag-chip .remove{cursor:pointer;font-weight:700;margin-left:4px;}
+
+/* input + chips container */
+.tag-box{
+    display:flex;flex-wrap:wrap;gap:4px;
+    border:1px solid #5993ff;border-radius:4px;
+    padding:4px;min-height:38px;
+}
+.tag-box input{
+    flex:1 0 120px;border:none;outline:none;
+    font:inherit;padding:4px;
+}
+/* dropdown list */
+.tag-menu{
+    list-style:none;margin:0;padding:4px 0;
+    border:1px solid #d0d7e2;border-top:none;
+    max-height:180px;overflow-y:auto;
+    background:#fff;position:absolute;z-index:1000;
+    width:100%; /* same width as box */
+}
+.tag-menu.hidden{display:none;}
+.tag-menu .item{padding:6px 10px;cursor:pointer}
+.tag-menu .item:hover,
+.tag-menu .item.active{background:#f3f6fb}
+/* chip */
+.tag-chip{
+    display:inline-flex;align-items:center;
+    background:#e5ecff;border:1px solid #b7c8ff;
+    border-radius:4px;padding:2px 6px;font-size:.85rem;
+}
+.tag-chip .x{margin-left:4px;cursor:pointer;font-weight:700;}
