@@ -71,10 +71,10 @@ public class UserController {
         return "Login";
     }
 
-    @GetMapping("/")
-    public String home(){
-        return "Home";
-    }
+//    @GetMapping("/")
+//    public String home(){
+//        return "Home";
+//    }
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id,Model model){
