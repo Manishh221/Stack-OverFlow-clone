@@ -131,3 +131,54 @@ summary::after {
 .help-step {
     margin-bottom: 6px;
 }
+/* container & display ------------------------------------------------*/
+.multi-select-display{
+    border:1px solid #5993ff;
+    border-radius:4px;
+    padding:6px;
+    min-height:38px;
+    cursor:pointer;
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+}
+.placeholder{color:#888}
+
+/* dropdown -----------------------------------------------------------*/
+.multi-select-dropdown{
+    position:relative;           /* so search bar stays on top */
+}
+.multi-select-dropdown.hidden{display:none;}
+.multi-select-dropdown .search{
+    width:100%;
+    box-sizing:border-box;
+    padding:6px 8px;
+    border:none;
+    border-bottom:1px solid #d0d7e2;
+    outline:none;
+}
+.multi-select-dropdown .options{
+    max-height:200px;
+    overflow-y:auto;
+    border:1px solid #d0d7e2;
+    border-top:none;
+    background:#fff;
+}
+.option{display:flex;align-items:center;padding:6px 10px;gap:6px;}
+.option:hover{background:#f3f6fb;}
+
+/* tag chips ----------------------------------------------------------*/
+.tag-chip{
+    display:inline-flex;
+    align-items:center;
+    background:#e5ecff;
+    border:1px solid #b7c8ff;
+    border-radius:4px;
+    padding:2px 6px;
+    font-size:.85rem;
+}
+.tag-chip .remove{
+    cursor:pointer;
+    font-weight:700;
+    margin-left:4px;
+}
