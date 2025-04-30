@@ -82,9 +82,12 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab", defaultValue = "profile") String profileTab) {
+    public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
+                          @RequestParam(value = "activitytab",defaultValue = "question") String activityTab) {
         Users user = userService.findUser(id);
         model.addAttribute("user", user);
+        model.addAttribute("profiletab",profileTab);
+        model.addAttribute("activitytab",activityTab);
         return "UserProfile";
     }
 

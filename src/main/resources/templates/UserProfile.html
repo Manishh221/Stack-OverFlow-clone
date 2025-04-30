@@ -13,14 +13,14 @@
 <div id="container">
     <div id="hero">
         <!-- sidebar -->
-        <div id="sidebar">
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Questions</a></li>
-                <li><a href="#">Tags</a></li>
-                <li><a href="#">Users</a></li>
-            </ul>
-        </div>
+<!--        <div id="sidebar">-->
+<!--            <ul>-->
+<!--                <li><a href="#">Home</a></li>-->
+<!--                <li><a href="#">Questions</a></li>-->
+<!--                <li><a href="#">Tags</a></li>-->
+<!--                <li><a href="#">Users</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
 
         <div id="main-content">
 
@@ -42,51 +42,23 @@
                 </form>
             </div>
 
-            <a th:href="@{/user/{id}(id=${user.id}) + '?profileTabs=profile'}"
-               th:classappend="${profiletabs == 'profile'} ? 'active-tab' : ''"
-               id="tab-profile">Profile</a>
+            <div class="profile-tabs">
+                <a th:href="@{'/user/' + ${user.id} + '?profiletab=profile'}"
+                   th:classappend="${profiletab == 'profile'} ? 'active-tab' : ''"
+                   id="tab-profile">Profile</a>
 
-            <a th:href="@{/user/{id}(id=${user.id}) + '?profileTabs=activity'}"
-               th:classappend="${profiletabs == 'activity'} ? ' active-tab' : ''"
-               id="tab-activity">Activity</a>
-
-
-
-
-            <div id="profile-desc">
-                <div id="stats">
-                    <h3>Stats</h3>
-                    <div id="profile-stats">
-                        <div class="stat-card">
-                            <h2 th:text="${user.reputation}"></h2>
-                            <p>Reputation</p>
-                        </div>
-                        <div class="stat-card">
-                            <h2 th:text="${user.answers.size()}"></h2>
-                            <p>Answers</p>
-                        </div>
-                        <div class="stat-card">
-                            <h2 th:text="${user.questions.size()}">0</h2>
-                            <p>Questions</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="about">
-                    <h3>About</h3>
-                    <div id="profile-about">
-                        <p th:if="${user.about == null or user.about.isEmpty()}">
-                            Your about me section is currently blank. Would you like to
-                            add one? <span>
-                            <form  th:action="@{/updateUser}" method="post">
-                                    <button type="submit" id="about-btn">Edit</button>
-                            </form>
-                        </span>
-                        </p>
-                        <p th:unless="${user.about == null or user.about.isEmpty()}" th:text="${user.about}"></p>
-                    </div>
-
-                </div>
+                <a th:href="@{'/user/' + ${user.id} + '?profiletab=activity'}"
+                   th:classappend="${profiletab == 'activity'} ? ' active-tab' : ''"
+                   id="tab-activity">Activity</a>
             </div>
+
+                <div  th:if="${profiletab == 'profile'}">
+                    <div th:replace="~{fragments/profilestat :: profilestat(user=${user})}"></div>
+                </div>
+                <div th:if="${profiletab == 'activity'}">
+                    <div th:replace="~{fragments/activitystat :: activitystat(user=${user},  activitytab=${activitytab})}"></div>
+                </div>
+
         </div>
     </div>
 </div>
