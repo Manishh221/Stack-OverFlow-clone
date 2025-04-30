@@ -30,12 +30,11 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public Question createNewQuestion(Question question, List<String> tagNames) {
-       Question theQuestion = new Question();
-       theQuestion.setTitle(question.getTitle());
-       theQuestion.setDescription(question.getDescription());
-       theQuestion.setUser(question.getUser());
-
+    public Question createNewQuestion(Question theQuestion, List<String> tagNames) {
+//       Question theQuestion = new Question();
+//       theQuestion.setTitle(question.getTitle());
+//       theQuestion.setDescription(question.getDescription());
+//       theQuestion.setUser(question.getUser());
        Question savedQuestion = questionRepository.save(theQuestion);
 
         Set<QuestionTag> questionTagSet = new HashSet<>();

@@ -24,7 +24,7 @@ public class QuestionController {
     }
 
     @PostMapping("/create/question")
-    public String createPost(@ModelAttribute("question")Question question,
+    public String createQuestion(@ModelAttribute("question")Question question,
                              @RequestParam("tag") List<String> tags) {
     questionService.createNewQuestion(question, tags);
 

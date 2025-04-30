@@ -29,6 +29,12 @@ public class Users {
     @Column(name = "role",nullable = false)
     private String role="USER";
 
+    @Column(columnDefinition = "TEXT")
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
+    private String about;
+
     @CreationTimestamp
     @Column(name = "created_at",updatable = false)
     private LocalDateTime createdAt;
@@ -88,6 +94,22 @@ public class Users {
 
     public String getRole() {
         return role;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     public void setRole(String role) {
