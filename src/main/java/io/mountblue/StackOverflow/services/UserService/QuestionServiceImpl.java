@@ -29,10 +29,21 @@ public class QuestionServiceImpl implements QuestionService{
         this.questionTagRepository = questionTagRepository;
     }
 
+//      delete the question:
+    @Override
+    public void deleteQuestionById(Long id) {
+        questionRepository.deleteById(id);
+    }
+
+//    delete question
+    @Override
+    public Question findQuestionById(Long id) {
+        return questionRepository.findById(id).get();
+    }
+
+//    create new  Question
     @Override
     public Question createNewQuestion(Question theQuestion, List<String> tagNames) {
-
-
        Question savedQuestion = questionRepository.save(theQuestion);
 
         Set<QuestionTag> questionTagSet = new HashSet<>();
@@ -60,21 +71,35 @@ public class QuestionServiceImpl implements QuestionService{
         return questionRepository.save(savedQuestion);
     }
 
-//    delete the question:
-    @Override
-    public void deleteQuestionById(Long id) {
-       questionRepository.deleteById(id);
-    }
-
 //  update the question:
     @Override
-    public Question updateQuestion(Question question, List<String> tagName) {
+    public Question updateQuestion(Question theQuestion, List<String> tagNames) {
 
-        return null;
+           Question savedQuestion = questionRepository.save(theQuestion);
+
+           Set<QuestionTag> questionTagSet = new HashSet<>();
+
+           for (String tagName: tagNames){
+               Tag tag = tagRepository.findByTagName(tagName.trim())
+                       .orElseGet(() -> {
+                           Tag newTag = new Tag();
+                           newTag.setTagName(tagName.trim());
+                           newTag.setCreatedAt(LocalDateTime.now());
+                           return tagRepository.save(newTag);
+                       });
+
+               QuestionTag questionTag = new QuestionTag();
+               questionTag.setQuestion(savedQuestion);
+               questionTag.setTag(tag);
+               questionTag.setCreatedAt(LocalDateTime.now());
+
+               questionTagSet.add(questionTag);
+           }
+
+           questionTagRepository.saveAll(questionTagSet);
+           savedQuestion.setQuestionTags(questionTagSet);
+
+           return questionRepository.save(savedQuestion);
+       }
     }
 
-    @Override
-    public Question findQuestionById(Long id) {
-       return questionRepository.findById(id).get();
-    }
-}
