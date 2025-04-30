@@ -61,13 +61,13 @@
                     <span class="answer-count" th:text="${#lists.size(question.answerList)} + ' answers'"></span>
                 </div>
                 <div class="question-title">
-                    <a th:href="@{'/questions/' + ${question.id}}" th:text="${question.title}"></a>
+                    <a th:href="@{'/question/' + ${question.id}}" th:text="${question.title}"></a>
                     <span class="question-meta"
                           th:text="'Asked ' + ${#temporals.format(question.createdAt, 'dd MMM yyyy')}"></span>
                 </div>
                 <div class="question-tags">
                     <span class="tag" th:each="qt : ${question.questionTags}"
-                          th:text="${qt.tag.name}"></span>
+                          th:text="${qt.tag.tagName}"></span>
                 </div>
             </li>
         </ul>

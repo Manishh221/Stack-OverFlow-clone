@@ -18,8 +18,6 @@ import java.util.*;
 @Controller
 public class QuestionController {
 
-
-
     private QuestionService questionService;
     private TagService tagService;
 
@@ -84,10 +82,10 @@ public class QuestionController {
         return "ReviewQuestion";
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "Home";
-    }
+//    @GetMapping("/")
+//    public String home() {
+//        return "Home";
+//    }
 
 //    --------------------------storing the Question------------------------------------------
     @PostMapping("/create-question")
@@ -95,7 +93,7 @@ public class QuestionController {
                                  @RequestParam(value = "tags", required = false)
                                  List<String> tagNames) {
         questionService.createNewQuestion(question, tagNames);
-        return "Home";
+        return "redirect:/";
     }
 
 
@@ -116,5 +114,12 @@ public class QuestionController {
     public String updateQuestion(@ModelAttribute("question") Question question, List<String> tags) {
 
         return null;
+    }
+
+    @GetMapping("/question/{id}")
+    public String showQuestion(@PathVariable Long id,Model model){
+        Question question = questionService.findQuestionById(id);
+        model.addAttribute("question",question);
+        return "QuestionDetail";
     }
 }

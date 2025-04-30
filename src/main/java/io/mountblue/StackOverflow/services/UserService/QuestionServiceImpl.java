@@ -3,14 +3,18 @@ package io.mountblue.StackOverflow.services.UserService;
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.QuestionTag;
 import io.mountblue.StackOverflow.entity.Tag;
+import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.repositories.QuestionRepository;
 import io.mountblue.StackOverflow.repositories.QuestionTagRepository;
 import io.mountblue.StackOverflow.repositories.TagRepository;
+import io.mountblue.StackOverflow.security.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,6 +53,10 @@ public class QuestionServiceImpl implements QuestionService{
     //  ---------------  create new  Question--------------------------------------
     @Override
     public Question createNewQuestion(Question theQuestion, List<String> tagNames) {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        UserInfo userInfo=(UserInfo) authentication.getPrincipal();
+        Users user=userInfo.getUser();
+        theQuestion.setUser(user);
        Question savedQuestion = questionRepository.save(theQuestion);
 
         Set<QuestionTag> questionTagSet = new HashSet<>();
