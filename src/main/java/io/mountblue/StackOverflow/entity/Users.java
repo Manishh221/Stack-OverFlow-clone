@@ -29,12 +29,6 @@ public class Users {
     @Column(name = "role",nullable = false)
     private String role="USER";
 
-    @Column(columnDefinition = "TEXT")
-    private String title;
-
-    @Column(columnDefinition = "TEXT")
-    private String about;
-
     @CreationTimestamp
     @Column(name = "created_at",updatable = false)
     private LocalDateTime createdAt;
@@ -46,10 +40,10 @@ public class Users {
     @Column(name = "last_login")
     private LocalDateTime lastLoginAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Answer> answers;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Question> questions;
 
     public Long getId() {
@@ -94,22 +88,6 @@ public class Users {
 
     public String getRole() {
         return role;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAbout() {
-        return about;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
     }
 
     public void setRole(String role) {
