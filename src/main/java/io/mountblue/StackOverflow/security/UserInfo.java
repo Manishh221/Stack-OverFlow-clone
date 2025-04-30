@@ -26,6 +26,10 @@ public class UserInfo implements UserDetails {
         return theUser.getPassword();
     }
 
+    public Users getUser(){
+        return this.theUser;
+    }
+
     @Override
     public String getUsername() {
         return theUser.getEmail();

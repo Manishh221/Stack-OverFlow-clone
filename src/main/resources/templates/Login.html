@@ -9,7 +9,8 @@
 <body>
 
 <!-- Navbar -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header(user=${user} ?: null)}"></div>
+
 
 <!-- Page Content -->
 <div class="login-wrapper">

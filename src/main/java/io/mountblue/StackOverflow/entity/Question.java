@@ -3,17 +3,24 @@ package io.mountblue.StackOverflow.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,10 +41,6 @@ public class Question {
             message = "Description must be 30-1000 characters."
     )
     private String description;
-
-    //To be implemented
-//    @OneToMany()
-//    private List<Tag> tags;
 
     @Column(name = "upvote")
     private int upvote;
@@ -60,4 +63,6 @@ public class Question {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<QuestionTag> questionTags;
 }
