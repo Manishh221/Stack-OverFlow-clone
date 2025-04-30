@@ -6,6 +6,8 @@ import io.mountblue.StackOverflow.services.UserService.QuestionService;
 import io.mountblue.StackOverflow.services.UserService.TagService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +26,16 @@ public class QuestionController {
         this.questionService = questionService;
         this.tagService = tagService;
     }
+
+    @GetMapping("/Show-all-questions/{page-number}")
+    public String showAllQuestions (@PathVariable("page-number") int pageNumber, Model model) {
+        Page<Question> allQuestions = questionService.findAllQuestions(pageNumber);
+
+        model.addAttribute("allQuestions", allQuestions);
+
+        return "Home";
+    }
+
 
     private static final List<String> DEMO_TAGS = List.of(
             "java", "javascript", "python", "kotlin",
