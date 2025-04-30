@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Review Your Question</title>
+
+    <!-- identical style sheets -->
+    <link rel="stylesheet" th:href="@{/css/createquestion.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+<body>
+
+<!-- top-bar / logo -->
+<div th:replace="fragments/header :: header"></div>
+
+<!-- use same wrapper classes -->
+<div class="container" th:object="${question}">
+    <div class="question-container">
+
+        <h1>Review your question</h1>
+        <p class="subtext" style="margin-top:-10px">
+            Check everything below. Click <strong>Edit</strong> to change
+            anything, or <strong>Post</strong> to publish.
+        </p>
+
+        <!-- •••••••••••  FORM  ••••••••••• -->
+        <form th:action="@{/questions/submit}" method="post">
+
+            <!-- TITLE (same id / class, just readonly) -------------------- -->
+            <div th:classappend="${#fields.hasErrors('title')} ? 'has-error'">
+                <label for="title">Title*</label>
+                <div class="subtext">
+                    Be specific and imagine you’re asking a question to another person
+                </div>
+                <input id="title" type="text" th:field="*{title}"
+                       readonly
+                       style="background:#fafafa;cursor:default">
+                <p class="error-msg" th:if="${#fields.hasErrors('title')}"
+                   th:errors="*{title}">title error</p>
+            </div>
+
+            <!-- DESCRIPTION ---------------------------------------------- -->
+            <div th:classappend="${#fields.hasErrors('description')} ? 'has-error'">
+                <label for="description">Description*</label>
+                <div class="subtext">
+                    Include all the information someone would need to answer your question
+                </div>
+                <textarea id="description" th:field="*{description}"
+                          readonly
+                          style="background:#fafafa;cursor:default"></textarea>
+                <p class="error-msg" th:if="${#fields.hasErrors('description')}"
+                   th:errors="*{description}">description error</p>
+            </div>
+
+            <!-- TAGS : same editable picker fragment ---------------------- -->
+            <div th:classappend="${#fields.hasErrors('questionTags')} ? 'has-error'">
+                <label>Tags*</label>
+
+                <!-- CSV of current tags → second arg -->
+                <div th:replace="fragments/QuestionFields :: picker(
+                        ${allTags},
+                        ${#lists.isEmpty(questionTags) ? '' :
+                             #strings.arrayJoin(
+                               questionTags.^[tag.name].![name], ',')})">
+                </div>
+
+                <p class="error-msg" th:if="${#fields.hasErrors('questionTags')}"
+                   th:errors="*{questionTags}">tags error</p>
+            </div>
+
+            <!-- ACTION BUTTONS  ------------------------------------------ -->
+            <div style="display:flex;gap:12px;margin-top:24px;">
+                <a th:href="@{/ask-question}" class="ask-btn"
+                   style="background:#e8f4ff;color:#0a95ff;border:1px solid #0a95ff">
+                    Edit
+                </a>
+
+                <button type="submit" class="ask-btn"
+                        th:disabled="${#fields.hasErrors()}">
+                    Post my question
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- tag-picker JS is injected by the fragment; nothing else needed -->
+</body>
+</html>

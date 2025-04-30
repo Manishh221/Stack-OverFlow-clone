@@ -1,184 +1,126 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f1f2f3;
-    margin: 0;
-    padding: 0;
+/* ───────────────── GLOBAL ───────────────────────────── */
+body{
+    font-family:Arial, sans-serif;
+    background:#f1f2f3;
+    margin:0;
 }
 
-.container {
+/* ───────────────── MAIN WRAPPER ─────────────────────── */
+.container{
+    max-width:750px;           /* centre column width */
+    margin:40px auto;
+    background:#fff;
+    border-radius:8px;
+    padding:30px 40px;         /* uniform padding */
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
 
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 500px;
-
+    /* stack children vertically */
+    display:flex;
+    flex-direction:column;
+    gap:32px;                  /* space between question & help box */
 }
 
-h1 {
-    margin-bottom: 30px;
-    font-size: 24px;
+/* question form block */
+.question-container{
+    display:flex;
+    flex-direction:column;
+    gap:24px;                  /* gap between each field group */
 }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
+/* ───────────────── TYPOGRAPHY ───────────────────────── */
+h1{font-size:24px;margin:0 0 8px;}
+label{font-weight:700;display:block;margin-bottom:4px;}
+.subtext{color:#6a737c;font-size:13px;margin-bottom:6px;}
+
+/* ───────────────── INPUTS ───────────────────────────── */
+input[type=text],
+textarea{
+    width:100%;
+    font-size:14px;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    resize:vertical;
+}
+textarea{height:200px}
+
+/* ───────────────── CODE-TIP BOX ─────────────────────── */
+.code-block-tip{
+    background:#f8f9f9;
+    font-size:13px;
+    padding:8px 12px;
+    border-left:3px solid #0074cc;
+    margin-top:-10px;
+    color:#3b4045;
 }
 
-.subtext {
-    color: #6a737c;
-    font-size: 13px;
-    margin-bottom: 12px;
+/* ───────────────── PRIMARY BUTTON ───────────────────── */
+.ask-btn{
+    background:#0a95ff;
+    color:#fff;
+    border:none;
+    padding:12px 20px;
+    border-radius:4px;
+    font-size:14px;
+    cursor:pointer;
+}
+.ask-btn:hover{background:#0074cc}
+
+/* ───────────────── HELP SIDEBAR ─────────────────────── */
+.help-box{
+    width:260px;
+    background:#fff;
+    border:1px solid #d6d9dc;
+    border-radius:6px;
+    padding:16px;
+    font-size:14px;
 }
 
-input[type="text"], textarea {
-    width: 100%;
-    font-size: 14px;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: vertical;
-}
+.step-content{padding:10px;font-size:12px;}
+.help-box h2{font-size:16px;margin:0 0 10px;}
+.help-box p{font-size:13px;margin:0 0 10px;color:#3b4045;}
 
-textarea {
-    height: 200px;
+details{margin-top:10px;border-top:1px solid #ddd;padding-top:10px;}
+summary{
+    cursor:pointer;font-weight:700;font-size:13px;color:#0074cc;list-style:none;
 }
+summary::-webkit-details-marker{display:none;}
+details[open] summary::after{content:" ▲";font-size:10px;}
+summary::after{content:" ▼";font-size:10px;}
+.help-step{margin-bottom:6px;}
 
-.code-block-tip {
-    background: #f8f9f9;
-    font-size: 13px;
-    padding: 8px 12px;
-    border-left: 3px solid #0074cc;
-    margin-top: -10px;
-    margin-bottom: 20px;
-    color: #3b4045;
-}
-
-.ask-btn {
-    background-color: #0a95ff;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.ask-btn:hover {
-    background-color: #0074cc;
-}
-
-.help-box {
-    width: 260px;
-    background-color: #ffffff;
-    border: 1px solid #d6d9dc;
-    border-radius: 6px;
-    padding: 16px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-}
-
-.step-content{
-    padding: 10px;
-    font-size: 12px;
-}
-
-.help-box h2 {
-    font-size: 16px;
-    margin: 0 0 10px 0;
-}
-
-.help-box p {
-    font-size: 13px;
-    margin-bottom: 10px;
-    color: #3b4045;
-}
-
-details {
-    margin-top: 10px;
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
-}
-
-summary {
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 13px ;
-    color: #0074cc;
-    list-style: none;
-}
-
-summary::-webkit-details-marker {
-    display: none;
-}
-
-details[open] summary::after {
-    content: " ▲";
-    font-size: 10px;
-}
-
-summary::after {
-    content: " ▼";
-    font-size: 10px;
-}
-
-.help-step {
-    margin-bottom: 6px;
-}
-/* container & display ------------------------------------------------*/
+/* ───────────────── TAG PICKER ───────────────────────── */
+/* main field */
 .multi-select-display{
     border:1px solid #5993ff;
     border-radius:4px;
     padding:6px;
     min-height:38px;
-    cursor:pointer;
     display:flex;
     flex-wrap:wrap;
     gap:4px;
+    cursor:pointer;
 }
 .placeholder{color:#888}
 
-/* dropdown -----------------------------------------------------------*/
-.multi-select-dropdown{
-    position:relative;           /* so search bar stays on top */
-}
+/* dropdown */
+.multi-select-dropdown{position:relative;}
 .multi-select-dropdown.hidden{display:none;}
 .multi-select-dropdown .search{
-    width:100%;
-    box-sizing:border-box;
-    padding:6px 8px;
-    border:none;
-    border-bottom:1px solid #d0d7e2;
-    outline:none;
+    width:100%;padding:6px 8px;border:none;
+    border-bottom:1px solid #d0d7e2;outline:none;
 }
 .multi-select-dropdown .options{
-    max-height:200px;
-    overflow-y:auto;
-    border:1px solid #d0d7e2;
-    border-top:none;
-    background:#fff;
+    max-height:200px;overflow-y:auto;
+    border:1px solid #d0d7e2;border-top:none;background:#fff;
 }
-.option{display:flex;align-items:center;padding:6px 10px;gap:6px;}
+.option{display:flex;align-items:center;gap:6px;padding:6px 10px;}
 .option:hover{background:#f3f6fb;}
 
-/* tag chips ----------------------------------------------------------*/
+/* chips */
 .tag-chip{
-    display:inline-flex;
-    align-items:center;
-    background:#e5ecff;
-    border:1px solid #b7c8ff;
-    border-radius:4px;
-    padding:2px 6px;
-    font-size:.85rem;
+    display:inline-flex;align-items:center;
+    background:#e5ecff;border:1px solid #b7c8ff;
+    border-radius:4px;padding:2px 6px;font-size:.85rem;
 }
-.tag-chip .remove{
-    cursor:pointer;
-    font-weight:700;
-    margin-left:4px;
-}
+.tag-chip .remove{cursor:pointer;font-weight:700;margin-left:4px;}

@@ -3,66 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Ask a Public Question</title>
+
+    <!-- same stylesheet the review page uses -->
     <link rel="stylesheet" th:href="@{/css/createquestion.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
 </head>
 <body>
+
 <div th:replace="fragments/header :: header"></div>
+
 <div class="container">
-<div class="question-container">
+    <div class="question-container">
 
-    <h1>Ask a public question</h1>
+        <h1>Ask a public question</h1>
 
-    <form th:action="@{/questions/submit}" method="post">
+        <!-- draft form -->
+        <form th:action="@{/review}" th:object="${question}" method="post">
 
-        <div>
-            <label for="title">Title*</label>
-            <div class="subtext">Be specific and imagine you’re asking a question to another person</div>
-            <input type="text" id="title" name="title" placeholder="e.g. Is there an R function for finding the index of an element in a vector?" th:value="${question?.title}">
-        </div>
-
-        <div>
-            <label for="body">Body*</label>
-            <div class="subtext">Include all the information someone would need to answer your question</div>
-            <textarea id="body" name="body" th:text="${question?.body}"></textarea>
-            <div class="code-block-tip">
-                ```code``` &nbsp;&nbsp; **bold** &nbsp;&nbsp; *italic* &nbsp;&nbsp; >quote
-            </div>
-        </div>
-
-        <div class="field">
-            <label for="tagSelectDisplay">Tags*</label>
-            <div class="subtext">
-                Add up to 5 tags. Click the box to open the dropdown.
+            <div>
+                <label for="title">Title*</label>
+                <div class="subtext">
+                    Be specific and imagine you’re asking a question to another person
+                </div>
+                <input id="title" type="text" th:field="*{title}"
+                       placeholder="e.g. How do I find the index of an element in a list?"/>
             </div>
 
-            <div id="tagSelectDisplay"
-                 class="multi-select-display"
-                 tabindex="0">
-                <span id="placeholder" class="placeholder">Select tags…</span>
-            </div>
-
-            <div id="tagDropdown" class="multi-select-dropdown hidden">
-                <input type="text" id="tagSearch" class="search" placeholder="Search…"/>
-
-                <div class="options">
-                    <label th:each="t : ${allTags}" class="option">
-                        <input type="checkbox" th:value="${t}"/>
-                        <span th:text="${t}">java</span>
-                    </label>
+            <div>
+                <label for="description">Description*</label>
+                <div class="subtext">
+                    Include all the information someone would need to answer your question
+                </div>
+                <textarea id="description" th:field="*{description}"></textarea>
+                <div class="code-block-tip">
+                    ```code``` &nbsp;&nbsp; **bold** &nbsp;&nbsp; *italic* &nbsp;&nbsp; &gt;quote
                 </div>
             </div>
 
-            <input type="hidden" name="tags" id="tagsHidden"/>
-        </div>
+            <div th:replace="fragments/QuestionFields :: picker(${allTags}, '')"></div>
 
+            <button type="submit" class="ask-btn">Review your question</button>
+        </form>
+    </div>
 
-        <button type="submit" class="ask-btn">Review your question</button>
-    </form>
-</div>
+    <!-- help sidebar (unchanged) ---------------------------------------- -->
     <div class="help-section">
         <div class="help-box">
-            <h2>Step 1: Draft your question</h2>
+            <h2>Step&nbsp;1: Draft your question</h2>
             <p>The community is here to help you with specific coding, algorithm, or language problems.</p>
             <p><strong>Avoid asking opinion-based questions.</strong></p>
 
@@ -89,77 +76,7 @@
         </div>
     </div>
 </div>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    (() => {
-        const MAX   = 5;
-        const disp  = document.getElementById('tagSelectDisplay');
-        const dd    = document.getElementById('tagDropdown');
-        const hidden= document.getElementById('tagsHidden');
-        const search= document.getElementById('tagSearch');
-        const opts  = Array.from(dd.querySelectorAll('input[type="checkbox"]'));
-        const place = document.getElementById('placeholder');
-        let selected= [];
 
-        /* ---------------- helpers ---------------- */
-        const updateChips = () => {
-            disp.querySelectorAll('.tag-chip').forEach(c => c.remove());
-            selected.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = 'tag-chip';
-                span.textContent = tag;
-
-                const x = document.createElement('span');
-                x.className = 'remove';
-                x.textContent = '×';
-                x.onclick = () => toggleTag(tag);
-                span.appendChild(x);
-                disp.appendChild(span);
-            });
-            place.style.display = selected.length ? 'none' : 'inline';
-            hidden.value = selected.join(',');
-        };
-
-        const toggleTag = (tag) => {
-            if (selected.includes(tag)){
-                selected = selected.filter(t => t !== tag);
-            } else {
-                if (selected.length === MAX) return;
-                selected.push(tag);
-            }
-            opts.find(o => o.value === tag).checked = selected.includes(tag);
-            updateChips();
-        };
-
-        /* ---------------- events ---------------- */
-        // open / close dropdown
-        disp.addEventListener('click', () => dd.classList.toggle('hidden'));
-        disp.addEventListener('keydown', e => { if(e.key === 'Enter') dd.classList.toggle('hidden'); });
-
-        // click away closes dropdown
-        document.addEventListener('click', e => {
-            if (!disp.contains(e.target) && !dd.contains(e.target)) dd.classList.add('hidden');
-        });
-
-        // checkbox clicks
-        opts.forEach(cb => cb.addEventListener('change', e => toggleTag(cb.value)));
-
-        // live search filter
-        search.addEventListener('input', () => {
-            const q = search.value.toLowerCase();
-            opts.forEach(cb => {
-                const lbl = cb.parentElement;
-                lbl.style.display = cb.value.includes(q) ? 'flex' : 'none';
-            });
-        });
-
-        // initialise with any server-side tags (edit mode)
-        const initial = /*[[${#strings.defaultString(question?.tags,'')}]]*/ '';
-        if(initial){
-            initial.split(',').forEach(t => toggleTag(t.trim()));
-        }
-    })();
-    /*]]>*/
-</script>
+<!-- interactive dropdown JS is loaded by the fragment itself -->
 </body>
 </html>
