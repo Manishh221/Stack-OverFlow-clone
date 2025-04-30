@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ques_tags")
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionTag {
@@ -34,4 +32,35 @@ public class QuestionTag {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

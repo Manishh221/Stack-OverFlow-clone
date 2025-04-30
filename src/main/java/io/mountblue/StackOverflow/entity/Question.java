@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Question {
@@ -65,4 +63,84 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuestionTag> questionTags;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getUpvote() {
+        return upvote;
+    }
+
+    public void setUpvote(int upvote) {
+        this.upvote = upvote;
+    }
+
+    public int getDownvote() {
+        return downvote;
+    }
+
+    public void setDownvote(int downvote) {
+        this.downvote = downvote;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public List<Answer> getAnswerList() {
+        return answerList;
+    }
+
+    public void setAnswerList(List<Answer> answerList) {
+        this.answerList = answerList;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Set<QuestionTag> getQuestionTags() {
+        return questionTags;
+    }
+
+    public void setQuestionTags(Set<QuestionTag> questionTags) {
+        this.questionTags = questionTags;
+    }
 }
