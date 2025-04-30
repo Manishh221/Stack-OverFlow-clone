@@ -2,15 +2,19 @@ package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.services.UserService.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class UserController {
@@ -38,6 +42,30 @@ public class UserController {
         return "redirect:/login";
     }
 
+    @PostMapping("/updateUser")
+        public String updateUser(@ModelAttribute("user") Users user, Principal principal){
+            Users existingUser = userService.findUser(user.getId());
+            if(existingUser==null){
+                throw new RuntimeException("User not found");
+            }
+        if (principal != null) {
+            String email = principal.getName();
+            Users loggedInUser = userService.loadUserByEmail(email);
+            if((Objects.equals(loggedInUser.getRole(), "ADMIN")) || (Objects.equals(loggedInUser.getEmail(), user.getEmail()))){
+                user.setUpdatedAt(LocalDateTime.now());
+                userService.createNewUser(user);
+
+            }
+        }
+        return "redirect:/user/" + user.getId();
+    }
+
+    @PostMapping("/deleteUser/{id}")
+        public String deleteUser(@PathVariable Long id){
+            userService.deleteUser(id);
+            return "redirect:/";
+    }
+
     @GetMapping("/login")
     public String loginForm(){
         return "Login";
@@ -47,5 +75,29 @@ public class UserController {
 //    public String home(){
 //        return "Home";
 //    }
+
+    @GetMapping("/user/{id}")
+    public String getUser(@PathVariable Long id,Model model){
+       Users user = userService.findUser(id);
+       model.addAttribute("user",user);
+       return "UserProfile";
+    }
+
+    @GetMapping("/users")
+    public String getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "reputation"));
+        Page<Users> usersPage = userService.findPaginatedUsers(pageable);
+
+        model.addAttribute("users", usersPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", usersPage.getTotalPages());
+
+        return "UsersList";
+    }
+
+
 
 }
