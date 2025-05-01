@@ -186,6 +186,17 @@
   <link rel="stylesheet" th:href="@{/css/header.css}" />
   <link rel="stylesheet" th:href="@{/css/questionDetail.css}" />
 </head>
+<script>
+  function showCommentBox(index) {
+    const box = document.getElementById('commentBox' + index);
+    if (box) box.style.display = 'block';
+  }
+
+  function hideCommentBox(index) {
+    const box = document.getElementById('commentBox' + index);
+    if (box) box.style.display = 'none';
+  }
+</script>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="detail-cont">
@@ -194,8 +205,8 @@
     <div class="question-box">
       <h2 class="qwrap" th:text="${question.title}">Question Title</h2>
       <div class="meta">
-        Asked <span th:text="${question.createdAt}">today</span> •
-        Modified <span th:text="${question.updatedAt}">today</span>
+        Asked <span th:text="${@dateUtils.format(question.createdAt)}">today</span> •
+        Modified <span th:text="${@dateUtils.format(question.updatedAt)}">today</span>
       </div>
       <hr>
       <p class="qwrap" th:text="${question.description}">Question description here</p>
@@ -206,7 +217,7 @@
       </div>
 
       <div class="comment-box">
-        <strong th:text="'asked ' + ${question.createdAt}"></strong>
+        <strong th:text="'asked ' + ${@dateUtils.format(question.createdAt)}"></strong>
         <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}" th:text="${question.user.username}">User Name</a>
       </div>
     </div>
@@ -226,6 +237,19 @@
             </div>
           </div>
         </div>
+        <!-- Add Comment Button -->
+        <button type="button" class="add-comment-btn"
+                th:attr="onclick='showCommentBox(' + ${iterStat.index} + ')'">
+          Add Comment
+        </button>
+
+        <!-- Hidden Comment Input Section -->
+        <div class="comment-input-box" th:attr="id='commentBox' + ${iterStat.index}" style="display: none; margin-top: 10px;">
+          <input type="text" placeholder="Write a comment..." class="comment-input" style="width: 70%;">
+          <button type="button" class="submit-comment-btn">Submit</button>
+          <button type="button" onclick="hideCommentBox([[${iterStat.index}]])">Cancel</button>
+        </div>
+      </div>
       </div>
     </div>
 
