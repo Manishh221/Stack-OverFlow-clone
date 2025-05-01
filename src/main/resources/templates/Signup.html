@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/signup.css}" />
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header(user=${user} ?: null)}"></div>
 
 <div class="signup-container">
     <div class="left-panel">

@@ -1,0 +1,24 @@
+<div id="profile-desc" th:fragment="activitystat">
+    <div id="activity-bar">
+        <ul>
+            <li
+                    th:classappend="${activitytab=='question'} ? 'activity-tab' : ''"
+            ><a
+                    th:href="@{'/user/' + ${user.id} + '?profiletab=activity' + '&activitytab=question'}"
+            >Question</a>
+            </li>
+            <li th:classappend="${activitytab=='answer'} ? 'activity-tab' : ''"><a
+                    th:href="@{'/user/' + ${user.id} + '?profiletab=activity' + '&activitytab=answer'}"
+            >Answers</a></li>
+        </ul>
+    </div>
+
+    <div class="user-main" th:if="${activitytab == 'question'}">
+        <div th:replace="~{fragments/question :: question(user=${user})}"></div>
+    </div>
+
+    <div class="user-main" th:if="${activitytab == 'answer'}">
+        <div th:replace="~{fragments/answer :: answer(user=${user})}"></div>
+    </div>
+
+</div>
