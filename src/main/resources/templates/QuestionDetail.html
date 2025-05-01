@@ -187,19 +187,27 @@
   <link rel="stylesheet" th:href="@{/css/questionDetail.css}" />
 </head>
 <script>
-  function showCommentBox(index) {
-    const box = document.getElementById('commentBox' + index);
-    if (box) box.style.display = 'block';
-  }
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.toggle-comment-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const id = button.getAttribute('data-answer-id');
+        const form = document.getElementById('comment-form-' + id);
+        form.style.display = 'block';
+      });
+    });
 
-  function hideCommentBox(index) {
-    const box = document.getElementById('commentBox' + index);
-    if (box) box.style.display = 'none';
-  }
+    document.querySelectorAll('.cancel-comment-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const form = button.closest('.comment-input');
+        form.style.display = 'none';
+      });
+    });
+  });
 </script>
 <body>
 <div th:replace="fragments/header :: header"></div>
-<div class="detail-cont">
+
+  <div class="detail-cont">
 
   <div class="question-container">
     <div class="question-box">
@@ -227,6 +235,27 @@
 
       <div th:each="answer : ${question.answerList}">
         <p th:text="${answer.text}">Answer content here</p>
+        <!-- Add Comment Button -->
+<!--        <button type="button" class="toggle-comment-btn"-->
+<!--                th:attr="data-answer-id=${answer.id}">Add Comment</button>-->
+
+        <!-- Comment Input Box (Initially hidden) -->
+<!--        <div class="comment-input" th:attr="id='comment-form-' + ${answer.id}" style="display: none;">-->
+<!--          <form th:action="@{'/answer/' + ${answer.id} + '/comments'}" method="post">-->
+<!--            <input type="text" name="commentText" placeholder="Add your comment..." required />-->
+<!--            <button type="submit">Submit</button>-->
+<!--            <button type="button" class="cancel-comment-btn">Cancel</button>-->
+<!--          </form>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Display Comments &ndash;&gt;-->
+<!--        <div class="comments" th:if="${answer.comments != null}">-->
+<!--          <div th:each="comment : ${answer.comments}">-->
+<!--            <p><strong th:text="${comment.user.username}">User</strong>:-->
+<!--              <span th:text="${comment.commentText}">Comment text</span>-->
+<!--            </p>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <div class="footer">
           <div class="user">
@@ -237,36 +266,14 @@
             </div>
           </div>
         </div>
-        <!-- Add Comment Button -->
-        <button type="button" class="add-comment-btn"
-                th:attr="onclick='showCommentBox(' + ${iterStat.index} + ')'">
-          Add Comment
-        </button>
 
-        <!-- Hidden Comment Input Section -->
-        <div class="comment-input-box" th:attr="id='commentBox' + ${iterStat.index}" style="display: none; margin-top: 10px;">
-          <input type="text" placeholder="Write a comment..." class="comment-input" style="width: 70%;">
-          <button type="button" class="submit-comment-btn">Submit</button>
-          <button type="button" onclick="hideCommentBox([[${iterStat.index}]])">Cancel</button>
-        </div>
       </div>
-      </div>
-    </div>
-
     <h2>Your Answer</h2>
     <form method="post" th:action="@{/submitAnswer}">
+<!--      <input type="hidden" name="id" value="" />-->
+<!--      <input type="hidden" name="username" value="" />-->
+<!--      <input type="hidden" name="email" value="" />-->
       <textarea name="answerText" placeholder="Write your answer here..."></textarea>
-
-      <div class="form-section">
-        <!-- Guest Post -->
-        <div class="form-box">
-          <h3>Post as a guest</h3>
-          <label for="guestName">Name</label>
-          <input type="text" id="guestName" name="guestName" placeholder="Name" required>
-          <label for="guestEmail">Email</label>
-          <input type="email" id="guestEmail" name="guestEmail" placeholder="Email (not shown)" required>
-        </div>
-      </div>
 
       <p>By clicking “Post Your Answer”, you agree to our
         <a href="/terms">terms of service</a> and
@@ -291,6 +298,7 @@
         </div>
         <p>See similar questions with these tags.</p>
       </div>
+    </div>
     </div>
   </div>
 
@@ -374,5 +382,7 @@
       </div>
     </div>
 </div>
+  </div>
+
 </body>
 </html>
