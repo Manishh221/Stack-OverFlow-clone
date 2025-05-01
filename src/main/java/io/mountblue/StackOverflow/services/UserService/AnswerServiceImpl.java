@@ -1,4 +1,32 @@
 package io.mountblue.StackOverflow.services.UserService;
 
-public class AnswerServiceImpl {
+import io.mountblue.StackOverflow.entity.Answer;
+import io.mountblue.StackOverflow.entity.Question;
+import io.mountblue.StackOverflow.repositories.AnswerRepository;
+import io.mountblue.StackOverflow.repositories.QuestionRepository;
+import io.mountblue.StackOverflow.security.UserInfo;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AnswerServiceImpl implements AnswerService {
+    private final AnswerRepository answerRepository;
+    private final QuestionRepository questionRepository;
+
+    public AnswerServiceImpl(AnswerRepository answerRepository, QuestionRepository questionRepository) {
+        this.answerRepository = answerRepository;
+        this.questionRepository = questionRepository;
+    }
+
+    @Override
+    public void saveAnswer(Answer answer, Long questionId, UserInfo userClass){
+        try {
+            answer.setUser(userClass.getUser());
+            Question question = questionRepository.findById(questionId)
+                    .orElseThrow(() -> new IllegalArgumentException("Question not found with id: " + questionId));;
+            answer.setQuestion(question);
+            answerRepository.save(answer);
+        }catch (Exception e){
+            throw new RuntimeException("Error saving answer: " + e.getMessage(), e);
+        }
+    }
 }

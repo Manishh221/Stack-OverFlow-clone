@@ -1,7 +1,9 @@
 package io.mountblue.StackOverflow.services.UserService;
 
-import org.springframework.stereotype.Service;
+import io.mountblue.StackOverflow.entity.Answer;
+import io.mountblue.StackOverflow.repositories.AnswerRepository;
+import io.mountblue.StackOverflow.security.UserInfo;
 
-@Service
-public class AnswerService {
+public interface AnswerService {
+    void saveAnswer(Answer answer, Long questionId, UserInfo userClass);
 }
