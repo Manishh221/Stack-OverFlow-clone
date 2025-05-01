@@ -22,11 +22,30 @@ public class AnswerServiceImpl implements AnswerService {
         try {
             answer.setUser(userClass.getUser());
             Question question = questionRepository.findById(questionId)
-                    .orElseThrow(() -> new IllegalArgumentException("Question not found with id: " + questionId));;
+                    .orElseThrow(() -> new IllegalArgumentException("Question not found with id: " + questionId));
             answer.setQuestion(question);
             answerRepository.save(answer);
         }catch (Exception e){
             throw new RuntimeException("Error saving answer: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void deleteAnswer(Long answerId){
+        try {
+            answerRepository.deleteById(answerId);
+        }catch (Exception e){
+            throw new RuntimeException("Error deleting answer: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Answer findAnswerById(Long answerId){
+        try {
+            return answerRepository.findById(answerId)
+                    .orElseThrow(() -> new IllegalArgumentException("Answer not found with id: " + answerId));
+        }catch (Exception e){
+            throw new RuntimeException("Error finding answer: " + e.getMessage(), e);
         }
     }
 }

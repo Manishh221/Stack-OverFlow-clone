@@ -6,4 +6,8 @@ import io.mountblue.StackOverflow.security.UserInfo;
 
 public interface AnswerService {
     void saveAnswer(Answer answer, Long questionId, UserInfo userClass);
+
+    void deleteAnswer(Long answerId);
+
+    Answer findAnswerById(Long answerId);
 }

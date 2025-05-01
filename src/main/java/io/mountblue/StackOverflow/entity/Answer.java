@@ -38,7 +38,7 @@ public class Answer {
     @OneToMany(mappedBy = "answer",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<AnswerVote> answerVoteList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "question",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "answer",cascade = CascadeType.ALL,orphanRemoval = true)
 //    comment entity to do
     private List<Comment> comments = new ArrayList<>();
 
