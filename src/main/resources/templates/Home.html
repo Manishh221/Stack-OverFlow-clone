@@ -32,31 +32,11 @@
         <section class="post-list">
             <h2>Interesting posts for you</h2>
 
-            <article th:each="post : ${posts}" class="post">
-                <div class="post-stats">
-                    <div class="stat"><span th:text="${post.votes}">0</span> votes</div>
-                    <div class="stat"><span th:text="${post.answers}">0</span> answers</div>
-                    <div class="stat"><span th:text="${post.views}">0</span> views</div>
-                </div>
+            <section class="post-list">
+                <h2>Interesting posts for you</h2>
 
-                <div class="post-body">
-                    <a th:href="@{/questions/{id}(id=${post.id})}"
-                       class="post-title" th:text="${post.title}">
-                        Problem when widget is showing image while scrolling
-                    </a>
-
-                    <p class="post-meta">
-                        <span th:text="${post.timeAgo}">asked 1 min ago</span> •
-                        <span th:text="${post.author}">Craig</span>
-                    </p>
-
-                    <div class="tags">
-                            <span th:each="t : ${post.tags}"
-                                  class="tag"
-                                  th:text="${t}">flutter</span>
-                    </div>
-                </div>
-            </article>
+                <div th:each="post : ${questions}" th:replace="fragments/questionlist :: questionlist(${post})"></div>
+            </section>
         </section>
 
         <!-- right-hand boxes -->

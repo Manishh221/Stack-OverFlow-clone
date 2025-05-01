@@ -1,7 +1,9 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.dto.QuestionResponseDto;
 import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.security.UserInfo;
+import io.mountblue.StackOverflow.services.UserService.QuestionService;
 import io.mountblue.StackOverflow.services.UserService.UserService;
 import io.mountblue.StackOverflow.services.UserService.UsersServiceDetails;
 import org.springframework.data.domain.Page;
@@ -22,10 +24,12 @@ import java.util.Objects;
 public class UserController {
     private UserService userService;
     private PasswordEncoder passwordEncoder;
+    private QuestionService questionService;
 
-    public UserController(UserService userService,PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService,PasswordEncoder passwordEncoder,QuestionService questionService) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
+        this.questionService=questionService;
     }
 
     @GetMapping("/signup")
@@ -75,8 +79,11 @@ public class UserController {
 
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
+        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
+        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent());
         if(userInfo.getUser() != null){
             model.addAttribute("user",userInfo.getUser());
+            model.addAttribute("questions",questions);
         }
         return "Home";
     }
