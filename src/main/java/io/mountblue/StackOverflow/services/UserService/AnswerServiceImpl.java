@@ -48,4 +48,13 @@ public class AnswerServiceImpl implements AnswerService {
             throw new RuntimeException("Error finding answer: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public void updateAnswer(Answer answer){
+        try {
+            answerRepository.save(answer);
+        }catch (Exception e){
+            throw new RuntimeException("Error updating answer: " + e.getMessage(), e);
+        }
+    }
 }

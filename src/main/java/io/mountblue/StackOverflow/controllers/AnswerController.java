@@ -84,4 +84,33 @@ public class AnswerController {
 //        redirecting back to question
         return "redirect:/question/" + questionId ;
     }
+
+    @PostMapping("answer/update/{id}")
+    public String updateAnswer(@PathVariable Long answerId, @Valid @ModelAttribute("answer") Answer answer,
+                               BindingResult bindingResult, Model model,
+                               @AuthenticationPrincipal UserInfo userClass){
+        if(userClass==null){
+            return "redirect:/login";
+        }
+//        getting answer
+        Answer existedAnswer = answerService.findAnswerById(answerId);
+//        checking if answer is empty
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("answer",answer);
+            return "/question/" + answer.getQuestion().getId();
+        }
+//        authorization
+        if((userClass.getUser().getEmail()  != existedAnswer.getUser().getEmail()) || !userClass.getUser().getRole().equals("ADMIN")){
+            return "redirect:/login";
+        }
+//        updating  Answer
+        try {
+            answerService.updateAnswer(answer);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error saving answer: " + e.getMessage());
+            return "redirect:/question/" + existedAnswer.getQuestion().getId();
+        }
+
+        return "redirect:/question/" + existedAnswer.getQuestion().getId();
+    }
 }

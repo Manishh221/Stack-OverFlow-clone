@@ -10,4 +10,6 @@ public interface AnswerService {
     void deleteAnswer(Long answerId);
 
     Answer findAnswerById(Long answerId);
+
+    void updateAnswer(Answer answer);
 }
