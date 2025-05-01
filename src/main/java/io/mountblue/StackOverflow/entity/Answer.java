@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,6 @@ public class Answer {
     private List<AnswerVote> answerVoteList = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer",cascade = CascadeType.ALL,orphanRemoval = true)
-//    comment entity to do
     private List<Comment> comments = new ArrayList<>();
 
     @CreationTimestamp
