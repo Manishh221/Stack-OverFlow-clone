@@ -13,4 +13,5 @@ public interface QuestionService {
     Question updateQuestion (Question question, List<String> tagName);
     Question findQuestionById (Long id);
     Page<Question> findAllQuestions(int pageNumber);
+
 }

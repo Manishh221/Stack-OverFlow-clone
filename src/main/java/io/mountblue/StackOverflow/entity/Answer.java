@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -16,5 +18,6 @@ public class Answer {
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private Users user;
 
-
+    @OneToMany(mappedBy = "answer",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<AnswerVote> answerVoteList;
 }

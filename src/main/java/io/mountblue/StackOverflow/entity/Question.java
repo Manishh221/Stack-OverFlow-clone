@@ -64,6 +64,17 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuestionTag> questionTags;
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionVote> questionVotes;
+
+    public List<QuestionVote> getQuestionVotes() {
+        return questionVotes;
+    }
+
+    public void setQuestionVotes(List<QuestionVote> questionVotes) {
+        this.questionVotes = questionVotes;
+    }
+
     public Long getId() {
         return id;
     }
