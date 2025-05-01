@@ -1,5 +1,6 @@
 package io.mountblue.StackOverflow.services.UserService;
 
+import io.mountblue.StackOverflow.dto.QuestionResponseDto;
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.QuestionTag;
 import io.mountblue.StackOverflow.entity.Tag;
@@ -17,7 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -117,11 +120,44 @@ public class QuestionServiceImpl implements QuestionService{
        }
 
 //--------------------------find all the questions by page number------------------------------------------
-    @Override
-    public Page<Question> findAllQuestions(int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("updatedAt").descending());
+@Override
+public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
+    Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("updatedAt").descending());
+    Page<Question> questionPage = questionRepository.findAll(pageable);
 
-        return questionRepository.findAll(pageable);
+    return questionPage.map(this::getAllQUestionData);
+}
+
+    public QuestionResponseDto getAllQUestionData(Question question) {
+        List<QuestionTag> questionTag = questionTagRepository.findByQuestionId(question.getId());
+        List<String> tags = new ArrayList<>();
+        for (QuestionTag questionTag1 : questionTag) {
+            tags.add(questionTag1.getTag().getTagName());
+        }
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(question.getUpdatedAt(), now);
+        long minutes = duration.toMinutes();
+        String timeAgo;
+
+        if (minutes < 1) {
+            timeAgo = "just now";
+        } else if (minutes < 60) {
+            timeAgo = minutes + " minute(s) ago";
+        } else if (minutes < 1440) {
+            timeAgo = (minutes / 60) + " hour(s) ago";
+        } else {
+            timeAgo = (minutes / 1440) + " day(s) ago";
+        }
+        QuestionResponseDto questionResponseDto = new QuestionResponseDto();
+        questionResponseDto.setTitle(question.getTitle());
+        questionResponseDto.setDescription(question.getDescription());
+        questionResponseDto.setVotes(question.getUpvote() - question.getDownvote());
+        questionResponseDto.setAuthor(question.getUser().getUsername());
+        questionResponseDto.setTags(tags);
+        questionResponseDto.setAnswers(question.getAnswerList().size());
+        questionResponseDto.setTimeAgo(timeAgo);
+
+        return questionResponseDto;
     }
 
 
