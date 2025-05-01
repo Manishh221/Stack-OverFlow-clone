@@ -1,5 +1,6 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.dto.QuestionResponseDto;
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.Tag;
 import io.mountblue.StackOverflow.services.UserService.QuestionService;
@@ -30,7 +31,7 @@ public class QuestionController {
 //    --------------------------get all Questions-----------------------------------------------
     @GetMapping("/Show-all-questions/{page-number}")
     public String showAllQuestions (@PathVariable("page-number") int pageNumber, Model model) {
-        Page<Question> allQuestions = questionService.findAllQuestions(pageNumber);
+        Page<QuestionResponseDto> allQuestions = questionService.findAllQuestions(pageNumber);
 
         model.addAttribute("allQuestions", allQuestions);
 
