@@ -34,6 +34,13 @@ public class AnswerController {
     public String createAnswer(@PathVariable Long questionId, @Valid @ModelAttribute("answer") Answer answer,
                                BindingResult bindingResult, Model model,
                                @AuthenticationPrincipal UserInfo userClass){
+        if (bindingResult.hasErrors()) {
+            Question question = questionService.findQuestionById(questionId);
+            model.addAttribute("question", question);
+            model.addAttribute("answer",answer);
+            return "redirect:/question/" + questionId;
+        }
+
 //        checking user logged in
         if(userClass==null){
             return "redirect:/login";
@@ -43,12 +50,6 @@ public class AnswerController {
         }
 
 
-        if (bindingResult.hasErrors()) {
-            Question question = questionService.findQuestionById(questionId);
-            model.addAttribute("question", question);
-            model.addAttribute("answer",answer);
-            return "redirect:/question/" + questionId;
-        }
 //        saving Answer
         try {
             answerService.saveAnswer(answer, questionId, userClass);

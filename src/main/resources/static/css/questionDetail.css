@@ -206,3 +206,16 @@ body {
                                             white-space: normal;
                                              word-wrap: break-word;
                                         }
+
+                                        #comment{
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:space-between;
+                                        }
+                                        #comment-content{
+                                        margin:0px;
+                                            padding:1rem 0px 0px 5em;
+                                        }
+                                        #edit-form-button{
+                                            float:right;
+                                        }
