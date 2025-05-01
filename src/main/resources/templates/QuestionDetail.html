@@ -8,46 +8,68 @@
 </head>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-  // Toggle comment form
-  document.querySelectorAll('.toggle-comment-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const id = button.getAttribute('data-answer-id');
-      const form = document.getElementById('comment-form-' + id);
-      if (form) form.style.display = 'block';
+    // Toggle comment form
+    document.querySelectorAll('.toggle-comment-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const id = button.getAttribute('data-answer-id');
+        const form = document.getElementById('comment-form' + id);
+        if (form) {
+          form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+        }
+      });
+    });
+
+    // Toggle update comment form
+    document.querySelectorAll('.toggle-update-comment-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const commentId = button.getAttribute('data-comment-id');
+        const form = document.getElementById('update-comment-form-' + commentId);
+        if (form) {
+          form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+        }
+      });
+    });
+
+    // Cancel update comment
+    document.querySelectorAll('.cancel-update-btn').forEach(button => {
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        const form = button.closest('.update-comment-form');
+        if (form) form.style.display = 'none';
+      });
+    });
+
+    // Cancel comment input
+    document.querySelectorAll('.cancel-comment-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const form = button.closest('.comment-input');
+        if (form) form.style.display = 'none';
+      });
+    });
+
+    // 🔧 Toggle edit form
+    document.querySelectorAll('.toggle-edit-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const id = button.getAttribute('data-answer-id');
+        const form = document.getElementById('edit-form-' + id);
+        if (form) {
+          form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+        }
+      });
+    });
+
+    // 🔧 Cancel edit form
+    document.querySelectorAll('.cancel-edit-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const form = button.closest('.edit-form');
+        if (form) {
+          form.style.display = 'none';
+        }
+      });
     });
   });
-
-  // Toggle update comment form
-  document.querySelectorAll('.toggle-update-comment-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const commentId = button.getAttribute('data-comment-id');
-      const form = document.getElementById('update-comment-form-' + commentId);
-      if (form) {
-        // Toggle visibility of the form
-        form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
-      }
-    });
-  });
-
-  // Cancel update comment
-  document.querySelectorAll('.cancel-update-btn').forEach(button => {
-    button.addEventListener('click', function (e) {
-      e.preventDefault();
-      const form = button.closest('.update-comment-form');
-      if (form) form.style.display = 'none';
-    });
-  });
-
-  // Cancel comment input
-  document.querySelectorAll('.cancel-comment-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const form = button.closest('.comment-input');
-      if (form) form.style.display = 'none';
-    });
-  });
-});
-
 </script>
+
 
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -89,60 +111,70 @@
           <button type="submit">Delete</button>
         </form>
 
-        <!-- Edit Form (Initially Hidden) -->
-        <div class="edit-form" th:attr="id='edit-form-' + ${ans.id}" style="display: none;">
-          <form th:action="@{'/answer/update/' + ${ans.id}}" method="post">
-            <textarea style="width:80%; margin:2em; height:fit-content;" name="updatedContent" th:text="${ans.content}" required></textarea>
-            <button type="submit">Update</button>
-            <button type="button" class="cancel-edit-btn">Cancel</button>
-          </form>
-        </div>
         <!-- Add Comment Button -->
         <button type="button" class="toggle-comment-btn"
                 th:attr="data-answer-id=${ans.id}">Add Comment</button>
 
+        <!-- Edit Form (Initially Hidden) -->
+        <div class="edit-form" th:attr="id='edit-form-' + ${ans.id}" style="display: none;">
+          <form th:action="@{'/answer/update/' + ${ans.id}}" method="post">
+            <textarea style="width:80%; margin:2em; height:fit-content;" name="updatedContent" th:text="${ans.content}" required></textarea>
+            <div id="edit-form-btn" style="text-align: right; margin-bottom:1rem;">
+              <button type="submit">Update</button>
+              <button type="button" class="cancel-edit-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
         <!-- Comment Input Box (Initially hidden) -->
-        <div class="comment-input" th:attr="id='comment-form-' + ${ans.id}" style="display: none;">
+        <div class="comment-input" th:attr="id='comment-form' + ${ans.id}" style="display: none;">
           <form th:action="@{'/answers/' + ${ans.id} + '/comment/create'}" method="post">
             <textarea style="width:80%; margin:2em; height:fit-content;" name="commentText" placeholder="Add your comment..." required ></textarea>
-            <button type="submit">Submit</button>
-            <button type="button" class="cancel-comment-btn">Cancel</button>
+           <div style="text-align: right; margin-bottom:1rem;">
+             <button type="submit">Submit</button>
+             <button type="button" class="cancel-comment-btn">Cancel</button>
+           </div>
           </form>
         </div>
 
         <!-- Display Comments -->
         <div class="comments" th:if="${ans.comments != null}">
+
           <div th:each="comment : ${ans.comments}">
-            <p>
-              <strong th:text="${comment.name}">User</strong>:
-              <span th:text="${comment.content}">Comment text</span>
-            </p>
+            <div id="comment">
+              <p id="comment-content">
+                <strong th:text="${comment.name}">User</strong>:
+                <span th:text="${comment.content}">Comment text</span>
+              </p>
+              <!--            comment buttons-->
+              <div>
+                <small th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy hh:mm')}"></small>
+                <!-- Update Comment Button -->
+                <button type="button" class="toggle-update-comment-btn"
+                        th:attr="data-comment-id=${comment.id}">
+                  Update
+                </button>
+                <!-- Delete Comment Button -->
+                <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/delete'}" method="post" style="display: inline;">
 
-            <!-- Update Comment Button -->
-            <button type="button" class="toggle-update-comment-btn"
-                    th:attr="data-comment-id=${comment.id}">
-              Update
-            </button>
-
+                  <button type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
             <!-- Update Comment Form (Initially hidden) -->
             <div class="update-comment-form" th:attr="id='update-comment-form-' + ${comment.id}" style="display: none;">
               <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/update'}" method="post">
                 <textarea style="width:80%; margin:2em; height:fit-content;" name="updatedComment" required th:text="${comment.content}"></textarea>
-                <button type="submit">Save</button>
-                <button type="button" class="cancel-update-btn">Cancel</button>
+                <div style="text-align: right; margin-bottom:1rem;">
+                  <button type="submit">Save</button>
+                  <button type="button" class="cancel-update-btn">Cancel</button>
+                </div>
               </form>
             </div>
-
-            <!-- Delete Comment Button -->
-            <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/delete'}" method="post" style="display: inline;">
-              <button type="submit">Delete</button>
-            </form>
 
             <hr />
           </div>
         </div>
-
-
 
         <div class="footer">
           <div class="user">
