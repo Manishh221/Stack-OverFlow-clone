@@ -2,11 +2,10 @@ package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.Tag;
-import io.mountblue.StackOverflow.services.UserService.QuestionService;
-import io.mountblue.StackOverflow.services.UserService.TagService;
+import io.mountblue.StackOverflow.services.QuestionService;
+import io.mountblue.StackOverflow.services.TagService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

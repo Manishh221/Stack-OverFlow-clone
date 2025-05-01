@@ -1,10 +1,9 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.entity.Answer;
-import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.security.UserInfo;
-import io.mountblue.StackOverflow.services.UserService.AnswerService;
-import io.mountblue.StackOverflow.services.UserService.QuestionService;
+import io.mountblue.StackOverflow.services.AnswerService;
+import io.mountblue.StackOverflow.services.QuestionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
