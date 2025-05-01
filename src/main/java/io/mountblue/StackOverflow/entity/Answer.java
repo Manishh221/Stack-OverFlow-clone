@@ -16,4 +16,5 @@ public class Answer {
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private Users user;
 
+
 }
