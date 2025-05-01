@@ -51,16 +51,16 @@
 
             <ul class="answer-list">
                 <li class="answer-item" th:each="answer : ${user.answers}">
-                    <span class="vote-count" th:text="${answer.upvote - answer.downvote} + ' votes'"></span>
+<!--                    <span class="vote-count" th:text="${answer.upvote - answer.downvote} + ' votes'"></span>-->
 
                     <div class="question-section">
                         <div class="question-link">
                             In:
-                            <a th:href="@{'/questions/' + ${answer.question.id}}"
+                            <a th:href="@{'/question/' + ${answer.question.id}}"
                                th:text="${answer.question.title}"></a>
                         </div>
 
-                        <div class="answer-content" th:text="${answer.description}">
+                        <div class="answer-content" th:text="${answer.content}">
                             <!-- Answer text here -->
                         </div>
 
@@ -68,8 +68,8 @@
                             <span class="answer-tags">
                                 <a class="tag"
                                    th:each="qt : ${answer.question.questionTags}"
-                                   th:text="${qt.tag.name}"
-                                   th:href="@{'/tags/' + ${qt.tag.id}}"></a>
+                                   th:text="${qt.tag.tagName}"
+                                   th:href="@{'/tags/' + ${qt.tag.tagId}}"></a>
                             </span>
                             <span th:text="'Answered ' + ${#temporals.format(answer.createdAt, 'dd MMM yyyy')}"></span>
                         </div>

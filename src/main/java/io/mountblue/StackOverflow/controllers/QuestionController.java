@@ -1,5 +1,6 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.Tag;
 import io.mountblue.StackOverflow.services.QuestionService;
@@ -119,6 +120,7 @@ public class QuestionController {
     public String showQuestion(@PathVariable Long id,Model model){
         Question question = questionService.findQuestionById(id);
         model.addAttribute("question",question);
+        model.addAttribute("answer",new Answer());
         return "QuestionDetail";
     }
 }
