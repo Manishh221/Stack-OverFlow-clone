@@ -1,0 +1,23 @@
+
+<nav class="navbar" th:fragment="header">
+  <div class="navbar-brand">
+    <img src="https://stackoverflow.design/assets/img/logos/so/logo-stackoverflow.svg" alt="Stack Overflow">
+  </div>
+
+  <div class="navbar-search">
+    <form th:action="@{/search}" method="get">
+      <input type="text" name="query" placeholder="Search..." />
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="navbar-links">
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/login}">Login</a>
+    <form th:action="@{/logout}" method="post">
+      <button class="logoutBtn" type="submit">Logout</button>
+    </form>
+    <a th:href="@{/signup}">SignUp</a>
+    <a th:if="${user != null}" th:href="@{'/user/' + ${user.id} + '?profiletab=profile'}">Profile</a>
+  </div>
+</nav>

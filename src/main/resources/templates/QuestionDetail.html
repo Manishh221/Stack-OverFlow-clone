@@ -1,0 +1,378 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--  <link rel="stylesheet" th:href="@{/css/header.css}" />-->
+<!--  <link rel="stylesheet" th:href="@{/css/questionDetail.css}" />-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="fragments/header :: header"></div>-->
+<!--<div class="detail-cont">-->
+
+<!--<div class="question-container">-->
+<!--<div class="question-box">-->
+<!--  <h2>Is Number("NaN") = NaN because js recognizes "NaN" as a value of type number or because its a string and not a number?</h2>-->
+<!--  <div class="meta">Asked today • Modified today</div>-->
+<!--  <hr>-->
+<!--  <p>There are now new Xades forms, see ETSI EN 319 132-1 V1.3.1 (2024-07). The library doesn't seem to support them. Will the library be expanded to include these new forms?</p>-->
+
+<!--  <div class="tags">-->
+<!--    <span>java</span>-->
+<!--    <span>xml</span>-->
+<!--    <span>digital-signature</span>-->
+<!--    <span>xades4j</span>-->
+<!--  </div>-->
+
+<!--<div class="comment-box">-->
+<!--  <strong>asked 15 mins ago</strong>-->
+<!--  <a href="#">Eisberg</a>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="answer-box">-->
+<!--  <h3>1 Answer</h3>-->
+
+<!--  <p>GPT’s claim that <code>Number("NaN")</code> returns NaN because "NaN" is a string and not a number is misleading.</p>-->
+
+<!--  <p>"NaN" is indeed a string, but JavaScript explicitly recognises it as a representation of the NaN value, just as it recognizes "Infinity" for Infinity.</p>-->
+
+<!--  <p>The string "NaN" is treated as a valid input for producing the NaN number value, unlike arbitrary strings like "potato".</p>-->
+
+<!--  <p>This behavior is defined in the ECMAScript specification – ToNumber operation and the Number() function’s parsing rules.</p>-->
+
+
+<!--  <div class="footer">-->
+<!--    <div class="user">-->
+<!--      <div class="user-info">-->
+<!--        <a href="#">mplungjan</a><br>-->
+<!--        <span>179k ● 28 ● 182 ● 240</span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<h2>Your Answer</h2>-->
+<!--<form method="post" th:action="@{/submitAnswer}">-->
+<!--  <textarea name="answerText" placeholder="Write your answer here..."></textarea>-->
+
+<!--  <div class="form-section">-->
+<!--    &lt;!&ndash; Guest Post &ndash;&gt;-->
+<!--    <div class="form-box">-->
+<!--      <h3>Post as a guest</h3>-->
+<!--      <label for="guestName">Name</label>-->
+<!--      <input type="text" id="guestName" name="guestName" placeholder="Name" required>-->
+<!--      <label for="guestEmail">Email</label>-->
+<!--      <input type="email" id="guestEmail" name="guestEmail" placeholder="Email (not shown)" required>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <p>By clicking “Post Your Answer”, you agree to our-->
+<!--    <a href="/terms">terms of service</a> and-->
+<!--    acknowledge you have read our <a href="/privacy">privacy policy</a>.-->
+<!--  </p>-->
+<!--  <button class="postbtn" type="submit">Post Your Answer</button>-->
+<!--</form>-->
+
+<!--<div class="form-section" style="margin-top: 2em;">-->
+<!--  &lt;!&ndash; Ask Box &ndash;&gt;-->
+<!--  <div class="ask-box form-box">-->
+<!--    <h4>Start asking to get answers</h4>-->
+<!--    <p>Find the answer to your question by asking.</p>-->
+<!--    <button class="postbtn" type="button">Ask question</button>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Related Tags &ndash;&gt;-->
+<!--  <div class="related form-box">-->
+<!--    <h4>Explore related questions</h4>-->
+<!--    <div class="tags">-->
+<!--      <span>java</span>-->
+<!--      <span>xml</span>-->
+<!--      <span>digital-signature</span>-->
+<!--      <span>xades4j</span>-->
+<!--    </div>-->
+<!--    <p>See similar questions with these tags.</p>-->
+<!--  </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--  <div class="sidebar">-->
+<!--  <div class="sidebar-card">-->
+<!--    <div class="sidebar-section">-->
+<!--      <h4>The Overflow Blog</h4>-->
+<!--      <div class="sidebar-item">-->
+<!--        <i>✏️</i>-->
+<!--        <span>How self-supervised language revolutionized natural language processing and...</span>-->
+<!--      </div>-->
+<!--      <div class="sidebar-item">-->
+<!--        <i>✏️</i>-->
+<!--        <span>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="divider"></div>-->
+
+<!--    <div class="sidebar-section">-->
+<!--      <h4>Featured on Meta</h4>-->
+<!--      <div class="sidebar-item">-->
+<!--        <i>💬</i>-->
+<!--        <span>Updates to advertising guidelines</span>-->
+<!--      </div>-->
+<!--      <div class="sidebar-item">-->
+<!--        <i>💬</i>-->
+<!--        <span>Evolving comments: An experiment to encourage engagement and follow-up questions</span>-->
+<!--      </div>-->
+<!--      <div class="sidebar-item">-->
+<!--        <i>📄</i>-->
+<!--        <span>Policy: Generative AI (e.g., ChatGPT) is banned</span>-->
+<!--      </div>-->
+<!--      <div class="sidebar-item">-->
+<!--        <i>📄</i>-->
+<!--        <span>Discussions learnings and potential next steps</span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="related-section">-->
+<!--    <div class="related-title">Related</div>-->
+
+<!--    <div class="related-item">-->
+<!--      <div class="vote-box">719</div>-->
+<!--      <a href="#" class="related-link">Programmatically Lighten or Darken a hex color (or rgb, and blend colors)</a>-->
+<!--    </div>-->
+
+<!--    <div class="related-item">-->
+<!--      <div class="vote-box">507</div>-->
+<!--      <a href="#" class="related-link">TypeScript Type 'string' is not assignable to type</a>-->
+<!--    </div>-->
+
+<!--    <div class="related-item">-->
+<!--      <div class="vote-box zero">0</div>-->
+<!--      <a href="#" class="related-link">Error &#45;&#45; Cast to Number failed for value "NaN" (type number) at path "totalOrders"</a>-->
+<!--    </div>-->
+
+<!--    <div class="related-item">-->
+<!--      <div class="vote-box">403</div>-->
+<!--      <a href="#" class="related-link">How to find what code is run by a button or element in Chrome using Developer Tools</a>-->
+<!--    </div>-->
+
+<!--    <div class="related-item">-->
+<!--      <div class="vote-box">208</div>-->
+<!--      <a href="#" class="related-link">TypeScript TS7015: Element implicitly has an 'any' type...</a>-->
+<!--    </div>-->
+
+<!--    <div class="related-item">-->
+<!--      <div class="vote-box">228</div>-->
+<!--      <a href="#" class="related-link">Why does typeof NaN return 'number'?</a>-->
+<!--    </div>-->
+
+<!--    <div class="related-item">-->
+<!--      <div class="vote-box">116</div>-->
+<!--      <a href="#" class="related-link">TypeScript isNaN only accepts a number</a>-->
+<!--    </div>-->
+
+<!--    <div class="related-item">-->
+<!--      <div class="vote-box">326</div>-->
+<!--      <a href="#" class="related-link">Ignore Typescript Errors "property does not exist on value of type"</a>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${question.title}">Question Detail</title>
+  <link rel="stylesheet" th:href="@{/css/header.css}" />
+  <link rel="stylesheet" th:href="@{/css/questionDetail.css}" />
+</head>
+<script>
+  function showCommentBox(index) {
+    const box = document.getElementById('commentBox' + index);
+    if (box) box.style.display = 'block';
+  }
+
+  function hideCommentBox(index) {
+    const box = document.getElementById('commentBox' + index);
+    if (box) box.style.display = 'none';
+  }
+</script>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="detail-cont">
+
+  <div class="question-container">
+    <div class="question-box">
+      <h2 class="qwrap" th:text="${question.title}">Question Title</h2>
+      <div class="meta">
+        Asked <span th:text="${@dateUtils.format(question.createdAt)}">today</span> •
+        Modified <span th:text="${@dateUtils.format(question.updatedAt)}">today</span>
+      </div>
+      <hr>
+      <p class="qwrap" th:text="${question.description}">Question description here</p>
+
+      <div class="tags">
+                <span th:each="tag : ${question.questionTags}"
+                      th:text="${tag.tag.tagName}">Tag</span>
+      </div>
+
+      <div class="comment-box">
+        <strong th:text="'asked ' + ${@dateUtils.format(question.createdAt)}"></strong>
+        <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}" th:text="${question.user.username}">User Name</a>
+      </div>
+    </div>
+
+    <div class="answer-box">
+      <h3 th:text="${#lists.size(question.answerList)} + ' Answer(s)'">1 Answer</h3>
+
+      <div th:each="answer : ${question.answerList}">
+        <p th:text="${answer.text}">Answer content here</p>
+
+        <div class="footer">
+          <div class="user">
+            <div class="user-info">
+              <a href="#" th:text="${answer.user.username}">Answer User</a><br>
+              <!-- Example placeholder for score if available -->
+              <span>179k ● 28 ● 182 ● 240</span>
+            </div>
+          </div>
+        </div>
+        <!-- Add Comment Button -->
+        <button type="button" class="add-comment-btn"
+                th:attr="onclick='showCommentBox(' + ${iterStat.index} + ')'">
+          Add Comment
+        </button>
+
+        <!-- Hidden Comment Input Section -->
+        <div class="comment-input-box" th:attr="id='commentBox' + ${iterStat.index}" style="display: none; margin-top: 10px;">
+          <input type="text" placeholder="Write a comment..." class="comment-input" style="width: 70%;">
+          <button type="button" class="submit-comment-btn">Submit</button>
+          <button type="button" onclick="hideCommentBox([[${iterStat.index}]])">Cancel</button>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <h2>Your Answer</h2>
+    <form method="post" th:action="@{/submitAnswer}">
+      <textarea name="answerText" placeholder="Write your answer here..."></textarea>
+
+      <div class="form-section">
+        <!-- Guest Post -->
+        <div class="form-box">
+          <h3>Post as a guest</h3>
+          <label for="guestName">Name</label>
+          <input type="text" id="guestName" name="guestName" placeholder="Name" required>
+          <label for="guestEmail">Email</label>
+          <input type="email" id="guestEmail" name="guestEmail" placeholder="Email (not shown)" required>
+        </div>
+      </div>
+
+      <p>By clicking “Post Your Answer”, you agree to our
+        <a href="/terms">terms of service</a> and
+        acknowledge you have read our <a href="/privacy">privacy policy</a>.
+      </p>
+      <button class="postbtn" type="submit">Post Your Answer</button>
+    </form>
+
+    <div class="form-section" style="margin-top: 2em;">
+      <!-- Ask Box -->
+      <div class="ask-box form-box">
+        <h4>Start asking to get answers</h4>
+        <p>Find the answer to your question by asking.</p>
+        <button class="postbtn" type="button">Ask question</button>
+      </div>
+
+      <!-- Related Tags -->
+      <div class="related form-box">
+        <h4>Explore related questions</h4>
+        <div class="tags">
+          <span th:each="tag : ${question.questionTags}" th:text="${tag.tag.tagName}">Related Tag</span>
+        </div>
+        <p>See similar questions with these tags.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-section">
+        <h4>The Overflow Blog</h4>
+        <div class="sidebar-item">
+          <i>✏️</i>
+          <span>How self-supervised language revolutionized natural language processing and...</span>
+        </div>
+        <div class="sidebar-item">
+          <i>✏️</i>
+          <span>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sidebar-section">
+        <h4>Featured on Meta</h4>
+        <div class="sidebar-item">
+          <i>💬</i>
+          <span>Updates to advertising guidelines</span>
+        </div>
+        <div class="sidebar-item">
+          <i>💬</i>
+          <span>Evolving comments: An experiment to encourage engagement and follow-up questions</span>
+        </div>
+        <div class="sidebar-item">
+          <i>📄</i>
+          <span>Policy: Generative AI (e.g., ChatGPT) is banned</span>
+        </div>
+        <div class="sidebar-item">
+          <i>📄</i>
+          <span>Discussions learnings and potential next steps</span>
+        </div>
+      </div>
+    </div>
+    <div class="related-section">
+      <div class="related-title">Related</div>
+
+      <div class="related-item">
+        <div class="vote-box">719</div>
+        <a href="#" class="related-link">Programmatically Lighten or Darken a hex color (or rgb, and blend colors)</a>
+      </div>
+
+      <div class="related-item">
+        <div class="vote-box">507</div>
+        <a href="#" class="related-link">TypeScript Type 'string' is not assignable to type</a>
+      </div>
+
+      <div class="related-item">
+        <div class="vote-box zero">0</div>
+        <a href="#" class="related-link">Error -- Cast to Number failed for value "NaN" (type number) at path "totalOrders"</a>
+      </div>
+
+      <div class="related-item">
+        <div class="vote-box">403</div>
+        <a href="#" class="related-link">How to find what code is run by a button or element in Chrome using Developer Tools</a>
+      </div>
+
+      <div class="related-item">
+        <div class="vote-box">208</div>
+        <a href="#" class="related-link">TypeScript TS7015: Element implicitly has an 'any' type...</a>
+      </div>
+
+      <div class="related-item">
+        <div class="vote-box">228</div>
+        <a href="#" class="related-link">Why does typeof NaN return 'number'?</a>
+      </div>
+
+      <div class="related-item">
+        <div class="vote-box">116</div>
+        <a href="#" class="related-link">TypeScript isNaN only accepts a number</a>
+      </div>
+
+      <div class="related-item">
+        <div class="vote-box">326</div>
+        <a href="#" class="related-link">Ignore Typescript Errors "property does not exist on value of type"</a>
+      </div>
+    </div>
+</div>
+</body>
+</html>

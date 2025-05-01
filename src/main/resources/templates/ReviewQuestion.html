@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Review Your Question</title>
+
+    <link rel="stylesheet" th:href="@{/css/createquestion.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+
+
+    <style>
+        .content-wrapper {
+            flex: 1;
+            display: grid;
+            grid-template-columns:1fr 300px;
+            gap: 32px;
+            padding: 40px 64px;
+            background: #f1f2f3;
+        }
+
+        .question-column {
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .help-column {
+            background: #f8f9f9;
+            border: 1px solid #e4e6e8;
+            border-radius: 6px;
+            padding: 24px;
+            height: max-content;
+        }
+    </style>
+</head>
+<body>
+
+<!-- nav -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="layout">
+    <div th:replace="fragments/Sidebar :: Sidebar"></div>
+
+    <main class="content-wrapper">
+
+        <!-- ================= MAIN CARD ================= -->
+        <section class="question-column" th:object="${question}">
+
+            <h1>Review your question</h1>
+            <p class="subtext" style="margin-top:-10px">
+                Check everything below. Click <strong>Edit</strong> to change anything,
+                or <strong>Post</strong> to publish.
+            </p>
+
+            <form method="post" th:action="@{/create-question}">
+
+                <!-- TITLE ------------------------------------------------ -->
+                <div th:classappend="${#fields.hasErrors('title')} ? 'has-error'">
+                    <label for="title">Title*</label>
+                    <div class="subtext">Be specific and imagine you’re asking a question to another person</div>
+                    <input id="title" readonly style="background:#fafafa;cursor:default"
+                           th:field="*{title}">
+                    <p class="error-msg"
+                       th:errors="*{title}"
+                       th:if="${#fields.hasErrors('title')}">invalid title</p>
+                </div>
+
+                <!-- DESCRIPTION ----------------------------------------- -->
+                <div th:classappend="${#fields.hasErrors('description')} ? 'has-error'">
+                    <label for="description">Description*</label>
+                    <div class="subtext">The body of your question contains details and results.</div>
+                    <textarea id="description" readonly style="background:#fafafa;cursor:default"
+                              th:field="*{description}"></textarea>
+                    <p class="error-msg"
+                       th:errors="*{description}"
+                       th:if="${#fields.hasErrors('description')}">invalid description</p>
+                </div>
+
+                <!-- TAGS ------------------------------------------------- -->
+                <label for="tagInput">Tags*</label>
+                <div class="subtext">Type to search or add (max&nbsp;5)</div>
+
+                <!-- data-init gets a CSV of previously-chosen tags -->
+                <div class="tag-box" id="tagBox"
+                     th:data-init="${#lists.isEmpty(selectedTags) ? '' :
+                                    #strings.arrayJoin(selectedTags, ',')}">
+                    <input autocomplete="off" id="tagInput" placeholder="start typing…">
+                </div>
+
+                <ul class="tag-menu hidden" id="tagMenu">
+                    <li class="item" th:each="t : ${allTags}" th:text="${t}">java</li>
+                </ul>
+
+                <input id="tagsHidden" name="tags" type="hidden">
+
+                <!-- ACTION BUTTONS -------------------------------------- -->
+                <div style="display:flex;gap:12px;margin-top:24px;">
+                    <a class="ask-btn" style="background:#e8f4ff;color:#0a95ff;border:1px solid #0a95ff"
+                       th:href="@{/ask-question}">
+                        Edit
+                    </a>
+                    <button class="ask-btn" th:disabled="${#fields.hasErrors()}"
+                            type="submit">
+                        Post my question
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ================= HELP COLUMN ================= -->
+        <aside class="help-column">
+            <div class="help-box">
+                <h2>Final checklist</h2>
+                <p>Please do a final review of your question.</p>
+                <ul style="font-size:13px;line-height:1.4;margin-left:16px;">
+                    <li>Is the title descriptive?</li>
+                    <li>Does the description include what you tried?</li>
+                    <li>Are error messages and code snippets included?</li>
+                </ul>
+            </div>
+        </aside>
+
+    </main>
+</div>
+
+<script th:inline="javascript">
+
+    (() => {
+        const MAX = 5;
+
+        const box = document.getElementById('tagBox');
+        const input = document.getElementById('tagInput');
+        const menu = document.getElementById('tagMenu');
+        const items = Array.from(menu.querySelectorAll('.item'));
+        const hidden = document.getElementById('tagsHidden');
+        let selected = (box.dataset.init || '')
+            .split(',')
+            .map(t => t.trim().toLowerCase())
+            .filter(Boolean);
+
+        const sync = () => hidden.value = selected.join(',');
+
+        const render = () => {
+            box.querySelectorAll('.tag-chip').forEach(c => c.remove());
+            selected.forEach(tag => {
+                const chip = document.createElement('span');
+                chip.className = 'tag-chip';
+                chip.textContent = tag;
+
+                const x = document.createElement('span');
+                x.className = 'x';
+                x.textContent = '×';
+                x.onclick = () => {
+                    selected = selected.filter(t => t !== tag);
+                    render();
+                };
+                chip.appendChild(x);
+
+                box.insertBefore(chip, input);
+            });
+            sync();
+        };
+
+        const add = tag => {
+            tag = tag.trim().toLowerCase();
+            if (!tag || selected.includes(tag) || selected.length >= MAX) return;
+            selected.push(tag);
+            render();
+        };
+
+        const filter = q => {
+            let first = null;
+            items.forEach(li => {
+                const show = li.textContent.includes(q) && !selected.includes(li.textContent);
+                li.style.display = show ? 'block' : 'none';
+                li.classList.remove('active');
+                if (show && !first) first = li;
+            });
+            first?.classList.add('active');
+            menu.classList.toggle('hidden', !q && !first);
+        };
+
+        /* -------- events ---------------------------------- */
+        input.addEventListener('input', () => filter(input.value.toLowerCase()));
+        input.addEventListener('keydown', e => {
+            if (['Enter', ','].includes(e.key)) {
+                e.preventDefault();
+                add(input.value);
+                input.value = '';
+                filter('');
+            }
+            if (e.key === 'ArrowDown') menu.querySelector('.active')?.focus();
+        });
+        items.forEach(li => li.addEventListener('mousedown', () => {
+            add(li.textContent);
+            input.value = '';
+            filter('');
+        }));
+        document.addEventListener('click', e => {
+            if (!box.contains(e.target) && !menu.contains(e.target))
+                menu.classList.add('hidden');
+        });
+
+        render();
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!--<div id="profile-desc" th:fragment="question">-->
+<!--    <div id="about">-->
+<!--        <h3><span>2 </span>Questions</h3>-->
+<!--        <div id="profile-about">-->
+<!--            <p>-->
+<!--                all question shows here-->
+<!--                <a href="">create a question </a>-->
+<!--            </p>-->
+<!--            <ul class="question-list">-->
+<!--                <li class="question-item">-->
+<!--                    <div class="question-top">-->
+<!--                        <span class="vote-count"><span></span>votes</span>-->
+<!--                        <span class="answer-count">1 answer</span>-->
+<!--                    </div>-->
+<!--                    <div class="question-title">-->
+<!--                        <a href="#">How to center a div using CSS Flexbox?</a>-->
+<!--                        <span class="question-meta">Asked 2 days ago</span>-->
+<!--                    </div>-->
+<!--                    <div class="question-tags">-->
+<!--                        <span class="tag">css</span>-->
+<!--                        <span class="tag">flexbox</span>-->
+<!--                        <span class="tag">html</span>-->
+<!--                    </div>-->
+<!--                </li>-->
+
+<!--                <li class="question-item">-->
+<!--                    <div class="question-top">-->
+<!--                        <span class="vote-count">5 votes</span>-->
+<!--                        <span class="answer-count">3 answers</span>-->
+<!--                    </div>-->
+<!--                    <div class="question-title">-->
+<!--                        <a href="#">What is the difference between let and var in JavaScript?</a>-->
+<!--                        <span class="question-meta">Asked 1 week ago</span>-->
+<!--                    </div>-->
+<!--                    <div class="question-tags">-->
+<!--                        <a href="#" class="tag">css</a>-->
+<!--                        <a href="#" class="tag">flexbox</a>-->
+<!--                        <a href="#" class="tag">html</a>-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--            </ul>-->
+
+
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+
+<div id="about" th:fragment="question(user)">
+    <h3><span th:text="${#lists.size(user.questions)}">0</span> Questions</h3>
+    <div id="profile-about">
+        <p>
+            All your questions are listed here.
+            <a href="/ask">Create a question</a>
+        </p>
+        <ul class="question-list">
+            <li class="question-item" th:each="question : ${user.questions}">
+                <div class="question-top">
+                    <span class="vote-count" th:text="${question.upvote - question.downvote} + ' votes'"></span>
+                    <span class="answer-count" th:text="${#lists.size(question.answerList)} + ' answers'"></span>
+                </div>
+                <div class="question-title">
+                    <a th:href="@{'/question/' + ${question.id}}" th:text="${question.title}"></a>
+                    <span class="question-meta"
+                          th:text="'Asked ' + ${#temporals.format(question.createdAt, 'dd MMM yyyy')}"></span>
+                </div>
+                <div class="question-tags">
+                    <span class="tag" th:each="qt : ${question.questionTags}"
+                          th:text="${qt.tag.tagName}"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+

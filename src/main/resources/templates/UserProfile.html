@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>User Profile</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/userProfile.css}">
+</head>
+<body>
+<!-- Header (no fragment, directly included) -->
+<div th:replace="~{fragments/header :: header(user=${user})}"></div>
+
+<div id="container">
+    <div id="hero">
+        <!-- sidebar -->
+<!--        <div id="sidebar">-->
+<!--            <ul>-->
+<!--                <li><a href="#">Home</a></li>-->
+<!--                <li><a href="#">Questions</a></li>-->
+<!--                <li><a href="#">Tags</a></li>-->
+<!--                <li><a href="#">Users</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+
+        <div id="main-content">
+
+            <div id="profilebox">
+                <div id="profile-data">
+                    <div id="profile-img"
+                         th:text="${#strings.toUpperCase(#strings.substring(user.username, 0, 1))}"></div>
+                    <div id="profile-title">
+                        <p id="profile-name" th:text="${user.username}"></p>
+                        <p id="about-login">
+                            <span th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy HH:mm')}"></span>
+                            <span th:if="${user.lastLoginAt != null}"
+                                  th:text="'Last seen: ' + ${#temporals.format(user.lastLoginAt, 'dd MMM yyyy HH:mm')}"></span>
+                        </p>
+                    </div>
+                </div>
+                <form id="profile-btn" th:action="@{/updateUser}" method="post">
+                    <button type="submit">Edit</button>
+                </form>
+            </div>
+
+            <div class="profile-tabs">
+                <a th:href="@{'/user/' + ${user.id} + '?profiletab=profile'}"
+                   th:classappend="${profiletab == 'profile'} ? 'active-tab' : ''"
+                   id="tab-profile">Profile</a>
+
+                <a th:href="@{'/user/' + ${user.id} + '?profiletab=activity'}"
+                   th:classappend="${profiletab == 'activity'} ? ' active-tab' : ''"
+                   id="tab-activity">Activity</a>
+            </div>
+
+                <div  th:if="${profiletab == 'profile'}">
+                    <div th:replace="~{fragments/profilestat :: profilestat(user=${user})}"></div>
+                </div>
+                <div th:if="${profiletab == 'activity'}">
+                    <div th:replace="~{fragments/activitystat :: activitystat(user=${user},  activitytab=${activitytab})}"></div>
+                </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
