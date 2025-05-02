@@ -2,8 +2,7 @@ package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.security.UserInfo;
-import io.mountblue.StackOverflow.services.UserService.UserService;
-import io.mountblue.StackOverflow.services.UserService.UsersServiceDetails;
+import io.mountblue.StackOverflow.services.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

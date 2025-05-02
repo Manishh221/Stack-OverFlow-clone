@@ -91,6 +91,7 @@ body {
                         .answer-box {
                             border-top: 1px solid #ddd;
                             padding-top: 1em;
+
                         }
                         .footer {
                             margin-top: 1.5em;
@@ -204,4 +205,17 @@ body {
                                             width:95%;
                                             white-space: normal;
                                              word-wrap: break-word;
+                                        }
+
+                                        #comment{
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:space-between;
+                                        }
+                                        #comment-content{
+                                        margin:0px;
+                                            padding:1rem 0px 0px 5em;
+                                        }
+                                        #edit-form-button{
+                                            float:right;
                                         }

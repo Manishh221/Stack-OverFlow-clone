@@ -50,8 +50,8 @@ public class Question {
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private Users user;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Answer> answerList;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answerList = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at")

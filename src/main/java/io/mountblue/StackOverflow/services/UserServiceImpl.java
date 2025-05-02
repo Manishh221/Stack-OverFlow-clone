@@ -1,11 +1,10 @@
-package io.mountblue.StackOverflow.services.UserService;
+package io.mountblue.StackOverflow.services;
 
 
 import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

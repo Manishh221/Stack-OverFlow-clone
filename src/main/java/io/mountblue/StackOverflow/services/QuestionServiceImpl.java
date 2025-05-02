@@ -1,4 +1,4 @@
-package io.mountblue.StackOverflow.services.UserService;
+package io.mountblue.StackOverflow.services;
 
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.QuestionTag;

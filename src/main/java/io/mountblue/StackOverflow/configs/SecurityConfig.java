@@ -1,6 +1,6 @@
 package io.mountblue.StackOverflow.configs;
 
-import io.mountblue.StackOverflow.services.UserService.UsersServiceDetails;
+import io.mountblue.StackOverflow.services.UsersServiceDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
