@@ -224,9 +224,8 @@ summary::after {
     gap: 4px;
     border: 1px solid #5993ff;
     border-radius: 4px;
-    padding: 6px;
-    min-height: 44px;
-    position: relative; /* So dropdown aligns with this box */
+    padding: 4px;
+    min-height: 38px;
 }
 
 .tag-box input {
@@ -234,43 +233,22 @@ summary::after {
     border: none;
     outline: none;
     font: inherit;
-    padding: 6px;
-    font-size: 14px;
+    padding: 4px;
 }
 
-/* Tag chip */
-.tag-chip {
-    display: inline-flex;
-    align-items: center;
-    background: #e5ecff;
-    border: 1px solid #b7c8ff;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 13px;
-}
-
-.tag-chip .x {
-    margin-left: 6px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* Tag dropdown menu */
+/* dropdown list */
 .tag-menu {
     list-style: none;
-    margin: 4px 0 0;
+    margin: 0;
     padding: 4px 0;
     border: 1px solid #d0d7e2;
-    background: #fff;
-    max-height: 160px;
+    border-top: none;
+    max-height: 180px;
     overflow-y: auto;
+    background: #fff;
     position: absolute;
-    top: 100%;
-    left: 0;
-    width: 300px; /* 👈 Set a fixed width here */
     z-index: 1000;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 40%;
 }
 
 .tag-menu.hidden {
@@ -278,14 +256,30 @@ summary::after {
 }
 
 .tag-menu .item {
-    padding: 6px 12px;
-    cursor: pointer;
-    font-size: 14px;
+    padding: 6px 10px;
+    cursor: pointer
 }
 
 .tag-menu .item:hover,
 .tag-menu .item.active {
-    background: #f3f6fb;
+    background: #f3f6fb
+}
+
+/* chip */
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    background: #e5ecff;
+    border: 1px solid #b7c8ff;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: .85rem;
+}
+
+.tag-chip .x {
+    margin-left: 4px;
+    cursor: pointer;
+    font-weight: 700;
 }
 
 
