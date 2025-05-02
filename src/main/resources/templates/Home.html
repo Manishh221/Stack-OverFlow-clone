@@ -4,88 +4,107 @@
     <meta charset="UTF-8">
     <title>Home Page</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
-    <!-- page-specific styles -->
     <link rel="stylesheet" th:href="@{/css/home.css}">
-    <!-- icon set for the sidebar -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 
 <div class="layout">
-
     <div th:replace="fragments/Sidebar :: Sidebar"></div>
 
     <main class="content-wrapper">
 
-        <section class="card welcome-card">
-            <h1>
-                Welcome to Stack Overflow,
-                <span th:text="${username}">Saikat Pattanayak</span>!
-            </h1>
-            <p>Find answers to your technical questions and help others answer theirs.</p>
-            <a class="btn" th:href="@{/ask-question}">Add Question</a>
+        <!-- Welcome Section with Cards -->
+        <section class="dashboard">
+            <div class="dashboard-header">
+                <div class="welcome-icon">👋</div>
+                <div>
+                    <h1>Welcome back, <span th:text="${username}">sk p</span></h1>
+                    <p class="subtitle">Find answers to your technical questions and help others answer theirs.</p>
+                </div>
+                <a href="/ask-question" class="ask-btn-outline">Ask Question</a>
+            </div>
+
+            <div class="dashboard-cards">
+                <!-- Reputation Card -->
+                <div class="card">
+                    <h3>Reputation</h3>
+                    <div class="rep-score">1</div>
+                    <div class="rep-graph"><div class="rep-line"></div></div>
+                    <p class="rep-text">
+                        Earn reputation by <a href="#">Asking</a>, <a href="#">Answering</a> & <a href="#">Editing</a>.
+                    </p>
+                </div>
+
+                <!-- Badge Progress -->
+                <div class="card">
+                    <h3>Badge progress</h3>
+                    <p>Take the tour to earn your first badge!</p>
+                    <a class="badge-btn" href="#">Get started here</a>
+                </div>
+
+                <!-- Watched Tags -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Watched tags</h3>
+                        <span class="gear">⚙️</span>
+                    </div>
+                    <p class="italic">You’re not watching any tags yet!</p>
+                    <a class="watch-btn" href="#">Customize your feed</a>
+                </div>
+            </div>
         </section>
 
-        <section class="post-list">
+        <!-- Posts Section -->
+        <section class="card right-box">
             <h2>Interesting posts for you</h2>
+            <p class="subtitle">Based on your viewing history and watched tags. <a href="#">Customize your feed</a></p>
 
-            <section class="post-list">
-                <h2>Interesting posts for you</h2>
+            <div th:each="post : ${questions.content}" class="post-container">
+                <div class="stats">
+                    <div><b th:text="${post.votes}">0</b> votes</div>
+                    <div><b th:text="${post.answers}">0</b> answers</div>
 
+                </div>
 
-            </section>
-        </section>
-
-        <!-- right-hand boxes -->
-        <aside class="right-column">
-
-            <div class="card right-box">
-                <div th:each="post : ${questions.content}">
-                    <div class="post-container">
-
-                        <div class="stats">
-                            <div><b th:text="${post.votes}">0</b> votes</div>
-                            <div><b th:text="${post.answers}">0</b> answers</div>
-                        </div>
-
-                        <div class="post-details">
-                            <a
-                                    class="post-title"
-                                    th:text="${post.title}">Sample Post Title</a>
-                            <div class="post-excerpt" th:text="${post.description}">
-                                This is a short excerpt from the question to give a quick overview...
-                            </div>
-                            <div class="tags">
-            <span class="tag"
-                  th:each="tag : ${post.tags}"
-                  th:text="${tag}">arrays</span>
-                            </div>
-                            <div class="post-meta">
-                                <span th:text="${post.author}">Zaver</span>
-                                asked
-                                <span th:text="${post.timeAgo}">12 mins ago</span>
-                            </div>
-                        </div>
+                <div class="post-details">
+                    <a class="post-title" th:text="${post.title}">Sample Post Title</a>
+                    <div class="post-excerpt" th:text="${post.description}">
+                        This is a short excerpt from the question to give a quick overview...
+                    </div>
+                    <div class="tags">
+                        <span class="tag" th:each="tag : ${post.tags}" th:text="${tag}">arrays</span>
+                    </div>
+                    <div class="post-meta">
+                        <span th:text="${post.author}">Doug418</span>
+                        asked <span th:text="${post.timeAgo}">2 mins ago</span>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Right Aside Section -->
+        <aside class="right-column">
+            <div class="card right-box">
+                <h3>The Overflow Blog</h3>
+                <ul>
+                    <li>How self-supervised language revolutionized natural language processing and...</li>
+                    <li>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</li>
+                </ul>
             </div>
 
             <div class="card right-box">
                 <h3>Featured on Meta</h3>
                 <ul>
                     <li>Updates to advertising guidelines</li>
-                    <li>Evolving comments: an experiment in follow-up questions</li>
+                    <li>Evolving comments: An experiment in follow-up questions</li>
                     <li>Policy: Generative AI (e.g. ChatGPT) is banned</li>
-                    <li>What we learned about follow-up questions …</li>
+                    <li>2025 Developer Survey: Call for Feedback</li>
                 </ul>
             </div>
-
         </aside>
     </main>
-
 </div>
-
 </body>
 </html>
