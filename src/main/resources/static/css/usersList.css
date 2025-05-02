@@ -118,4 +118,36 @@
         gap:3rem;
         align-items:center;
     }
+    .tags-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px;
+    }
+
+    .tag-card {
+      border: 1px solid #d6d9dc;
+      border-radius: 6px;
+      padding: 16px;
+      background-color: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .tag-header .tag-name {
+      display: inline-block;
+      background-color: #e1ecf4;
+      color: #39739d;
+      font-weight: bold;
+      padding: 4px 6px;
+      border-radius: 3px;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .tag-stats {
+      font-size: 12px;
+      color: #6a737c;
+      margin-top: 10px;
+    }
+
 
