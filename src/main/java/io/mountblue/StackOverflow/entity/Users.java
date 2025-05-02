@@ -52,6 +52,25 @@ public class Users {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", reputation=" + reputation +
+                ", role='" + role + '\'' +
+                ", title='" + title + '\'' +
+                ", about='" + about + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", lastLoginAt=" + lastLoginAt +
+                ", answers=" + answers +
+                ", questions=" + questions +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

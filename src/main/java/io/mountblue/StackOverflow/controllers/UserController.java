@@ -61,6 +61,7 @@ public class UserController {
             Users loggedInUser = userService.loadUserByEmail(email);
             if((Objects.equals(loggedInUser.getRole(), "ADMIN")) || (Objects.equals(loggedInUser.getEmail(), user.getEmail()))){
                 user.setUpdatedAt(LocalDateTime.now());
+                System.out.println("Tghe user is "+user);
                 userService.createNewUser(user);
 
             }
