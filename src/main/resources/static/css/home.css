@@ -225,6 +225,19 @@ body {
     width: auto;
 }
 
+.rep-card{
+    background: #fff;
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 16px;
+    flex: 1;
+    max-width: 260px;
+}
+
+.welcome{
+    display:flex;
+}
+
 .card h3 {
     margin-bottom: 8px;
     font-size: 15px;

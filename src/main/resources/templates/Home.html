@@ -18,17 +18,19 @@
         <!-- Welcome Section with Cards -->
         <section class="dashboard">
             <div class="dashboard-header">
+                <div class="welcome">
                 <div class="welcome-icon">👋</div>
                 <div>
                     <h1>Welcome back, <span th:text="${username}">sk p</span></h1>
                     <p class="subtitle">Find answers to your technical questions and help others answer theirs.</p>
+                </div>
                 </div>
                 <a href="/ask-question" class="ask-btn-outline">Ask Question</a>
             </div>
 
             <div class="dashboard-cards">
                 <!-- Reputation Card -->
-                <div class="card">
+                <div class="rep-card">
                     <h3>Reputation</h3>
                     <div class="rep-score">1</div>
                     <div class="rep-graph"><div class="rep-line"></div></div>
@@ -37,22 +39,6 @@
                     </p>
                 </div>
 
-                <!-- Badge Progress -->
-                <div class="card">
-                    <h3>Badge progress</h3>
-                    <p>Take the tour to earn your first badge!</p>
-                    <a class="badge-btn" href="#">Get started here</a>
-                </div>
-
-                <!-- Watched Tags -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Watched tags</h3>
-                        <span class="gear">⚙️</span>
-                    </div>
-                    <p class="italic">You’re not watching any tags yet!</p>
-                    <a class="watch-btn" href="#">Customize your feed</a>
-                </div>
             </div>
         </section>
 
