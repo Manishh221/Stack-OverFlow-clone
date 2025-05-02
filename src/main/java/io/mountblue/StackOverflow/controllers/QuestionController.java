@@ -68,7 +68,6 @@ public class QuestionController {
             @RequestParam(value = "tags", required = false) String tagsCsv,
             Model model) {
 
-        // If there are field errors, bounce back to Ask page so the user can fix them
         if (br.hasErrors()) {
             model.addAttribute("allTags", allTags());
             return "CreateQuestion";
@@ -90,9 +89,22 @@ public class QuestionController {
 
 //    --------------------------storing the Question------------------------------------------
     @PostMapping("/create-question")
-    public String createQuestion(@ModelAttribute("question")Question question,
+    public String createQuestion(@Valid @ModelAttribute("question")Question question,
+                                 BindingResult br,
                                  @RequestParam(value = "tags", required = false)
-                                 List<String> tagNames) {
+                                 String tagsCsv,Model model) {
+        List<String> tagNames = (tagsCsv == null || tagsCsv.isBlank())
+                ? List.of()
+                : Arrays.stream(tagsCsv.split(",")).map(String::trim).filter(t -> !t.isEmpty()).toList();
+
+        if (br.hasErrors() || tagNames.isEmpty()) {
+            model.addAttribute("allTags", allTags());
+            if (tagNames.isEmpty()) {
+                model.addAttribute("tagsError", "At least one tag is required.");
+            }
+            return "CreateQuestion";  // same form view
+        }
+
         questionService.createNewQuestion(question, tagNames);
         return "redirect:/";
     }

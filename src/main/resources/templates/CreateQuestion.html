@@ -44,26 +44,24 @@
 
             <h1>Ask a public question</h1>
 
-            <form th:action="@{/review}" th:object="${question}" method="post">
+            <form th:action="@{/create-question}" th:object="${question}" method="post">
                 <!-- TITLE --------------------------------------------------- -->
-                <div>
+                <div th:classappend="${#fields.hasErrors('title')} ? 'has-error'" class="question-fields">
                     <label for="title">Title*</label>
                     <div class="subtext">Be specific and imagine you’re asking a question to another person</div>
-                    <input id="title" type="text" th:field="*{title}"
-                           placeholder="e.g. How do I find the index of an element in a list?"/>
+                    <input id="title" type="text" th:field="*{title}" placeholder="e.g. How do I find the index of an element in a list?"/>
+                    <p class="error-msg" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
                 </div>
 
                 <!-- DESCRIPTION -------------------------------------------- -->
-                <div>
+                <div th:classappend="${#fields.hasErrors('description')} ? 'has-error'" class="question-fields">
                     <label for="description">Description*</label>
                     <div class="subtext">Include all the information someone would need to answer your question</div>
                     <textarea id="description" th:field="*{description}"></textarea>
-                    <div class="code-block-tip">
-                        ```code``` &nbsp;&nbsp; **bold** &nbsp;&nbsp; *italic* &nbsp;&nbsp; &gt;quote
-                    </div>
+                    <p class="error-msg" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
                 </div>
 
-                <!-- TAGS ----------------------------------------------------- -->
+                <div class="question-fields">
                 <label for="tagInput">Tags*</label>
                 <div class="subtext">Type to search or add (max&nbsp;5)</div>
 
@@ -76,13 +74,13 @@
                 </ul>
 
                 <input type="hidden" id="tagsHidden" name="tags">
+                <p class="error-msg" th:if="${tagsError}" th:text="${tagsError}"></p>
                 <p th:field="${tags}"></p>
-
-                <button class="ask-btn" type="submit">Review your question</button>
+                </div>
+                <button class="ask-btn" type="submit">Submit your question</button>
             </form>
         </section>
 
-        <!-- ========== HELP SECTION ========== -->
         <aside class="help-column">
             <div class="help-box">
                 <h2>Step&nbsp;1: Draft your question</h2>

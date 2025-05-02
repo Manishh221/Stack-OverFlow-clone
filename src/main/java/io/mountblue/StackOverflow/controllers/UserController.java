@@ -78,13 +78,15 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
+    public String home(Model model){
         Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
-        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent());
-        if(userInfo.getUser() != null){
-            model.addAttribute("user",userInfo.getUser());
-            model.addAttribute("questions",questions);
-        }
+        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent().get(0).getVotes());
+//        model.addAttribute("user",userInfo.getUser());
+//        @AuthenticationPrincipal UserInfo userInfo ,
+        model.addAttribute("questions",questions);
+//        if(userInfo.getUser() != null){
+//
+//        }
         return "Home";
     }
 

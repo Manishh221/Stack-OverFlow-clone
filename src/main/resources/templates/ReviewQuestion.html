@@ -47,7 +47,6 @@
 
     <main class="content-wrapper">
 
-        <!-- ================= MAIN CARD ================= -->
         <section class="question-column" th:object="${question}">
 
             <h1>Review your question</h1>
@@ -58,7 +57,6 @@
 
             <form method="post" th:action="@{/create-question}">
 
-                <!-- TITLE ------------------------------------------------ -->
                 <div th:classappend="${#fields.hasErrors('title')} ? 'has-error'">
                     <label for="title">Title*</label>
                     <div class="subtext">Be specific and imagine you’re asking a question to another person</div>
@@ -69,7 +67,6 @@
                        th:if="${#fields.hasErrors('title')}">invalid title</p>
                 </div>
 
-                <!-- DESCRIPTION ----------------------------------------- -->
                 <div th:classappend="${#fields.hasErrors('description')} ? 'has-error'">
                     <label for="description">Description*</label>
                     <div class="subtext">The body of your question contains details and results.</div>
@@ -80,11 +77,9 @@
                        th:if="${#fields.hasErrors('description')}">invalid description</p>
                 </div>
 
-                <!-- TAGS ------------------------------------------------- -->
                 <label for="tagInput">Tags*</label>
                 <div class="subtext">Type to search or add (max&nbsp;5)</div>
 
-                <!-- data-init gets a CSV of previously-chosen tags -->
                 <div class="tag-box" id="tagBox"
                      th:data-init="${#lists.isEmpty(selectedTags) ? '' :
                                     #strings.arrayJoin(selectedTags, ',')}">
@@ -97,7 +92,6 @@
 
                 <input id="tagsHidden" name="tags" type="hidden">
 
-                <!-- ACTION BUTTONS -------------------------------------- -->
                 <div style="display:flex;gap:12px;margin-top:24px;">
                     <a class="ask-btn" style="background:#e8f4ff;color:#0a95ff;border:1px solid #0a95ff"
                        th:href="@{/ask-question}">

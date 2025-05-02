@@ -7,13 +7,13 @@ import java.util.List;
 
 public class QuestionResponseDto {
 
-    public String title;
-    public String description;
-    public List<String> tags;
-    public String author;
+    private String title;
+    private String description;
+    private List<String> tags;
+    private String author;
     private String timeAgo;
-    public int votes;
-    public int answers;
+    private int votes;
+    private int answers;
 
     public String getTitle() {
         return title;

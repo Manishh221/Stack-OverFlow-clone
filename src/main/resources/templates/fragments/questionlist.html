@@ -1,85 +1,26 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <style>
-        .post-container {
-            border-bottom: 1px solid #ddd;
-            padding: 16px 0;
-            display: flex;
-            justify-content: space-between;
-        }
+<div th:fragment="questionlist(post)" class="post-container">
 
-        .post-details {
-            flex: 1;
-            margin-left: 10px;
-        }
-
-        .post-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #0074cc;
-            text-decoration: none;
-        }
-
-        .post-title:hover {
-            text-decoration: underline;
-        }
-
-        .post-excerpt {
-            color: #3b3b3b;
-            font-size: 14px;
-            margin-top: 4px;
-            margin-bottom: 8px;
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .tag {
-            background-color: #e1ecf4;
-            color: #39739d;
-            padding: 4px 6px;
-            font-size: 12px;
-            border-radius: 3px;
-        }
-
-        .post-meta {
-            font-size: 12px;
-            color: #6a737c;
-        }
-
-        .stats {
-            text-align: center;
-            width: 80px;
-        }
-
-        .stats div {
-            margin-bottom: 4px;
-        }
-    </style>
-</head>
-<body>
-<div class="post-container" th:fragment="questionlist(post)">
     <div class="stats">
         <div><b th:text="${post.votes}">0</b> votes</div>
         <div><b th:text="${post.answers}">0</b> answers</div>
     </div>
 
     <div class="post-details">
-        <a class="post-title" th:text="${post.title}">Sample Post Title</a>
+        <a th:href="@{/questions/{id}(id=${post.id})}"
+           class="post-title"
+           th:text="${post.title}">Sample Post Title</a>
         <div class="post-excerpt" th:text="${post.description}">
             This is a short excerpt from the question to give a quick overview...
         </div>
         <div class="tags">
-            <div class="tag" th:each="tag : ${post.tags}" th:text="${tag}">arrays</div>
+            <span class="tag"
+                  th:each="tag : ${post.tags}"
+                  th:text="${tag}">arrays</span>
         </div>
         <div class="post-meta">
-            <span th:text="${post.author}">Zaver</span> asked <span th:text="${post.timeAgo}">12 mins ago</span>
+            <span th:text="${post.author}">Zaver</span>
+            asked
+            <span th:text="${post.timeAgo}">12 mins ago</span>
         </div>
     </div>
 </div>
-</body>
-</html>

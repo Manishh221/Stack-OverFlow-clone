@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
@@ -7,9 +7,8 @@
     <!-- page-specific styles -->
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <!-- icon set for the sidebar -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          rel="stylesheet">
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -35,7 +34,7 @@
             <section class="post-list">
                 <h2>Interesting posts for you</h2>
 
-                <div th:each="post : ${questions}" th:replace="fragments/questionlist :: questionlist(${post})"></div>
+
             </section>
         </section>
 
@@ -43,11 +42,34 @@
         <aside class="right-column">
 
             <div class="card right-box">
-                <h3>The Overflow Blog</h3>
-                <ul>
-                    <li>How self-supervised language revolutionized NLP …</li>
-                    <li>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</li>
-                </ul>
+                <div th:each="post : ${questions.content}">
+                    <div class="post-container">
+
+                        <div class="stats">
+                            <div><b th:text="${post.votes}">0</b> votes</div>
+                            <div><b th:text="${post.answers}">0</b> answers</div>
+                        </div>
+
+                        <div class="post-details">
+                            <a
+                                    class="post-title"
+                                    th:text="${post.title}">Sample Post Title</a>
+                            <div class="post-excerpt" th:text="${post.description}">
+                                This is a short excerpt from the question to give a quick overview...
+                            </div>
+                            <div class="tags">
+            <span class="tag"
+                  th:each="tag : ${post.tags}"
+                  th:text="${tag}">arrays</span>
+                            </div>
+                            <div class="post-meta">
+                                <span th:text="${post.author}">Zaver</span>
+                                asked
+                                <span th:text="${post.timeAgo}">12 mins ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="card right-box">
