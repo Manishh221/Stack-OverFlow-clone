@@ -65,11 +65,11 @@ public class UserController {
 
             }
         }
-        return "redirect:/user/" + user.getId();
+        return "redirect:/user/" + user.getId() + "?profiletab=profile";
     }
 
     @PostMapping("/deleteUser/{id}")
-        public String deleteUser(@PathVariable Long id){
+        public String deleteUser(@PathVariable("id") Long id){
             userService.deleteUser(id);
             return "redirect:/";
     }
@@ -97,11 +97,13 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
-                          @RequestParam(value = "activitytab",defaultValue = "question") String activityTab) {
+                          @RequestParam(value = "activitytab",defaultValue = "question") String activityTab,
+                          @RequestParam(value = "settingtab", defaultValue = "editProfile") String editProfile) {
         Users user = userService.findUser(id);
         model.addAttribute("user", user);
         model.addAttribute("profiletab",profileTab);
         model.addAttribute("activitytab",activityTab);
+        model.addAttribute("settingtab", editProfile);
         return "UserProfile";
     }
 

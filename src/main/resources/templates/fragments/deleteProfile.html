@@ -1,0 +1,27 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Profile Fragment</title>
+
+</head>
+<body>
+<div th:fragment="deleteProfile(user)">
+    <div class="delete-profile">
+        <h2>Delete Profile</h2>
+        <p>Before confirming that you would like your profile deleted, we'd like to take a moment to explain the implications of deletion:</p>
+        <ul>
+            <li>Deletion is irreversible, and you will have no way to regain any of your original content, should this deletion be carried out and you change your mind later on.</li>
+            <li>Your questions and answers will remain on the site, but will be disassociated and anonymized (the author will be listed as "user30402581") and will not indicate your authorship even if you later return to the site.</li>
+        </ul>
+        <p>Confirming deletion will only delete your profile on Stack Overflow - it will not affect any of your other profiles on the Stack Exchange network. If you want to delete multiple profiles, you'll need to visit each site separately and request deletion of those individual profiles.</p>
+        <form th:action="@{/deleteUser/{id}(id=${user.id})}" method="post">
+            <label>
+                <input type="checkbox" id="confirmDeletion" name="confirmDeletion" required /> I have read the information stated above and understand the implications of having my profile deleted. I wish to proceed with the deletion of my profile.
+            </label>
+            <button type="submit" id="deleteButton" disabled>Delete profile</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

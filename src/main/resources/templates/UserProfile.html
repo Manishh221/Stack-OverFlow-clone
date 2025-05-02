@@ -72,5 +72,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('confirmDeletion').addEventListener('change', function() {
+        document.getElementById('deleteButton').disabled = !this.checked;
+    });
+
+</script>
+
+
 </body>
 </html>
