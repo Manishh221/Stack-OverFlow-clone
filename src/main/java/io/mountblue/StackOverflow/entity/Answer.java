@@ -1,6 +1,7 @@
 package io.mountblue.StackOverflow.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -23,9 +24,9 @@ public class Answer {
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private Users user;
 
-    @NotNull(message = "is required")
+    @NotBlank(message = "Content is required and cannot be empty or just whitespace.")
     @Size(min = 1, message = "is required")
-    @Column(name = "content", nullable = false)
+    @Column(name = "content",columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @ManyToOne

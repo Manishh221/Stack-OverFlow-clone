@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AnswerController {
@@ -30,36 +31,69 @@ public class AnswerController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
-    @PostMapping("/answer/create/{questionId}")
-    public String createAnswer(@PathVariable Long questionId, @Valid @ModelAttribute("answer") Answer answer,
-                               BindingResult bindingResult, Model model,
-                               @AuthenticationPrincipal UserInfo userClass){
-        if (bindingResult.hasErrors()) {
-            Question question = questionService.findQuestionById(questionId);
-            model.addAttribute("question", question);
-            model.addAttribute("answer",answer);
-            return "redirect:/question/" + questionId;
-        }
+//    @PostMapping("/answer/create/{questionId}")
+//    public String createAnswer(@PathVariable Long questionId, @Valid @ModelAttribute("answer") Answer answer,
+//                               BindingResult bindingResult, Model model,
+//                               @AuthenticationPrincipal UserInfo userClass){
+//        if (bindingResult.hasErrors()) {
+//            Question question = questionService.findQuestionById(questionId);
+//            model.addAttribute("question", question);
+//            model.addAttribute("answer",answer);
+//            return "redirect:/question/" + questionId;
+//        }
+//
+////        checking user logged in
+//        if (userClass == null || userClass.getUser() == null) {
+//            return "redirect:/login";
+//        }
+//        if (userClass.getUser().getReputation() <= 1) {
+//            return "redirect:/question/" + questionId;
+//        }
+//
+//
+////        saving Answer
+//        try {
+//            answerService.saveAnswer(answer, questionId, userClass);
+//        } catch (Exception e) {
+//            model.addAttribute("errorMessage", "Error saving answer: " + e.getMessage());
+//            return "redirect:/question/" + questionId;
+//        }
+////        after saving back to question
+//        return "redirect:/question/" + questionId;
+//    }
+@PostMapping("/answer/create/{questionId}")
+public String createAnswer(@PathVariable Long questionId,
+                           @Valid @ModelAttribute("answer") Answer answer,
+                           BindingResult bindingResult,
+                           Model model,
+                           RedirectAttributes redirectAttributes,
+                           @AuthenticationPrincipal UserInfo userClass) {
 
-//        checking user logged in
-        if(userClass==null){
-            return "redirect:/login";
-        }
-        if(userClass.getUser().getReputation() <= 1){
-            return  "redirect:/question/" + questionId;
-        }
+    System.out.println("answer is " + answer.getContent());
+    if (userClass == null || userClass.getUser() == null) {
+        return "redirect:/login";
+    }
 
-
-//        saving Answer
-        try {
-            answerService.saveAnswer(answer, questionId, userClass);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error saving answer: " + e.getMessage());
-            return "redirect:/question/" + questionId;
-        }
-//        after saving back to question
+    if (userClass.getUser().getReputation() <= 1) {
+        redirectAttributes.addFlashAttribute("errorMessage", "You need more reputation to post an answer.");
         return "redirect:/question/" + questionId;
     }
+
+    if (bindingResult.hasErrors()) {
+        Question question = questionService.findQuestionById(questionId);
+        model.addAttribute("question", question);
+        model.addAttribute("answer", answer);
+        return "/question/" + questionId;
+    }
+
+    try {
+        answerService.saveAnswer(answer, questionId, userClass);
+    } catch (Exception e) {
+        redirectAttributes.addFlashAttribute("errorMessage", "Error saving answer: " + e.getMessage());
+    }
+
+    return "redirect:/question/" + questionId;
+}
 
     @PostMapping("/answer/delete/{answerId}")
     public String deleteAnswer(@PathVariable Long answerId, Model model,
