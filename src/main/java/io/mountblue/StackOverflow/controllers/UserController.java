@@ -53,6 +53,9 @@ public class UserController {
     @PostMapping("/updateUser")
         public String updateUser(@ModelAttribute("user") Users user, Principal principal){
             Users existingUser = userService.findUser(user.getId());
+
+        System.out.println(user);
+
             if(existingUser==null){
                 throw new RuntimeException("User not found");
             }
