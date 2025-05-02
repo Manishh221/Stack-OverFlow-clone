@@ -45,4 +45,8 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    public Page<Users> searchUsers(String keyword, Pageable pageable) {
+        return userRepository.searchUsers(keyword, pageable);
+    }
+
 }

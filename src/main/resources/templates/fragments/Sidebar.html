@@ -1,7 +1,12 @@
 <aside class="sidebar" th:fragment="Sidebar">
     <ul>
-        <li class="active"><i class="fa-solid fa-house"></i>Home</li>
+        <li class="active">
+            <a th:href="@{/}"><i class="fa-solid fa-house"></i>Home</a>
+           </li>
         <li><i class="fa-regular fa-circle-question"></i>Questions</li>
+        <li>
+            <a th:href="@{/users}"><i class="fa-solid fa-user"></i>Users</a>
+            </li>
         <li><i class="fa-solid fa-tags"></i>Tags</li>
 
     </ul>

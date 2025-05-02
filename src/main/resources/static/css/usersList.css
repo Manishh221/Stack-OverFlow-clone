@@ -1,0 +1,121 @@
+.user-card {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .user-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .user-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .user-tags a {
+        color: #0074cc;
+        margin-right: 5px;
+        text-decoration: none;
+    }
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 30px;
+        gap: 6px;
+    }
+
+    .pagination a, .pagination span {
+        padding: 8px 14px;
+        border: 1px solid #d6d9dc;
+        border-radius: 6px;
+        background-color: #ffffff;
+        color: #232629;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .pagination .active-page {
+        background-color: #f48024;
+        color: white;
+        border-color: #f48024;
+        font-weight: bold;
+    }
+
+    .pagination a:hover {
+        background-color: #f1f2f3;
+    }
+
+    .user-cont{
+        display:flex;
+        height: calc(100vh - 72px);
+        gap:3rem;
+    }
+    .userlist{
+        display:flex;
+        flex-direction:column;
+    }
+    .list-cont{
+        margin-top:2rem;
+        display:flex;
+        gap:2rem;
+        max-width:1000px;
+        flex-wrap:wrap;
+    }
+    .user-search-form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        margin-top:2rem;
+    }
+
+    .user-search-form input {
+        padding: 8px;
+        width: 250px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .user-search-form button {
+        padding: 8px 16px;
+        background-color: #f48024;
+        border: none;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .user-search-form button:hover {
+        background-color: #e4711b;
+    }
+    .sort-controls {
+    align-items:center;
+        display: flex;
+        gap: 1rem;
+        margin-top:0.6rem;
+    }
+
+    .sort-controls a {
+        padding: 3px 16px;
+        height:fit-content;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #555;
+        background-color: #f8f9f9;
+        font-weight: 500;
+    }
+
+    .sort-controls .active-sort {
+        background-color: #e3e6e8;
+        border-color: #babfc4;
+        color: #000;
+    }
+    .search-sort{
+        display:flex;
+        gap:3rem;
+        align-items:center;
+    }
+

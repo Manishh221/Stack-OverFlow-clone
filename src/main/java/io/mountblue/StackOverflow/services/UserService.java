@@ -20,4 +20,6 @@ public interface UserService {
     void deleteUser(Long id);
 
     Users loadUserByEmail(String email);
+
+    Page<Users> searchUsers(String keyword, Pageable pageable);
 }

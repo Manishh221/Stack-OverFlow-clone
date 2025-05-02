@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/header.css}" />
+<link rel="stylesheet" th:href="@{/css/usersList.css}" />
+<link rel="stylesheet" th:href="@{/css/home.css}" />
+<head>
+  <title>Users</title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header(user=${user} ?: null)}"></div>
+<div class="user-cont">
+<div th:replace="fragments/Sidebar :: Sidebar"></div>
+  <div class="userlist">
+<h1>Users</h1>
+    <div class="search-sort">
+    <form th:action="@{/users}" method="get" class="user-search-form">
+      <input type="text" name="keyword" placeholder="Search users..."
+             th:value="${keyword}" />
+      <button type="submit">Search</button>
+    </form>
+    <div class="sort-controls">
+      <a th:href="@{/users(sort='reputation', keyword=${keyword})}"
+         th:classappend="${sort == 'reputation'} ? 'active-sort'" >Reputation</a>
+      <a th:href="@{/users(sort='new', keyword=${keyword})}"
+         th:classappend="${sort == 'new'} ? 'active-sort'" >New users</a>
+    </div>
+    </div>
+    <div class="list-cont">
+<div th:each="user : ${users}" class="user-card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png" alt="Stack Overflow" class="user-avatar"/>
+  <div class="user-info">
+    <a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.username}"></a>
+    <strong th:text="${user.reputation}"></strong>
+<!--    <div class="user-tags">-->
+<!--            <span th:each="tag : ${user.tags}">-->
+<!--                <a th:href="@{/tags/{tag}(tag=${tag})}" th:text="${tag}"></a>-->
+<!--            </span>-->
+<!--    </div>-->
+  </div>
+</div>
+</div>
+
+        <div class="pagination">
+          <a th:if="${currentPage > 0}"
+             th:href="@{/users(page=${currentPage - 1}, size=2, sort=${sort}, keyword=${keyword})}">Prev</a>
+
+          <span class="active-page" th:text="${currentPage + 1}"></span>
+
+          <span th:text="'of ' + ${totalPages}"></span>
+
+          <a th:if="${currentPage + 1 < totalPages}"
+             th:href="@{/users(page=${currentPage + 1}, size=2, sort=${sort}, keyword=${keyword})}">Next</a>
+
+        </div>
+
+
+  </div>
+</div>
+</body>
+</html>

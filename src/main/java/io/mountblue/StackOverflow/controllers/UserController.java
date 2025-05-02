@@ -108,17 +108,31 @@ public class UserController {
     @GetMapping("/users")
     public String getAllUsers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "reputation") String sort,
             Model model) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "reputation"));
-        Page<Users> usersPage = userService.findPaginatedUsers(pageable);
+
+        Sort sorting = Sort.by(Sort.Direction.DESC, sort.equals("new") ? "createdAt" : "reputation");
+        Pageable pageable = PageRequest.of(page, size, sorting);
+        Page<Users> usersPage;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            usersPage = userService.searchUsers(keyword, pageable);
+            model.addAttribute("keyword", keyword);
+        } else {
+            usersPage = userService.findPaginatedUsers(pageable);
+        }
 
         model.addAttribute("users", usersPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", usersPage.getTotalPages());
+        model.addAttribute("sort", sort);
 
         return "UsersList";
     }
+
+
 
 
 
