@@ -1,9 +1,11 @@
 <div th:fragment="editProfile(user)" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="profile-info">
         <h2>Edit your profile</h2>
-        <form th:action="@{/updateUser}" th:object="${user}" method="post" enctype="multipart/form-data">
-            <h3>Public information</h3>
+        <hr>
+            <p>Public information</p>
 
+        <form th:action="@{/updateUser}" th:object="${user}" method="post" enctype="multipart/form-data">
+            <div class="form-container">
 
                 <!--                <label>Profile image</label>-->
                 <!--                <div class="profile-picture">-->
@@ -19,7 +21,14 @@
                 <!--                <input type="text" th:field="*{displayName}">-->
                 <!--            </div>-->
 
+
                 <div class="form-group">
+
+                    <div class="form-group">
+                        <label>Display name</label>
+                        <input type="text" th:field="*{username}">
+                    </div>
+
                     <label>Title</label>
                     <input type="text" th:field="*{title}" placeholder="No title has been set">
                     <input type="hidden" th:field="*{id}" />
@@ -51,13 +60,19 @@
                     <textarea th:field="*{about}"></textarea>
                 </div>
 
+            </div>
+
+            <div class="private-information">
                 <div class="private-info">
-                    <h3>Private information <small>(Not shown publicly)</small></h3>
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" th:field="*{username}">
-                    </div>
+                    <span><p>Private information</p> <small>Not shown publicly</small></span>
                 </div>
+
+                <div class="full-name" >
+                  <h5>Full name</h5>
+                    <input class="input-full-name" type="text" th:field="*{username}">
+                </div>
+
+            </div>
 
                 <div class="buttons">
                     <button type="submit">Save profile</button>

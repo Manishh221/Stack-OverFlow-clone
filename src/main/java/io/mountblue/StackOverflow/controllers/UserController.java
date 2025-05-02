@@ -83,21 +83,32 @@ public class UserController {
         return "Login";
     }
 
-    @GetMapping("/")
-    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
-        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
-        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent().get(0).getVotes());
-//        model.addAttribute("user",userInfo.getUser());
-//        @AuthenticationPrincipal UserInfo userInfo ,
-        if(userInfo.getUser() != null){
-            model.addAttribute("user",userInfo.getUser());
-        }
-        model.addAttribute("questions",questions);
+    @GetMapping("/")public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
+        Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
+        List<QuestionResponseDto> questionList = questions.getContent();
+        System.out.println("The questions are: " + questionList);
+        if (!questionList.isEmpty()) {
+            System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
+        }    if (userInfo != null && userInfo.getUser() != null) {
+            model.addAttribute("user", userInfo.getUser());    }
+        model.addAttribute("questions", questions);
+        return "Home";}
+
+//    @GetMapping("/")
+//    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
+//        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
+//        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent().get(0).getVotes());
+////        model.addAttribute("user",userInfo.getUser());
+////        @AuthenticationPrincipal UserInfo userInfo ,
 //        if(userInfo.getUser() != null){
-//
+//            model.addAttribute("user",userInfo.getUser());
 //        }
-        return "Home";
-    }
+//        model.addAttribute("questions",questions);
+////        if(userInfo.getUser() != null){
+////
+////        }
+//        return "Home";
+//    }
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,

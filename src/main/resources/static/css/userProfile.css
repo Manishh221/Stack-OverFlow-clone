@@ -344,61 +344,86 @@ body {
 
 /* delete profile css */
 
-    .delete-profile {
-        border: 1px solid #e1e1e1;
-        padding: 20px;
-        background-color: #fff;
-        max-width: 800px;
-        font-family: Arial, sans-serif;
-    }
-    .delete-profile h2 {
-        margin-top: 0;
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .delete-profile p {
-        margin: 10px 0;
-        font-size: 14px;
-    }
-    .delete-profile ul {
-        list-style-type: disc;
-        margin: 10px 0 10px 20px;
-        font-size: 14px;
-    }
-    .delete-profile label {
-        display: block;
-        margin: 10px 0;
-        font-size: 14px;
-    }
-    .delete-profile input[type="checkbox"] {
-        margin-right: 5px;
-    }
-    .delete-profile button {
-        padding: 10px 20px;
-        background-color: #f44336;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-    }
-    .delete-profile button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-    .delete-profile button:enabled:hover {
-        background-color: #d32f2f;
-    }
+   .delete-profile {
+       padding: 20px;
+       background-color: #fff;
+       max-width: 800px;
+       font-family: Arial, sans-serif;
+   }
+
+   .delete-profile h2 {
+       margin-top: 0;
+       font-size: 18px;
+       font-weight: bold;
+       color: #000;
+   }
+
+   .delete-profile p {
+       margin: 15px 0; /* Slightly more spacing for paragraphs like in the screenshot */
+       font-size: 14px;
+       line-height: 1.5; /* Better readability */
+       color: #333;
+   }
+
+   .delete-profile ul {
+       list-style-type: disc;
+       margin: 15px 0 15px 20px; /* Adjusted spacing */
+       font-size: 14px;
+       color: #333;
+   }
+
+   .delete-profile li {
+       margin-bottom: 10px; /* Space between list items */
+       line-height: 1.5;
+   }
+
+   .delete-profile label {
+       display: block;
+       margin: 20px 0; /* More spacing around the checkbox label */
+       font-size: 14px;
+       color: #333;
+   }
+
+   .delete-profile input[type="checkbox"] {
+       margin-right: 8px; /* Slightly more space between checkbox and text */
+       vertical-align: middle;
+   }
+
+   .delete-profile button {
+       padding: 10px 20px;
+       background-color: #f44336; /* Matches the red color in the screenshot */
+       color: white;
+       border: none;
+       border-radius: 4px;
+       cursor: pointer;
+       font-size: 14px;
+       font-weight: 500;
+   }
+
+   .delete-profile button:disabled {
+       background-color: #cccccc; /* Grayed out when disabled */
+       cursor: not-allowed;
+   }
+
+   .delete-profile button:enabled:hover {
+       background-color: #d32f2f; /* Darker red on hover */
+   }
 
 /* edit profile css */
 
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
 }
+
+.form-container{
+box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+border-radius: 5px;
+padding: 26px;
+}
+
 .profile-info {
-    border: 1px solid #e1e1e1;
     padding: 20px;
     background-color: #fff;
     max-width: 800px;
@@ -421,7 +446,37 @@ body {
     margin-bottom: 5px;
     font-size: 14px;
     font-weight: bold;
+    color: #4e4646;
 }
+
+h5{
+    margin: 6px;
+    margin-left: 0px;
+    color: #4e4646;
+}
+
+.private-information{
+    padding-top: 42px;
+}
+
+
+.input-full-name {
+    width: 50%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.full-name {
+
+     width: 100%;
+     padding: 27px;
+     box-sizing: border-box;
+     border-radius: 4px;
+     box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+}
+
 .form-group input, .form-group textarea {
     width: 100%;
     padding: 8px;
