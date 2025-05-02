@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class AnswerVote {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne

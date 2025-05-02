@@ -10,6 +10,8 @@ public class Reputations {
     public static final int QUESTION_REPUTATION_DOWNVOTE = -2;
 
     public static final int COMMENT_EVERYWHERE = 30;
+    public static final int UPVOTE_EVERYWHERE = 1;
+    public static final int DOWNVOTE_EVERYWHERE = 1;
     public static final int ANSWER_EVERYWHERE = 50;
     public static final int QUESTION_ADDED = 10;
 }
