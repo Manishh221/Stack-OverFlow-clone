@@ -1,71 +1,80 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
-    <!-- page-specific styles -->
     <link rel="stylesheet" th:href="@{/css/home.css}">
-    <!-- icon set for the sidebar -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 
 <div class="layout">
-
     <div th:replace="fragments/Sidebar :: Sidebar"></div>
 
     <main class="content-wrapper">
 
-        <section class="card welcome-card">
-            <h1>
-                Welcome to Stack Overflow,
-                <span th:text="${username}">Saikat Pattanayak</span>!
-            </h1>
-            <p>Find answers to your technical questions and help others answer theirs.</p>
-            <a class="btn" th:href="@{/ask-question}">Add Question</a>
+        <!-- Welcome Section with Cards -->
+        <section class="dashboard">
+            <div class="dashboard-header">
+                <div class="welcome">
+                <div class="welcome-icon">👋</div>
+                <div>
+                    <h1>Welcome back, <span th:text="${username}">sk p</span></h1>
+                    <p class="subtitle">Find answers to your technical questions and help others answer theirs.</p>
+                </div>
+                </div>
+                <a href="/ask-question" class="ask-btn-outline">Ask Question</a>
+            </div>
+
+            <div class="dashboard-cards">
+                <!-- Reputation Card -->
+                <div class="rep-card">
+                    <h3>Reputation</h3>
+                    <div class="rep-score">1</div>
+                    <div class="rep-graph"><div class="rep-line"></div></div>
+                    <p class="rep-text">
+                        Earn reputation by <a href="#">Asking</a>, <a href="#">Answering</a> & <a href="#">Editing</a>.
+                    </p>
+                </div>
+
+            </div>
         </section>
 
-        <section class="post-list">
+        <!-- Posts Section -->
+        <section class="card right-box">
             <h2>Interesting posts for you</h2>
 
-            <article th:each="post : ${posts}" class="post">
-                <div class="post-stats">
-                    <div class="stat"><span th:text="${post.votes}">0</span> votes</div>
-                    <div class="stat"><span th:text="${post.answers}">0</span> answers</div>
-                    <div class="stat"><span th:text="${post.views}">0</span> views</div>
+            <div th:each="post : ${questions.content}" class="post-container">
+                <div class="stats">
+                    <div><b th:text="${post.votes}">0</b> votes</div>
+                    <div><b th:text="${post.answers}">0</b> answers</div>
+
                 </div>
 
-                <div class="post-body">
-                    <a th:href="@{/questions/{id}(id=${post.id})}"
-                       class="post-title" th:text="${post.title}">
-                        Problem when widget is showing image while scrolling
-                    </a>
-
-                    <p class="post-meta">
-                        <span th:text="${post.timeAgo}">asked 1 min ago</span> •
-                        <span th:text="${post.author}">Craig</span>
-                    </p>
-
+                <div class="post-details">
+                    <a class="post-title" th:text="${post.title}">Sample Post Title</a>
+                    <div class="post-excerpt" th:text="${post.description}">
+                        This is a short excerpt from the question to give a quick overview...
+                    </div>
                     <div class="tags">
-                            <span th:each="t : ${post.tags}"
-                                  class="tag"
-                                  th:text="${t}">flutter</span>
+                        <span class="tag" th:each="tag : ${post.tags}" th:text="${tag}">arrays</span>
+                    </div>
+                    <div class="post-meta">
+                        <span th:text="${post.author}">Doug418</span>
+                        asked <span th:text="${post.timeAgo}">2 mins ago</span>
                     </div>
                 </div>
-            </article>
+            </div>
         </section>
 
-        <!-- right-hand boxes -->
+        <!-- Right Aside Section -->
         <aside class="right-column">
-
             <div class="card right-box">
                 <h3>The Overflow Blog</h3>
                 <ul>
-                    <li>How self-supervised language revolutionized NLP …</li>
+                    <li>How self-supervised language revolutionized natural language processing and...</li>
                     <li>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</li>
                 </ul>
             </div>
@@ -74,16 +83,13 @@
                 <h3>Featured on Meta</h3>
                 <ul>
                     <li>Updates to advertising guidelines</li>
-                    <li>Evolving comments: an experiment in follow-up questions</li>
+                    <li>Evolving comments: An experiment in follow-up questions</li>
                     <li>Policy: Generative AI (e.g. ChatGPT) is banned</li>
-                    <li>What we learned about follow-up questions …</li>
+                    <li>2025 Developer Survey: Call for Feedback</li>
                 </ul>
             </div>
-
         </aside>
     </main>
-
 </div>
-
 </body>
 </html>

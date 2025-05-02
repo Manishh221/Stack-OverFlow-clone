@@ -1,12 +1,13 @@
 package io.mountblue.StackOverflow.controllers;
 
-import io.mountblue.StackOverflow.entity.Answer;
+import io.mountblue.StackOverflow.dto.QuestionResponseDto;
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.Tag;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.TagService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +31,7 @@ public class QuestionController {
 //    --------------------------get all Questions-----------------------------------------------
     @GetMapping("/Show-all-questions/{page-number}")
     public String showAllQuestions (@PathVariable("page-number") int pageNumber, Model model) {
-        Page<Question> allQuestions = questionService.findAllQuestions(pageNumber);
+        Page<QuestionResponseDto> allQuestions = questionService.findAllQuestions(pageNumber);
 
         model.addAttribute("allQuestions", allQuestions);
 
@@ -67,7 +68,6 @@ public class QuestionController {
             @RequestParam(value = "tags", required = false) String tagsCsv,
             Model model) {
 
-        // If there are field errors, bounce back to Ask page so the user can fix them
         if (br.hasErrors()) {
             model.addAttribute("allTags", allTags());
             return "CreateQuestion";
@@ -89,9 +89,22 @@ public class QuestionController {
 
 //    --------------------------storing the Question------------------------------------------
     @PostMapping("/create-question")
-    public String createQuestion(@ModelAttribute("question")Question question,
+    public String createQuestion(@Valid @ModelAttribute("question")Question question,
+                                 BindingResult br,
                                  @RequestParam(value = "tags", required = false)
-                                 List<String> tagNames) {
+                                 String tagsCsv,Model model) {
+        List<String> tagNames = (tagsCsv == null || tagsCsv.isBlank())
+                ? List.of()
+                : Arrays.stream(tagsCsv.split(",")).map(String::trim).filter(t -> !t.isEmpty()).toList();
+
+        if (br.hasErrors() || tagNames.isEmpty()) {
+            model.addAttribute("allTags", allTags());
+            if (tagNames.isEmpty()) {
+                model.addAttribute("tagsError", "At least one tag is required.");
+            }
+            return "CreateQuestion";  // same form view
+        }
+
         questionService.createNewQuestion(question, tagNames);
         return "redirect:/";
     }
@@ -120,7 +133,6 @@ public class QuestionController {
     public String showQuestion(@PathVariable Long id,Model model){
         Question question = questionService.findQuestionById(id);
         model.addAttribute("question",question);
-        model.addAttribute("answer",new Answer());
         return "QuestionDetail";
     }
 }
