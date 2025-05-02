@@ -80,20 +80,27 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
-        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
-        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent().get(0).getVotes());
-//        model.addAttribute("user",userInfo.getUser());
-//        @AuthenticationPrincipal UserInfo userInfo ,
-        if(userInfo.getUser() != null){
-            model.addAttribute("user",userInfo.getUser());
+    public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
+        Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
+
+        // Only print if the list has content
+        if (!questions.isEmpty()) {
+            System.out.println("Questions: " + questions.getContent());
+//            System.out.println("First question votes: " + questions.getContent().get(0).getVotes());
+            model.addAttribute("username", userInfo.getUser().getUsername());
+        } else {
+            System.out.println("No questions found.");
+            model.addAttribute("username", "User");
         }
-        model.addAttribute("questions",questions);
-//        if(userInfo.getUser() != null){
-//
-//        }
+
+        if (userInfo.getUser() != null) {
+            model.addAttribute("user", userInfo.getUser());
+        }
+
+        model.addAttribute("questions", questions);
         return "Home";
     }
+
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
