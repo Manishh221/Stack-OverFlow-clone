@@ -1,6 +1,7 @@
 package io.mountblue.StackOverflow.services;
 
 import io.mountblue.StackOverflow.controllers.QuestionController;
+import io.mountblue.StackOverflow.dto.QuestionResponseDto;
 import io.mountblue.StackOverflow.entity.Question;
 import org.springframework.data.domain.Page;
 
@@ -12,6 +13,7 @@ public interface QuestionService {
     void deleteQuestionById(Long id);
     Question updateQuestion (Question question, List<String> tagName);
     Question findQuestionById (Long id);
-    Page<Question> findAllQuestions(int pageNumber);
+    Page<QuestionResponseDto> findAllQuestions(int pageNumber);
+    QuestionResponseDto getAllQUestionData(Question question);
 
 }

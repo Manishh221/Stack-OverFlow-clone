@@ -1,0 +1,26 @@
+<div th:fragment="questionlist(post)" class="post-container">
+
+    <div class="stats">
+        <div><b th:text="${post.votes}">0</b> votes</div>
+        <div><b th:text="${post.answers}">0</b> answers</div>
+    </div>
+
+    <div class="post-details">
+        <a th:href="@{/questions/{id}(id=${post.id})}"
+           class="post-title"
+           th:text="${post.title}">Sample Post Title</a>
+        <div class="post-excerpt" th:text="${post.description}">
+            This is a short excerpt from the question to give a quick overview...
+        </div>
+        <div class="tags">
+            <span class="tag"
+                  th:each="tag : ${post.tags}"
+                  th:text="${tag}">arrays</span>
+        </div>
+        <div class="post-meta">
+            <span th:text="${post.author}">Zaver</span>
+            asked
+            <span th:text="${post.timeAgo}">12 mins ago</span>
+        </div>
+    </div>
+</div>

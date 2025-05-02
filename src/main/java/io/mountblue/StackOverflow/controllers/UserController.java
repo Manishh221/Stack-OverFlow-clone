@@ -1,8 +1,13 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.dto.QuestionResponseDto;
 import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.security.UserInfo;
+import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
+import io.mountblue.StackOverflow.services.QuestionService;
+import io.mountblue.StackOverflow.services.UserService;
+import io.mountblue.StackOverflow.services.UsersServiceDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +26,12 @@ import java.util.Objects;
 public class UserController {
     private UserService userService;
     private PasswordEncoder passwordEncoder;
+    private QuestionService questionService;
 
-    public UserController(UserService userService,PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService,PasswordEncoder passwordEncoder,QuestionService questionService) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
+        this.questionService=questionService;
     }
 
     @GetMapping("/signup")
@@ -73,10 +80,15 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
-        if(userInfo.getUser() != null){
-            model.addAttribute("user",userInfo.getUser());
-        }
+    public String home(Model model){
+        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
+        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent().get(0).getVotes());
+//        model.addAttribute("user",userInfo.getUser());
+//        @AuthenticationPrincipal UserInfo userInfo ,
+        model.addAttribute("questions",questions);
+//        if(userInfo.getUser() != null){
+//
+//        }
         return "Home";
     }
 

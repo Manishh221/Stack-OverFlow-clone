@@ -44,26 +44,24 @@
 
             <h1>Ask a public question</h1>
 
-            <form th:action="@{/review}" th:object="${question}" method="post">
+            <form th:action="@{/create-question}" th:object="${question}" method="post">
                 <!-- TITLE --------------------------------------------------- -->
-                <div>
+                <div th:classappend="${#fields.hasErrors('title')} ? 'has-error'" class="question-fields">
                     <label for="title">Title*</label>
                     <div class="subtext">Be specific and imagine you’re asking a question to another person</div>
-                    <input id="title" type="text" th:field="*{title}"
-                           placeholder="e.g. How do I find the index of an element in a list?"/>
+                    <input id="title" type="text" th:field="*{title}" placeholder="e.g. How do I find the index of an element in a list?"/>
+                    <p class="error-msg" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
                 </div>
 
                 <!-- DESCRIPTION -------------------------------------------- -->
-                <div>
+                <div th:classappend="${#fields.hasErrors('description')} ? 'has-error'" class="question-fields">
                     <label for="description">Description*</label>
                     <div class="subtext">Include all the information someone would need to answer your question</div>
                     <textarea id="description" th:field="*{description}"></textarea>
-                    <div class="code-block-tip">
-                        ```code``` &nbsp;&nbsp; **bold** &nbsp;&nbsp; *italic* &nbsp;&nbsp; &gt;quote
-                    </div>
+                    <p class="error-msg" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
                 </div>
 
-                <!-- TAGS ----------------------------------------------------- -->
+                <div class="question-fields">
                 <label for="tagInput">Tags*</label>
                 <div class="subtext">Type to search or add (max&nbsp;5)</div>
 
@@ -76,13 +74,13 @@
                 </ul>
 
                 <input type="hidden" id="tagsHidden" name="tags">
+                <p class="error-msg" th:if="${tagsError}" th:text="${tagsError}"></p>
                 <p th:field="${tags}"></p>
-
-                <button class="ask-btn" type="submit">Review your question</button>
+                </div>
+                <button class="ask-btn" type="submit">Submit your question</button>
             </form>
         </section>
 
-        <!-- ========== HELP SECTION ========== -->
         <aside class="help-column">
             <div class="help-box">
                 <h2>Step&nbsp;1: Draft your question</h2>
@@ -118,52 +116,87 @@
     (() => {
         const MAX = 5;
 
-        const box   = document.getElementById('tagBox');
-        const input = document.getElementById('tagInput');
-        const menu  = document.getElementById('tagMenu');
-        const items = Array.from(menu.querySelectorAll('.item'));
-        const hidden= document.getElementById('tagsHidden');
+        const box    = document.getElementById('tagBox');
+        const input  = document.getElementById('tagInput');
+        const menu   = document.getElementById('tagMenu');
+        const items  = Array.from(menu.querySelectorAll('.item'));
+        const hidden = document.getElementById('tagsHidden');
 
         let selected = [];
 
         const syncHidden = () => hidden.value = selected.join(',');
+
         const addChip = tag => {
             const chip = document.createElement('span');
             chip.className = 'tag-chip';
             chip.textContent = tag;
+
             const x = document.createElement('span');
-            x.className = 'x'; x.textContent = '×';
+            x.className = 'x';
+            x.textContent = '×';
             x.onclick = () => remove(tag);
+
             chip.appendChild(x);
             box.insertBefore(chip, input);
         };
+
         const render = () => {
             box.querySelectorAll('.tag-chip').forEach(c => c.remove());
             selected.forEach(addChip);
             syncHidden();
         };
-        const add    = t => { if(t && !selected.includes(t) && selected.length<MAX){ selected.push(t); render();} };
-        const remove = t => { selected = selected.filter(s=>s!==t); render(); };
 
-        const filter = q=>{
-            let first=null;
-            items.forEach(li=>{
-                const show=li.textContent.includes(q)&&!selected.includes(li.textContent);
-                li.style.display=show?'block':'none';
-                li.classList.remove('active');
-                if(show&&!first) first=li;
-            });
-            first?.classList.add('active');
-            menu.classList.toggle('hidden',!q&&first==null);
+        const add = tag => {
+            tag = tag.trim().toLowerCase();
+            const isValid = /^[a-z0-9-]{2,25}$/.test(tag); // alphanumeric & dashes, 2-25 chars
+            if (tag && isValid && !selected.includes(tag) && selected.length < MAX) {
+                selected.push(tag);
+                render();
+            }
         };
 
-        input.addEventListener('input',e=>filter(input.value.toLowerCase()));
-        input.addEventListener('keydown',e=>{
-            if(e.key==='Enter'||e.key===','){e.preventDefault(); add(input.value.trim().toLowerCase()); input.value=''; filter('');}
-            if(e.key==='ArrowDown') menu.querySelector('.active')?.focus();
+        const remove = tag => {
+            selected = selected.filter(t => t !== tag);
+            render();
+        };
+
+        const filter = query => {
+            let first = null;
+            items.forEach(li => {
+                const show = li.textContent.includes(query) && !selected.includes(li.textContent);
+                li.style.display = show ? 'block' : 'none';
+                li.classList.remove('active');
+                if (show && !first) first = li;
+            });
+            first?.classList.add('active');
+            menu.classList.toggle('hidden', !query && !first);
+        };
+
+        input.addEventListener('input', () => filter(input.value.toLowerCase()));
+
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                add(input.value);
+                input.value = '';
+                filter('');
+            }
+            if (e.key === 'ArrowDown') {
+                menu.querySelector('.active')?.focus();
+            }
         });
-        items.forEach(li=>li.addEventListener('mousedown',()=>{add(li.textContent); input.value=''; filter('');}));
-        document.addEventListener('click',e=>{ if(!box.contains(e.target)&&!menu.contains(e.target)) menu.classList.add('hidden'); });
+
+        items.forEach(li => li.addEventListener('mousedown', () => {
+            add(li.textContent);
+            input.value = '';
+            filter('');
+        }));
+
+        document.addEventListener('click', e => {
+            if (!box.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
     })();
 </script>
 </body>
