@@ -31,7 +31,7 @@
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header(user=${user})}"></div>
 
 <!-- ======= sidebar + main area ======= -->
 <div class="layout">

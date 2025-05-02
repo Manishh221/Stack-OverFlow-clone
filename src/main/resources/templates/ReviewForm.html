@@ -5,6 +5,7 @@
     <link th:href="@{/css/review.css}" rel="stylesheet">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header(user=${user})}"></div>
 <h1>Review your question</h1>
 
 <div class="alert alert-info">

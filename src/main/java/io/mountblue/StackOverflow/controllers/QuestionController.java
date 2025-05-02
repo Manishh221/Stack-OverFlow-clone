@@ -1,14 +1,17 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
+import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.Tag;
+import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.TagService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,8 +53,11 @@ public class QuestionController {
 
 //    ----------------ask any Question--------------------------------------------------------
     @GetMapping("/ask-question")
-    public String askQuestion(Model model) {
-
+    public String askQuestion(@AuthenticationPrincipal UserInfo userInfo , Model model) {
+        if(userInfo== null){
+            return "redirect:/login";
+        }
+        model.addAttribute("user",userInfo.getUser());
         if (!model.containsAttribute("question")) {
             model.addAttribute("question", new Question());
         }
@@ -89,10 +95,14 @@ public class QuestionController {
 
 //    --------------------------storing the Question------------------------------------------
     @PostMapping("/create-question")
-    public String createQuestion(@Valid @ModelAttribute("question")Question question,
+    public String createQuestion(@AuthenticationPrincipal UserInfo userInfo ,@Valid @ModelAttribute("question")Question question,
                                  BindingResult br,
                                  @RequestParam(value = "tags", required = false)
                                  String tagsCsv,Model model) {
+        if(userInfo==null){
+            return "redirect:/login";
+        }
+        model.addAttribute("user",userInfo.getUser());
         List<String> tagNames = (tagsCsv == null || tagsCsv.isBlank())
                 ? List.of()
                 : Arrays.stream(tagsCsv.split(",")).map(String::trim).filter(t -> !t.isEmpty()).toList();
@@ -130,9 +140,10 @@ public class QuestionController {
     }
 
     @GetMapping("/question/{id}")
-    public String showQuestion(@PathVariable Long id,Model model){
+    public String showQuestion( @PathVariable Long id,Model model){
         Question question = questionService.findQuestionById(id);
         model.addAttribute("question",question);
+        model.addAttribute("answer",new Answer());
         return "QuestionDetail";
     }
 }

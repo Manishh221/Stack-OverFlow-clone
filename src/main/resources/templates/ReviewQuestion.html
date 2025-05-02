@@ -40,7 +40,7 @@
 <body>
 
 <!-- nav -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header(user=${user})}"></div>
 
 <div class="layout">
     <div th:replace="fragments/Sidebar :: Sidebar"></div>
