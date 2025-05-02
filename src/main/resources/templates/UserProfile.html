@@ -50,6 +50,11 @@
                 <a th:href="@{'/user/' + ${user.id} + '?profiletab=activity'}"
                    th:classappend="${profiletab == 'activity'} ? ' active-tab' : ''"
                    id="tab-activity">Activity</a>
+
+                <a th:href="@{'/user/' + ${user.id} + '?profiletab=settings'}"
+                   th:classappend="${profiletab == 'settings'} ? ' active-tab' : ''"
+                   id="tab-settings">Settings</a>
+
             </div>
 
                 <div  th:if="${profiletab == 'profile'}">
@@ -59,8 +64,22 @@
                     <div th:replace="~{fragments/activitystat :: activitystat(user=${user},  activitytab=${activitytab})}"></div>
                 </div>
 
+            <div th:if="${profiletab == 'settings'}">
+                <div th:replace="~{fragments/settingstat :: settingstat(user=${user})}"></div>
+            </div>
+
+
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('confirmDeletion').addEventListener('change', function() {
+        document.getElementById('deleteButton').disabled = !this.checked;
+    });
+
+</script>
+
+
 </body>
 </html>
