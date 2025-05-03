@@ -1,25 +1,25 @@
 <div th:fragment="editProfile(user)" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="profile-info">
-        <h2>Edit your profile</h2>
+        <h1 id="edit-profile-header">Edit your profile</h1>
         <hr>
             <p>Public information</p>
 
         <form th:action="@{/updateUser}" th:object="${user}" method="post" enctype="multipart/form-data">
             <div class="form-container">
 
-                <!--                <label>Profile image</label>-->
-                <!--                <div class="profile-picture">-->
-                <!--                    <img th:src="@{${(user.profileImage != null) ? user.profileImage : 'https://via.placeholder.com/100/FF69B4/FFFFFF?text=Profile'}}" alt="Profile Image" />-->
-                <!--                    <input type="file" name="profileImageFile" id="profileImageFile" accept="image/*" style="display: none;" />-->
-                <!--                    <button type="button" onclick="document.getElementById('profileImageFile').click();">Change picture</button>-->
-                <!--                </div>-->
+<!--                                <label>Profile image</label>-->
+<!--                                <div class="profile-picture">-->
+<!--                                    <img th:src="@{${(user.profileImage != null) ? user.profileImage : 'https://via.placeholder.com/100/FF69B4/FFFFFF?text=Profile'}}" alt="Profile Image" />-->
+<!--                                    <input type="file" name="profileImageFile" id="profileImageFile" accept="image/*" style="display: none;" />-->
+<!--                                    <button type="button" onclick="document.getElementById('profileImageFile').click();">Change picture</button>-->
+<!--                                </div>-->
 
-                <!--            </div>-->
+<!--                            </div>-->
 
-                <!--            <div class="form-group">-->
-                <!--                <label>Display name</label>-->
-                <!--                <input type="text" th:field="*{displayName}">-->
-                <!--            </div>-->
+<!--                            <div class="form-group">-->
+<!--                                <label>Display name</label>-->
+<!--                                <input type="text" th:field="*{displayName}">-->
+<!--                            </div>-->
 
 
                 <div class="form-group">
@@ -64,16 +64,16 @@
 
             <div class="private-information">
                 <div class="private-info">
-                    <span><p>Private information</p> <small>Not shown publicly</small></span>
+                    <p>Private information<small>Not shown publicly</small></p>
                 </div>
 
                 <div class="full-name" >
                   <h5>Full name</h5>
-                    <input class="input-full-name" type="text" th:field="*{username}">
+                    <input class="input-full-name" type="text">
                 </div>
 
             </div>
-
+<br><br>
                 <div class="buttons">
                     <button type="submit">Save profile</button>
                     <button type="button" onclick="window.location.href='/profile'">Cancel</button>
