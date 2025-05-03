@@ -24,8 +24,8 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "title", nullable = false)
-    @NotBlank
+    @Column(name = "title", nullable = false,columnDefinition = "TEXT")
+    @NotBlank(message = "title cannot be empty")
     private String title;
 
     @Column(name = "description",columnDefinition = "TEXT", nullable = false)
