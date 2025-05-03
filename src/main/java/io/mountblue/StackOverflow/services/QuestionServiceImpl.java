@@ -150,6 +150,7 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
         }
         QuestionResponseDto questionResponseDto = new QuestionResponseDto();
         questionResponseDto.setTitle(question.getTitle());
+        questionResponseDto.setId(question.getId());
         questionResponseDto.setDescription(question.getDescription());
         questionResponseDto.setVotes(question.getUpvote() - question.getDownvote());
         questionResponseDto.setAuthor(question.getUser().getUsername());

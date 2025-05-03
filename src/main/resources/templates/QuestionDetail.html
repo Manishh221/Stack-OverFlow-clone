@@ -7,6 +7,8 @@
   <link rel="stylesheet" th:href="@{/css/questionDetail.css}" />
 </head>
 <script>
+
+
   document.addEventListener('DOMContentLoaded', function () {
     // Toggle comment form
     document.querySelectorAll('.toggle-comment-btn').forEach(button => {
@@ -120,6 +122,12 @@
       </div>
         </div>
       </div>
+
+        <!-- Question Edit Form (Initially Hidden) -->
+        <div id="question-edit-form" style="display: none; margin-top: 1em;">
+
+      </div>
+
       <div class="comment-box">
         <strong th:text="'asked ' + ${@dateUtils.format(question.createdAt)}"></strong>
         <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}" th:text="${question.user.username}">User Name</a>
@@ -231,7 +239,7 @@
             <hr />
           </div>
         </div>
-
+    <div style="display:flex; justify-content:end; gap:1em;">
         <div class="footer">
           <div class="user">
             <div class="user-info">
@@ -242,6 +250,16 @@
           </div>
         </div>
 
+<!--        <div th:if="${updatedUser!=null}" class="footer">-->
+<!--          <div class="user">-->
+<!--            <div class="user-info">-->
+<!--              <a href="#" th:text="${updatedUser.username}">Answer User</a><br>-->
+<!--              &lt;!&ndash; Example placeholder for score if available &ndash;&gt;-->
+<!--              <span th:text="${@dateUtils.format(ans.updatedAt)}">179k ● 28 ● 182 ● 240</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+    </div>
       </div>
     <h2>Your Answer</h2>
     <form method="post" th:object="${answer}" th:action="@{'/answer/create/' + ${question.id}}">

@@ -30,6 +30,7 @@
                          th:text="${#strings.toUpperCase(#strings.substring(user.username, 0, 1))}"></div>
                     <div id="profile-title">
                         <p id="profile-name" th:text="${user.username}"></p>
+                        <p th:if="${user.title!=null}" id="profile-tl" style="color:grey;" th:text="${user.title}"></p>
                         <p id="about-login">
                             <span th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy HH:mm')}"></span>
                             <span th:if="${user.lastLoginAt != null}"

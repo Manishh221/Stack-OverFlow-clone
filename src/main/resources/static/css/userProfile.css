@@ -70,12 +70,17 @@
 #profile-title{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap:-1em;
+    height:fit-content;
 }
 #profile-name{
     height: fit-content;
     margin: 0;
     font-size: 2em;
+}
+#profile-tl{
+    margin-top:-0.2em;
+    margin-bottom:-1em;
 }
 #about-login span{
     color: var(--font-color);

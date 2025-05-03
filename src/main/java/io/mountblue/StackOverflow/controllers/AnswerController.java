@@ -102,9 +102,8 @@ public class AnswerController {
             return "error";
         }
 
-        // Authorization check
-        if (!userClass.getUser().getEmail().equals(existedAnswer.getUser().getEmail())
-                && !userClass.getUser().getRole().equals("ADMIN")) {
+
+        if (userClass.getUser().getReputation() <=1) {
             return "redirect:/login";
         }
 
