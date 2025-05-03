@@ -21,7 +21,7 @@ public class VoteServiceImpl implements VoteServices {
     private AnswerRepository answerRepository;
 
     @Autowired
-    public VoteServiceImpl(QuestionVoteRepository questionVoteRepository, AnswerVoteRepository answerVoteRepository, QuestionRepository questionRepository) {
+    public VoteServiceImpl(QuestionVoteRepository questionVoteRepository, AnswerVoteRepository answerVoteRepository, QuestionRepository questionRepository,AnswerRepository answerRepository) {
         this.questionVoteRepository = questionVoteRepository;
         this.answerVoteRepository = answerVoteRepository;
         this.questionRepository = questionRepository;
@@ -36,6 +36,8 @@ public class VoteServiceImpl implements VoteServices {
         Users user = userDetails.getUser();
         if (user.getReputation() > Reputations.DOWNVOTE_EVERYWHERE) {
             Question question = questionRepository.findById(questionId).get();
+            Users questionUser = question.getUser();
+            questionUser.setReputation(questionUser.getReputation()-Reputations.QUESTION_REPUTATION_DOWNVOTE);
             questionVote.setQuestion(question);
             questionVote.setUser(user);
             questionVote.setDownvote(true);
@@ -51,6 +53,8 @@ public class VoteServiceImpl implements VoteServices {
         Users user = userDetails.getUser();
         if (user.getReputation() > Reputations.UPVOTE_EVERYWHERE) {
             Question question = questionRepository.findById(questionId).get();
+            Users questionUser = question.getUser();
+            questionUser.setReputation(questionUser.getReputation()+Reputations.QUESTION_REPUTATION_UPVOTE);
             questionVote.setQuestion(question);
             questionVote.setUser(user);
             questionVote.setUpvote(true);
@@ -66,6 +70,8 @@ public class VoteServiceImpl implements VoteServices {
         Users user = userDetails.getUser();
         if (user.getReputation() > Reputations.DOWNVOTE_EVERYWHERE) {
             Answer answer = answerRepository.findById(answerId).get();
+            Users answerUser = answer.getUser();
+            answerUser.setReputation(answerUser.getReputation()-Reputations.ANSWER_REPUTATION_DOWNVOTE);
             answerVote.setAnswer(answer);
             answerVote.setUser(user);
             answerVote.setDownvote(true);
@@ -81,12 +87,13 @@ public class VoteServiceImpl implements VoteServices {
         Users user = userDetails.getUser();
         if (user.getReputation() > Reputations.UPVOTE_EVERYWHERE) {
             Answer answer = answerRepository.findById(answerId).get();
+            Users answerUser = answer.getUser();
+            answerUser.setReputation(answerUser.getReputation()+Reputations.ANSWER_REPUTATION_UPVOTE);
             answerVote.setAnswer(answer);
             answerVote.setUser(user);
             answerVote.setUpvote(true);
             answerVoteRepository.save(answerVote);
         }
-
     }
 
 }

@@ -1,8 +1,10 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.constants.Reputations;
 import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Comment;
 import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.exceptions.InsufficientReputationException;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.AnswerService;
 import io.mountblue.StackOverflow.services.CommentService;
@@ -27,6 +29,12 @@ public class CommentController {
     public String addComment(@PathVariable Long answerId,
                              @RequestParam("commentText") String commentText,
                              @AuthenticationPrincipal UserInfo userClass){
+        if(userClass != null){
+            Users user = userClass.getUser();
+            if(user.getReputation()< Reputations.COMMENT_EVERYWHERE){
+                throw new InsufficientReputationException("You need at least 30 reputation to answer.");
+            }
+        }
         Answer answer = answerService.findAnswerById(answerId);
         Long questionId = answer.getQuestion().getId();
         Comment comment = new Comment();
@@ -51,8 +59,7 @@ public class CommentController {
             ){
                 commentService.deleteComment(commentId);
             }
-
-        return "redirect:/question/" + questionId;
+            return "redirect:/question/" + questionId;
     }
 
     @PostMapping("/comment/{commentId}/update")

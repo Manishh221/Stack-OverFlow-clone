@@ -1,13 +1,17 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.constants.Reputations;
 import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Question;
+import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.exceptions.InsufficientReputationException;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.AnswerService;
 import io.mountblue.StackOverflow.services.QuestionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,21 +38,25 @@ public class AnswerController {
     public String createAnswer(@PathVariable Long questionId, @Valid @ModelAttribute("answer") Answer answer,
                                BindingResult bindingResult, Model model,
                                @AuthenticationPrincipal UserInfo userClass){
+        //        checking user logged in
+        if(userClass==null){
+            return "redirect:/login";
+        }
+        if(userClass != null){
+            Users user = userClass.getUser();
+            if(user.getReputation()< Reputations.ANSWER_EVERYWHERE){
+                throw new InsufficientReputationException("You need at least 50 reputation to answer.");
+            }
+        }
         if (bindingResult.hasErrors()) {
             Question question = questionService.findQuestionById(questionId);
             model.addAttribute("question", question);
             model.addAttribute("answer",answer);
             return "redirect:/question/" + questionId;
         }
-
-//        checking user logged in
-        if(userClass==null){
-            return "redirect:/login";
-        }
         if(userClass.getUser().getReputation() <= 1){
             return  "redirect:/question/" + questionId;
         }
-
 
 //        saving Answer
         try {
@@ -95,7 +103,12 @@ public class AnswerController {
         if (userClass == null) {
             return "redirect:/login";
         }
-
+        if(userClass != null){
+            Users user = userClass.getUser();
+            if(user.getReputation()< Reputations.ANSWER_EVERYWHERE){
+                throw new InsufficientReputationException("You need at least 50 reputation to answer.");
+            }
+        }
         Answer existedAnswer = answerService.findAnswerById(answerId);
         if (existedAnswer == null) {
             model.addAttribute("errorMessage", "Answer not found.");
