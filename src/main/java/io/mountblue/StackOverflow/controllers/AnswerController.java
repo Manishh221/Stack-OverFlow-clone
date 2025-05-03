@@ -83,7 +83,7 @@ public String createAnswer(@PathVariable Long questionId,
         Question question = questionService.findQuestionById(questionId);
         model.addAttribute("question", question);
         model.addAttribute("answer", answer);
-        return "/question/" + questionId;
+        return "redirect:/question/" + questionId;
     }
 
     try {
