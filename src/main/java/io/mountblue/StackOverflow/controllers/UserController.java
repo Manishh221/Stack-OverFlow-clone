@@ -1,10 +1,16 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
+import io.mountblue.StackOverflow.entity.Tag;
+import io.mountblue.StackOverflow.entity.UserTags;
 import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.repositories.UserTagsRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
+import io.mountblue.StackOverflow.services.QuestionService;
+import io.mountblue.StackOverflow.services.UserService;
+import io.mountblue.StackOverflow.services.UsersServiceDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +30,14 @@ public class UserController {
     private UserService userService;
     private PasswordEncoder passwordEncoder;
     private QuestionService questionService;
+    private UserTagsRepository userTagsRepository;
 
-    public UserController(UserService userService,PasswordEncoder passwordEncoder,QuestionService questionService) {
+    public UserController(UserService userService,PasswordEncoder passwordEncoder,
+                          QuestionService questionService, UserTagsRepository userTagsRepository) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
         this.questionService=questionService;
+        this.userTagsRepository = userTagsRepository;
     }
 
     @GetMapping("/signup")
@@ -50,6 +59,9 @@ public class UserController {
     @PostMapping("/updateUser")
         public String updateUser(@ModelAttribute("user") Users user, Principal principal){
             Users existingUser = userService.findUser(user.getId());
+
+        System.out.println(user);
+
             if(existingUser==null){
                 throw new RuntimeException("User not found");
             }
@@ -102,10 +114,16 @@ public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
                           @RequestParam(value = "activitytab",defaultValue = "question") String activityTab,
                           @RequestParam(value = "settingtab", defaultValue = "editProfile") String editProfile) {
         Users user = userService.findUser(id);
+
+        List<Tag> userAllTags = userTagsRepository.findAllTagsByUserId(id);
+        System.out.println("all users tags are: " + userAllTags);
+
         model.addAttribute("user", user);
         model.addAttribute("profiletab",profileTab);
         model.addAttribute("activitytab",activityTab);
         model.addAttribute("settingtab", editProfile);
+        model.addAttribute("tagList", userAllTags);
+
         return "UserProfile";
     }
 
