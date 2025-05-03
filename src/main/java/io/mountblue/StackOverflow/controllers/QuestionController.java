@@ -140,9 +140,9 @@ public class QuestionController {
         return null;
     }
 
-    @GetMapping("/question/{id}")
-    public String showQuestion( @PathVariable Long id,Model model){
-        Question question = questionService.findQuestionById(id);
+    @GetMapping("/question/{questionId}")
+    public String showQuestion( @PathVariable Long questionId,Model model){
+        Question question = questionService.findQuestionById(questionId);
         model.addAttribute("question",question);
         model.addAttribute("answer",new Answer());
         return "QuestionDetail";
