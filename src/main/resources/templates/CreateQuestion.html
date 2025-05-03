@@ -104,7 +104,7 @@
         el: document.querySelector('#editor'),
         height: '400px',
         initialEditType: 'markdown',
-        previewStyle: 'none',
+        previewStyle: 'tab',
         placeholder: 'Include the problem and expand on what you put in the title. Minimum 20 characters.',
         plugins: [toastui.Editor.plugin.codeSyntaxHighlight],
         toolbarItems: [
@@ -113,25 +113,55 @@
             ['link', 'quote','image', 'table'],
             ['ul', 'ol',],
         ],
-        hooks: {
-            afterPreviewRender: function () {
-                document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+       hooks: {
+        addImageBlobHook: async (blob, callback) => {
+            const formData = new FormData();
+            formData.append('image', blob);
+
+            try {
+                const response = await fetch('/upload-image', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                callback(data.url, 'Image');
+            } catch (err) {
+                console.error('Image upload failed:', err);
+                alert("Failed to upload image.");
             }
+        },
+        afterPreviewRender: function () {
+            document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
         }
+    }
     });
 
     document.querySelector('#qForm').addEventListener('submit', function (e) {
-        const html = editor.getHTML();
-        const markdown = editor.getMarkdown();
-        const hiddenInput = document.getElementById('descriptionHidden');
+    let html = editor.getHTML();
+    const markdown = editor.getMarkdown();
+    const hiddenInput = document.getElementById('descriptionHidden');
 
-        if (!markdown || markdown.trim().length < 20) {
-            e.preventDefault();
-            alert("Description is too short.");
-            return;
-        }
-        hiddenInput.value = html; // or markdown depending on what you want to store
+    if (!markdown || markdown.trim().length < 20) {
+        e.preventDefault();
+        alert("Description is too short.");
+        return;
+    }
+
+    html = html.replace(/(?<!["'>])\b((https?:\/\/|www\.)[^\s<]+)/g, function (match) {
+       const href = match.startsWith('http') ? match : 'https://' + match;
+       return `<a href="${href}" target="_blank" rel="noopener noreferrer">${match}</a>`;
     });
+
+    // Fix <a href="www.google.com"> style links
+    html = html.replace(/<a\s+[^>]*href="(?!https?:\/\/)(www\.[^"]+)"[^>]*>(.*?)<\/a>/g, function(match, href, text) {
+        return `<a href="https://${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+    });
+
+
+    hiddenInput.value = html;
+});
+
 </script>
 
 <script>
