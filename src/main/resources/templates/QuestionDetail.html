@@ -195,7 +195,7 @@
                                     </div>
                                 </div>
                                 <div id="ans-cont">
-                                    <p th:text="${ans.content}">Answer content here</p>
+                                    <div th:utext="${ans.content}"></div>
                                 </div>
                             </div>
 
@@ -222,7 +222,7 @@
                             <div class="edit-form" th:attr="id='edit-form-' + ${ans.id}" style="display: none;">
                                 <form th:action="@{'/answer/update/' + ${ans.id}}" method="post">
                                     <textarea style="width:80%; margin:2em; height:fit-content;" name="updatedContent"
-                                              th:text="${ans.content}" required></textarea>
+                                              th:utext="${ans.content}" required></textarea>
                                     <div id="edit-form-btn" style="text-align: right; margin-bottom:1rem;">
                                         <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
                                                 type="submit">Update
@@ -304,29 +304,29 @@
                                 </div>
                             </div>
 
-                            <!-- NEW ANSWER INPUT -->
-                            <h2>Your Answer</h2>
-                            <form id="answerForm" method="post" th:object="${answer}"
-                                  th:action="@{'/answer/create/' + ${question.id}}">
-                                <input type="hidden" th:field="*{id}"/>
-
-                                <!-- Toast UI Editor Container -->
-                                <div id="editor" style="margin-bottom: 1em;"></div>
-
-                                <!-- Hidden Textarea (will be filled with HTML) -->
-                                <textarea id="answerContent" name="content" style="display: none;"
-                                          th:field="*{content}"></textarea>
-
-                                <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></div>
-
-                                <p>By clicking “Post Your Answer”, you agree to our
-                                    <a href="/terms">terms of service</a> and
-                                    acknowledge you have read our <a href="/privacy">privacy policy</a>.
-                                </p>
-
-                                <button class="postbtn" type="submit">Post Your Answer</button>
-                            </form>
                         </div>
+
+                        <h2>Your Answer</h2>
+                        <form id="answerForm" method="post" th:object="${answer}"
+                              th:action="@{'/answer/create/' + ${question.id}}">
+                            <input type="hidden" th:field="*{id}"/>
+
+                            <!-- Toast UI Editor Container -->
+                            <div id="editor" style="margin-bottom: 1em;"></div>
+
+                            <!-- Hidden Textarea (will be filled with HTML) -->
+                            <textarea id="answerContent" name="content" style="display: none;"
+                                      th:field="*{content}"></textarea>
+
+                            <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></div>
+
+                            <p>By clicking “Post Your Answer”, you agree to our
+                                <a href="/terms">terms of service</a> and
+                                acknowledge you have read our <a href="/privacy">privacy policy</a>.
+                            </p>
+
+                            <button class="postbtn" type="submit">Post Your Answer</button>
+                        </form>
 
                         <!-- Related Tags -->
                         <div class="related form-box">
