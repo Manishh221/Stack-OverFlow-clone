@@ -5,6 +5,7 @@
     <title th:text="${question.title}">Question Detail</title>
     <link rel="stylesheet" th:href="@{/css/header.css}"/>
     <link rel="stylesheet" th:href="@{/css/questionDetail.css}"/>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 
@@ -96,8 +97,10 @@
 <div th:replace="~{fragments/header :: header(user=${user})}"></div>
 
 <div class="detail-cont">
+    <div th:replace="fragments/Sidebar :: Sidebar"></div>
+    <div style=" display:flex; flex-direction:column; gap:1.2em; flex:1;">
 
-    <div class="question-container">
+    <div class="question-container" style="margin-left:3rem;">
         <div class="question-box">
             <h2 class="qwrap" th:text="${question.title}">Question Title</h2>
             <div class="meta">
@@ -105,8 +108,8 @@
                 Modified <span th:text="${@dateUtils.format(question.updatedAt)}">today</span>
             </div>
             <hr>
-            <div id="desc-wrap">
-                <div id="vote-cont">
+            <div id="desc-wrap" >
+                <div style="margin-top:2em;" id="vote-cont">
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                         <!-- Upvote Button -->
                         <form th:action="@{'/questions/' + ${question.id} + '/upvote'}" method="post"
@@ -138,15 +141,9 @@
                 </div>
                 <div id="desc-cont">
                     <div class="detail-cont">
-                        <div class="question-container">
+                        <div class="question-cont">
                             <!-- QUESTION -->
                             <div class="question-box">
-                                <h2 class="qwrap" th:text="${question.title}">Question Title</h2>
-                                <div class="meta">
-                                    Asked <span th:text="${@dateUtils.format(question.createdAt)}">today</span> •
-                                    Modified <span th:text="${@dateUtils.format(question.updatedAt)}">today</span>
-                                </div>
-                                <hr>
                                 <div class="qwrap" th:utext="${question.description}"></div>
 
                                 <div class="tags">
@@ -155,192 +152,186 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="comment-box">
+                        <div class="comment-box" style="position:absolute; bottom:0; left:30rem; height:fit-content;">
                             <strong th:text="'asked ' + ${@dateUtils.format(question.createdAt)}"></strong>
                             <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}"
                                th:text="${question.user.username}">User Name</a>
                         </div>
                     </div>
+                </div>
 
-                    <div class="answer-box">
-                        <h3 th:text="${#lists.size(question.answerList)} + ' Answer(s)'">1 Answer</h3>
-
-                        <div class="answ" th:each="ans : ${question.answerList}">
-                            <div id="ans-wrap">
-                                <div id="vote-cnt">
-                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                                        <!-- Upvote Button -->
-                                        <form th:action="@{'/questions/' + ${question.id} + '/upvote'}" method="post"
-                                              style="margin: 0;">
-                                            <button type="submit"
-                                                    style="font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
-                                                <span style="font-size:25px">▲</span>
-                                            </button>
-                                        </form>
-
-                                        <!-- Vote Count -->
-                                        <div style="font-size: 24px; font-weight: bold;">
-                                            <!--              <span th:text="${question.voteCount}">0</span>-->
-                                            <span>0</span>
-                                        </div>
-
-                                        <!-- Downvote Button -->
-                                        <form th:action="@{'/questions/' + ${question.id} + '/downvote'}" method="post"
-                                              style="margin: 0;">
-                                            <button type="submit"
-                                                    style="font-size:1.5em; background: none;border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
-                                                <span style="font-size:25px">▼</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div id="ans-cont">
-                                    <div th:utext="${ans.content}"></div>
-                                </div>
-                            </div>
-
-                            <!-- Hide/Show Edit Form -->
-                            <button type="button"
-                                    style="cursor:pointer; margin-top:2em; color:grey; border:none; background-color:transparent;"
-                                    class="toggle-edit-btn" th:attr="data-answer-id=${ans.id}">Edit
-                            </button>
-
-                            <!-- Delete Button -->
-                            <form th:action="@{'/answer/delete/' + ${ans.id}}" method="post" style="display: inline;">
-                                <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
-                                        type="submit">Delete
-                                </button>
-                            </form>
-
-                            <!-- Add Comment Button -->
-                            <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
-                                    type="button" class="toggle-comment-btn"
-                                    th:attr="data-answer-id=${ans.id}">Add Comment
-                            </button>
-
-                            <!-- Edit Form (Initially Hidden) -->
-                            <div class="edit-form" th:attr="id='edit-form-' + ${ans.id}" style="display: none;">
-                                <form th:action="@{'/answer/update/' + ${ans.id}}" method="post">
-                                    <textarea style="width:80%; margin:2em; height:fit-content;" name="updatedContent"
-                                              th:utext="${ans.content}" required></textarea>
-                                    <div id="edit-form-btn" style="text-align: right; margin-bottom:1rem;">
-                                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
-                                                type="submit">Update
-                                        </button>
-                                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
-                                                type="button" class="cancel-edit-btn">Cancel
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- Comment Input Box (Initially hidden) -->
-                            <div class="comment-input" th:attr="id='comment-form' + ${ans.id}" style="display: none;">
-                                <form th:action="@{'/answers/' + ${ans.id} + '/comment/create'}" method="post">
-                                    <textarea style="width:80%; margin:2em; height:fit-content;" name="commentText"
-                                              placeholder="Add your comment..." required></textarea>
-                                    <div style="text-align: right; margin-bottom:1rem;">
-                                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
-                                                type="submit">Submit
-                                        </button>
-                                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
-                                                type="button" class="cancel-comment-btn">Cancel
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- Display Comments -->
-                            <div class="comments" th:if="${ans.comments != null}">
-
-                                <div th:each="comment : ${ans.comments}">
-                                    <div id="comment">
-                                        <p id="comment-content">
-                                            <strong th:text="${comment.name}">User</strong>:
-                                            <span th:text="${comment.content}">Comment text</span>
-                                        </p>
-                                        <!--            comment buttons-->
-                                        <div>
-                                            <small th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy hh:mm')}"></small>
-                                            <!-- Update Comment Button -->
-                                            <button type="button" class="toggle-update-comment-btn"
-                                                    th:attr="data-comment-id=${comment.id}">
-                                                Update
-                                            </button>
-                                            <!-- Delete Comment Button -->
-                                            <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/delete'}"
-                                                  method="post" style="display: inline;">
-
-                                                <button type="submit">Delete</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <!-- Update Comment Form (Initially hidden) -->
-                                    <div class="update-comment-form" th:attr="id='update-comment-form-' + ${comment.id}"
-                                         style="display: none;">
-                                        <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/update'}"
-                                              method="post">
-                                            <textarea style="width:80%; margin:2em; height:fit-content;"
-                                                      name="updatedComment" required
-                                                      th:text="${comment.content}"></textarea>
-                                            <div style="text-align: right; margin-bottom:1rem;">
-                                                <button type="submit">Save</button>
-                                                <button type="button" class="cancel-update-btn">Cancel</button>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <hr/>
-                                </div>
-                            </div>
-
-                            <div class="footer">
-                                <div class="user">
-                                    <div class="user-info">
-                                        <a href="#" th:text="${ans.user.username}">Answer User</a><br>
-                                        <!-- Example placeholder for score if available -->
-                                        <span th:text="${@dateUtils.format(ans.createdAt)}">179k ● 28 ● 182 ● 240</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <h2>Your Answer</h2>
-                        <form id="answerForm" method="post" th:object="${answer}"
-                              th:action="@{'/answer/create/' + ${question.id}}">
-                            <input type="hidden" th:field="*{id}"/>
-
-                            <!-- Toast UI Editor Container -->
-                            <div id="editor" style="margin-bottom: 1em;"></div>
-
-                            <!-- Hidden Textarea (will be filled with HTML) -->
-                            <textarea id="answerContent" name="content" style="display: none;"
-                                      th:field="*{content}"></textarea>
-
-                            <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></div>
-
-                            <p>By clicking “Post Your Answer”, you agree to our
-                                <a href="/terms">terms of service</a> and
-                                acknowledge you have read our <a href="/privacy">privacy policy</a>.
-                            </p>
-
-                            <button class="postbtn" type="submit">Post Your Answer</button>
-                        </form>
-
-                        <!-- Related Tags -->
-                        <div class="related form-box">
-                            <h4>Explore related questions</h4>
-                            <div class="tags">
-                                <span th:each="tag : ${question.questionTags}"
-                                      th:text="${tag.tag.tagName}">Related Tag</span>
-                            </div>
-                            <p>See similar questions with these tags.</p>
-                        </div>
                     </div>
                 </div>
             </div>
 
+    <div class="answer-box" style="margin-left:8rem;" >
+        <h3 th:text="${#lists.size(question.answerList)} + ' Answer(s)'">1 Answer</h3>
+
+        <div class="answ" th:each="ans : ${question.answerList}">
+            <div id="ans-wrap">
+                <div id="vote-cnt" style="margin-top:2em; margin-left:-2em;">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <!-- Upvote Button -->
+                        <form th:action="@{'/questions/' + ${question.id} + '/upvote'}" method="post"
+                              style="margin: 0;">
+                            <button type="submit"
+                                    style="font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
+                                <span style="font-size:25px">▲</span>
+                            </button>
+                        </form>
+
+                        <!-- Vote Count -->
+                        <div style="font-size: 24px; font-weight: bold;">
+                            <!--              <span th:text="${question.voteCount}">0</span>-->
+                            <span>0</span>
+                        </div>
+
+                        <!-- Downvote Button -->
+                        <form th:action="@{'/questions/' + ${question.id} + '/downvote'}" method="post"
+                              style="margin: 0;">
+                            <button type="submit"
+                                    style="font-size:1.5em; background: none;border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
+                                <span style="font-size:25px">▼</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div id="ans-cont" style="margin-top:2em; margin-left:1.5em;">
+                    <div th:utext="${ans.content}"></div>
+                </div>
+            </div>
+
+            <!-- Hide/Show Edit Form -->
+            <button type="button"
+                    style="cursor:pointer; margin-top:2em; color:grey; border:none; background-color:transparent;"
+                    class="toggle-edit-btn" th:attr="data-answer-id=${ans.id}">Edit
+            </button>
+
+            <!-- Delete Button -->
+            <form th:action="@{'/answer/delete/' + ${ans.id}}" method="post" style="display: inline;">
+                <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                        type="submit">Delete
+                </button>
+            </form>
+
+            <!-- Add Comment Button -->
+            <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                    type="button" class="toggle-comment-btn"
+                    th:attr="data-answer-id=${ans.id}">Add Comment
+            </button>
+
+            <!-- Edit Form (Initially Hidden) -->
+            <div class="edit-form" th:attr="id='edit-form-' + ${ans.id}" style="display: none;">
+                <form th:action="@{'/answer/update/' + ${ans.id}}" method="post">
+                                    <textarea style="width:80%; margin:2em; height:fit-content;" name="updatedContent"
+                                              th:utext="${ans.content}" required></textarea>
+                    <div id="edit-form-btn" style="text-align: right; margin-bottom:1rem;">
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                                type="submit">Update
+                        </button>
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                                type="button" class="cancel-edit-btn">Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Comment Input Box (Initially hidden) -->
+            <div class="comment-input" th:attr="id='comment-form' + ${ans.id}" style="display: none;">
+                <form th:action="@{'/answers/' + ${ans.id} + '/comment/create'}" method="post">
+                                    <textarea style="width:80%; margin:2em; height:fit-content;" name="commentText"
+                                              placeholder="Add your comment..." required></textarea>
+                    <div style="text-align: right; margin-bottom:1rem;">
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                                type="submit">Submit
+                        </button>
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                                type="button" class="cancel-comment-btn">Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Display Comments -->
+            <div class="comments" th:if="${ans.comments != null}">
+
+                <div th:each="comment : ${ans.comments}">
+                    <div id="comment">
+                        <p id="comment-content">
+                            <strong th:text="${comment.name}">User</strong>:
+                            <span th:text="${comment.content}">Comment text</span>
+                        </p>
+                        <!--            comment buttons-->
+                        <div>
+                            <small th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy hh:mm')}"></small>
+                            <!-- Update Comment Button -->
+                            <button type="button" class="toggle-update-comment-btn"
+                                    th:attr="data-comment-id=${comment.id}">
+                                Update
+                            </button>
+                            <!-- Delete Comment Button -->
+                            <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/delete'}"
+                                  method="post" style="display: inline;">
+
+                                <button type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Update Comment Form (Initially hidden) -->
+                    <div class="update-comment-form" th:attr="id='update-comment-form-' + ${comment.id}"
+                         style="display: none;">
+                        <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/update'}"
+                              method="post">
+                                            <textarea style="width:80%; margin:2em; height:fit-content;"
+                                                      name="updatedComment" required
+                                                      th:text="${comment.content}"></textarea>
+                            <div style="text-align: right; margin-bottom:1rem;">
+                                <button type="submit">Save</button>
+                                <button type="button" class="cancel-update-btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr/>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="user">
+                    <div class="user-info">
+                        <a href="#" th:text="${ans.user.username}">Answer User</a><br>
+                        <!-- Example placeholder for score if available -->
+                        <span th:text="${@dateUtils.format(ans.createdAt)}">179k ● 28 ● 182 ● 240</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <h2>Your Answer</h2>
+        <form id="answerForm" method="post" th:object="${answer}"
+              th:action="@{'/answer/create/' + ${question.id}}">
+            <input type="hidden" th:field="*{id}"/>
+
+            <!-- Toast UI Editor Container -->
+            <div id="editor" style="margin-bottom: 1em;"></div>
+
+            <!-- Hidden Textarea (will be filled with HTML) -->
+            <textarea id="answerContent" name="content" style="display: none;"
+                      th:field="*{content}"></textarea>
+
+            <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></div>
+
+            <p>By clicking “Post Your Answer”, you agree to our
+                <a href="/terms">terms of service</a> and
+                acknowledge you have read our <a href="/privacy">privacy policy</a>.
+            </p>
+
+            <button style="margin:2rem 0 2rem 0;" class="postbtn" type="submit">Post Your Answer</button>
+        </form>
+    </div>
+
+    </div>
             <div class="sidebar">
                 <div class="sidebar-card">
                     <div class="sidebar-section">
@@ -357,7 +348,7 @@
 
                     <div class="divider"></div>
 
-                    <div class="sidebar-section">
+                    <div class="sidebar-section" style="">
                         <h4>Featured on Meta</h4>
                         <div class="sidebar-item">
                             <i>💬</i>
@@ -480,5 +471,10 @@
                         document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
                     });
                 </script>
+            </div>
+
+
+
+</div>
 </body>
 </html>
