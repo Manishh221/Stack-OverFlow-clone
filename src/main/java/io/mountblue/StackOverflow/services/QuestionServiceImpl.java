@@ -1,13 +1,11 @@
 package io.mountblue.StackOverflow.services;
 
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
-import io.mountblue.StackOverflow.entity.Question;
-import io.mountblue.StackOverflow.entity.QuestionTag;
-import io.mountblue.StackOverflow.entity.Tag;
-import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.entity.*;
 import io.mountblue.StackOverflow.repositories.QuestionRepository;
 import io.mountblue.StackOverflow.repositories.QuestionTagRepository;
 import io.mountblue.StackOverflow.repositories.TagRepository;
+import io.mountblue.StackOverflow.repositories.UserTagsRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,14 +29,15 @@ public class QuestionServiceImpl implements QuestionService{
     private TagRepository tagRepository;
     private QuestionRepository questionRepository;
     private QuestionTagRepository questionTagRepository;
-
+    private UserTagsRepository userTagsRepository;
 
    @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository,
-                               TagRepository tagRepository, QuestionTagRepository questionTagRepository) {
+                               TagRepository tagRepository, QuestionTagRepository questionTagRepository, UserTagsRepository userTagsRepository) {
         this.questionRepository = questionRepository;
         this.tagRepository = tagRepository;
         this.questionTagRepository = questionTagRepository;
+        this.userTagsRepository = userTagsRepository;
     }
 
 //  --------------  delete the question--------------------------------------
@@ -73,11 +72,14 @@ public class QuestionServiceImpl implements QuestionService{
                        return tagRepository.save(newTag);
                    });
 
+           UserTags userTags = new UserTags();
+           userTags.setUser(user);
+           userTags.setTag(tag);
+           userTagsRepository.save(userTags);
            QuestionTag questionTag = new QuestionTag();
            questionTag.setQuestion(savedQuestion);
            questionTag.setTag(tag);
            questionTag.setCreatedAt(LocalDateTime.now());
-
            questionTagSet.add(questionTag);
        }
 

@@ -1,13 +1,17 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
+import io.mountblue.StackOverflow.entity.Tag;
+import io.mountblue.StackOverflow.entity.UserTags;
 import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.repositories.UserTagsRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
 import io.mountblue.StackOverflow.services.UsersServiceDetails;
+import org.springframework.core.metrics.StartupStep;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,11 +31,14 @@ public class UserController {
     private UserService userService;
     private PasswordEncoder passwordEncoder;
     private QuestionService questionService;
+    private UserTagsRepository userTagsRepository;
 
-    public UserController(UserService userService,PasswordEncoder passwordEncoder,QuestionService questionService) {
+    public UserController(UserService userService,PasswordEncoder passwordEncoder,
+                          QuestionService questionService, UserTagsRepository userTagsRepository) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
         this.questionService=questionService;
+        this.userTagsRepository = userTagsRepository;
     }
 
     @GetMapping("/signup")
@@ -115,10 +122,16 @@ public class UserController {
                           @RequestParam(value = "activitytab",defaultValue = "question") String activityTab,
                           @RequestParam(value = "settingtab", defaultValue = "editProfile") String editProfile) {
         Users user = userService.findUser(id);
+
+        List<Tag> userAllTags = userTagsRepository.findAllTagsByUserId(id);
+        System.out.println("all users tags are: " + userAllTags);
+
         model.addAttribute("user", user);
         model.addAttribute("profiletab",profileTab);
         model.addAttribute("activitytab",activityTab);
         model.addAttribute("settingtab", editProfile);
+        model.addAttribute("tagList", userAllTags);
+
         return "UserProfile";
     }
 
@@ -149,8 +162,11 @@ public class UserController {
         return "UsersList";
     }
 
+    @GetMapping("/dt/{userId}")
+    public String showAllTags(@PathVariable("userId") Long id) {
 
 
-
+    return "/user/" + id + "?profiletab=profile";
+}
 
 }
