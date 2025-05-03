@@ -26,4 +26,8 @@
         <div th:replace="~{fragments/answer :: answer(user=${user})}"></div>
     </div>
 
+    <div class="user-main" th:if="${activitytab == 'tags'}">
+        <div th:replace="~{fragments/tags :: tagBox(allTags=${tagList})}"></div>
+    </div>
+
 </div>

@@ -62,4 +62,13 @@ public class Tag {
     public void setQuestionTags(Set<QuestionTag> questionTags) {
         this.questionTags = questionTags;
     }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "tagId=" + tagId +
+                ", tagName='" + tagName + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

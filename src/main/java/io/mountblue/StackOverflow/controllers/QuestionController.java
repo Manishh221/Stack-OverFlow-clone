@@ -5,6 +5,7 @@ import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.Tag;
 import io.mountblue.StackOverflow.repositories.QuestionRepository;
+import io.mountblue.StackOverflow.entity.UserTags;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.TagService;

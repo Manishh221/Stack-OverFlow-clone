@@ -802,3 +802,74 @@ h5{
       word-wrap: break-word;
       padding-left: 26px;
   }
+
+
+/* activity/tag section: */
+
+.tag-section {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tag-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.sort-toggle {
+    display: flex;
+    gap: 6px;
+}
+
+.sort-button {
+    padding: 4px 10px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.sort-button.active {
+    font-weight: bold;
+    background-color: #e0e0e0;
+}
+
+.tag-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tag-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 11px;
+    border-bottom: 1px solid #e1e1e1;
+    border-radius: 6px;
+    align-items: center;
+    background-color: #fff;
+}
+
+.tag-name {
+    background-color: #f1f2f3;
+    color: #3b4045;
+    padding: 5px 11px;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 13px;
+    font-family: sans-serif;
+}
+
+.tag-score, .tag-posts {
+    font-size: 13px;
+    color: #2f2f2f;
+}
+
+.unit {
+    color: #777;
+    margin-left: 2px;
+}

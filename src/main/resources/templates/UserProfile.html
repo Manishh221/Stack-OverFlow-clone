@@ -79,9 +79,10 @@
                 <div  th:if="${profiletab == 'profile'}">
                     <div th:replace="~{fragments/profilestat :: profilestat(user=${user})}"></div>
                 </div>
-                <div th:if="${profiletab == 'activity'}">
-                    <div th:replace="~{fragments/activitystat :: activitystat(user=${user},  activitytab=${activitytab})}"></div>
-                </div>
+
+            <div th:if="${profiletab == 'activity'}">
+                <div th:replace="~{fragments/activitystat :: activitystat(user=${user}, activitytab=${activitytab}, tagList=${tagList})}"></div>
+            </div>
 
             <div th:if="${profiletab == 'settings'}">
                 <div th:replace="~{fragments/settingstat :: settingstat(user=${user})}"></div>
