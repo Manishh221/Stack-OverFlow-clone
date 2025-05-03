@@ -53,6 +53,9 @@ public class UserController {
     @PostMapping("/updateUser")
         public String updateUser(@ModelAttribute("user") Users user, Principal principal){
             Users existingUser = userService.findUser(user.getId());
+
+        System.out.println(user);
+
             if(existingUser==null){
                 throw new RuntimeException("User not found");
             }
@@ -80,6 +83,17 @@ public class UserController {
         return "Login";
     }
 
+    @GetMapping("/")public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
+        Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
+        List<QuestionResponseDto> questionList = questions.getContent();
+        System.out.println("The questions are: " + questionList);
+        if (!questionList.isEmpty()) {
+            System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
+        }    if (userInfo != null && userInfo.getUser() != null) {
+            model.addAttribute("user", userInfo.getUser());    }
+        model.addAttribute("questions", questions);
+        return "Home";}
+
 //    @GetMapping("/")
 //    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
 //        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
@@ -95,34 +109,6 @@ public class UserController {
 ////        }
 //        return "Home";
 //    }
-@GetMapping("/")
-public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
-    // Fetch all questions (first page)
-    Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
-
-    // Get content of the page (list of questions)
-    List<QuestionResponseDto> questionList = questions.getContent();
-
-    // Print the list of questions
-    System.out.println("The questions are: " + questionList);
-
-    // If there are questions, print the vote count of the first question
-    if (!questionList.isEmpty()) {
-        System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
-    }
-
-    // Check if userInfo is available and add user to the model
-    if (userInfo != null && userInfo.getUser() != null) {
-        model.addAttribute("user", userInfo.getUser());
-    }
-
-    // Add the list of questions to the model
-    model.addAttribute("questions", questions);
-
-    // Return the view name
-    return "Home";
-}
-
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
