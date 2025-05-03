@@ -11,6 +11,7 @@ import io.mountblue.StackOverflow.services.UserService;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
 import io.mountblue.StackOverflow.services.UsersServiceDetails;
+import org.springframework.core.metrics.StartupStep;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,22 +33,22 @@ public class UserController {
     private QuestionService questionService;
     private UserTagsRepository userTagsRepository;
 
-    public UserController(UserService userService,PasswordEncoder passwordEncoder,
+    public UserController(UserService userService, PasswordEncoder passwordEncoder,
                           QuestionService questionService, UserTagsRepository userTagsRepository) {
         this.userService = userService;
-        this.passwordEncoder=passwordEncoder;
-        this.questionService=questionService;
+        this.passwordEncoder = passwordEncoder;
+        this.questionService = questionService;
         this.userTagsRepository = userTagsRepository;
     }
 
     @GetMapping("/signup")
-    public String showSignup(Model model){
-        model.addAttribute("user",new Users());
+    public String showSignup(Model model) {
+        model.addAttribute("user", new Users());
         return "Signup";
     }
 
     @PostMapping("/adduser")
-    public String addUser(@ModelAttribute("user") Users user){
+    public String addUser(@ModelAttribute("user") Users user) {
         user.setCreatedAt(LocalDateTime.now());
         List<String> splitList = List.of(user.getEmail().split("@"));
         user.setUsername(splitList.get(0));
@@ -57,20 +58,20 @@ public class UserController {
     }
 
     @PostMapping("/updateUser")
-        public String updateUser(@ModelAttribute("user") Users user, Principal principal){
-            Users existingUser = userService.findUser(user.getId());
+    public String updateUser(@ModelAttribute("user") Users user, Principal principal) {
+        Users existingUser = userService.findUser(user.getId());
 
         System.out.println(user);
 
-            if(existingUser==null){
-                throw new RuntimeException("User not found");
-            }
+        if (existingUser == null) {
+            throw new RuntimeException("User not found");
+        }
         if (principal != null) {
             String email = principal.getName();
             Users loggedInUser = userService.loadUserByEmail(email);
-            if((Objects.equals(loggedInUser.getRole(), "ADMIN")) || (Objects.equals(loggedInUser.getEmail(), user.getEmail()))){
+            if ((Objects.equals(loggedInUser.getRole(), "ADMIN")) || (Objects.equals(loggedInUser.getEmail(), user.getEmail()))) {
                 user.setUpdatedAt(LocalDateTime.now());
-                System.out.println("Tghe user is "+user);
+                System.out.println("Tghe user is " + user);
                 userService.createNewUser(user);
 
             }
@@ -79,39 +80,39 @@ public class UserController {
     }
 
     @PostMapping("/deleteUser/{id}")
-        public String deleteUser(@PathVariable("id") Long id){
-            userService.deleteUser(id);
-            return "redirect:/";
+    public String deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+        return "redirect:/";
     }
 
     @GetMapping("/login")
-    public String loginForm(){
+    public String loginForm() {
         return "Login";
     }
 
-@GetMapping("/")
-public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
-    Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
-    List<QuestionResponseDto> questionList = questions.getContent();
+    @GetMapping("/")
+    public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
+        Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
+        List<QuestionResponseDto> questionList = questions.getContent();
 
-    System.out.println("The questions are: " + questionList);
+        System.out.println("The questions are: " + questionList);
 
-    if (!questionList.isEmpty()) {
-        System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
+        if (!questionList.isEmpty()) {
+            System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
+        }
+
+        if (userInfo != null && userInfo.getUser() != null) {
+            model.addAttribute("user", userInfo.getUser());
+        }
+
+        model.addAttribute("questions", questions);
+
+        return "Home";
     }
-
-    if (userInfo != null && userInfo.getUser() != null) {
-        model.addAttribute("user", userInfo.getUser());
-    }
-
-    model.addAttribute("questions", questions);
-
-    return "Home";
-}
 
     @GetMapping("/user/{id}")
-    public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
-                          @RequestParam(value = "activitytab",defaultValue = "question") String activityTab,
+    public String getUser(@PathVariable Long id, Model model, @RequestParam(value = "profiletab") String profileTab,
+                          @RequestParam(value = "activitytab", defaultValue = "question") String activityTab,
                           @RequestParam(value = "settingtab", defaultValue = "editProfile") String editProfile) {
         Users user = userService.findUser(id);
 
@@ -119,8 +120,8 @@ public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
         System.out.println("all users tags are: " + userAllTags);
 
         model.addAttribute("user", user);
-        model.addAttribute("profiletab",profileTab);
-        model.addAttribute("activitytab",activityTab);
+        model.addAttribute("profiletab", profileTab);
+        model.addAttribute("activitytab", activityTab);
         model.addAttribute("settingtab", editProfile);
         model.addAttribute("tagList", userAllTags);
 
@@ -154,8 +155,7 @@ public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
         return "UsersList";
     }
 
-
-
-
-
 }
+
+
+

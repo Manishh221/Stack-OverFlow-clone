@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 @Table(name = "user_tags")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class UserTags {
 
     @Id
@@ -40,5 +38,37 @@ public class UserTags {
                 ", tag=" + tag +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
