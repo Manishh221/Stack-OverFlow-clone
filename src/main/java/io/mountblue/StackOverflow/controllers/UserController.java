@@ -80,21 +80,49 @@ public class UserController {
         return "Login";
     }
 
-    @GetMapping("/")
-    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
-        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
-        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent().get(0).getVotes());
-//        model.addAttribute("user",userInfo.getUser());
-//        @AuthenticationPrincipal UserInfo userInfo ,
-        if(userInfo.getUser() != null){
-            model.addAttribute("user",userInfo.getUser());
-        }
-        model.addAttribute("questions",questions);
+//    @GetMapping("/")
+//    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
+//        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
+//        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent().get(0).getVotes());
+////        model.addAttribute("user",userInfo.getUser());
+////        @AuthenticationPrincipal UserInfo userInfo ,
 //        if(userInfo.getUser() != null){
-//
+//            model.addAttribute("user",userInfo.getUser());
 //        }
-        return "Home";
+//        model.addAttribute("questions",questions);
+////        if(userInfo.getUser() != null){
+////
+////        }
+//        return "Home";
+//    }
+@GetMapping("/")
+public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
+    // Fetch all questions (first page)
+    Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
+
+    // Get content of the page (list of questions)
+    List<QuestionResponseDto> questionList = questions.getContent();
+
+    // Print the list of questions
+    System.out.println("The questions are: " + questionList);
+
+    // If there are questions, print the vote count of the first question
+    if (!questionList.isEmpty()) {
+        System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
     }
+
+    // Check if userInfo is available and add user to the model
+    if (userInfo != null && userInfo.getUser() != null) {
+        model.addAttribute("user", userInfo.getUser());
+    }
+
+    // Add the list of questions to the model
+    model.addAttribute("questions", questions);
+
+    // Return the view name
+    return "Home";
+}
+
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,

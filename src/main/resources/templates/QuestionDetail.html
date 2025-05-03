@@ -84,13 +84,42 @@
         Modified <span th:text="${@dateUtils.format(question.updatedAt)}">today</span>
       </div>
       <hr>
+      <div id="desc-wrap">
+        <div id="vote-cont">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <!-- Upvote Button -->
+            <form th:action="@{'/questions/' + ${question.id} + '/upvote'}" method="post" style="margin: 0;">
+              <button type="submit" style="font-size:1.5em; background: none; border-color:gray; border-radius:50%; padding:5px; cursor: pointer;">
+                <span style="font-size:25px">▲</span>
+              </button>
+            </form>
+
+            <!-- Vote Count -->
+            <div style="font-size: 24px; font-weight: bold;">
+<!--              <span th:text="${question.voteCount}">0</span>-->
+              <span th:text="${question.upvote-question.downvote}">1</span>
+            </div>
+
+            <!-- Downvote Button -->
+            <form th:action="@{'/questions/' + ${question.id} + '/downvote'}" method="post" style="margin: 0;">
+              <button type="submit" style="font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
+                <span style="font-size:25px">▼</span>
+              </button>
+            </form>
+
+
+          </div>
+
+        </div>
+        <div id="desc-cont">
       <p class="qwrap" th:text="${question.description}">Question description here</p>
 
       <div class="tags">
                 <span th:each="tag : ${question.questionTags}"
                       th:text="${tag.tag.tagName}">Tag</span>
       </div>
-
+        </div>
+      </div>
       <div class="comment-box">
         <strong th:text="'asked ' + ${@dateUtils.format(question.createdAt)}"></strong>
         <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}" th:text="${question.user.username}">User Name</a>
@@ -101,18 +130,45 @@
       <h3 th:text="${#lists.size(question.answerList)} + ' Answer(s)'">1 Answer</h3>
 
       <div class="answ" th:each="ans : ${question.answerList}">
+        <div id="ans-wrap">
+          <div id="vote-cnt">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+              <!-- Upvote Button -->
+              <form th:action="@{'/questions/' + ${question.id} + '/upvote'}" method="post" style="margin: 0;">
+                <button type="submit" style="font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
+                 <span style="font-size:25px">▲</span>
+                </button>
+              </form>
+
+              <!-- Vote Count -->
+              <div style="font-size: 24px; font-weight: bold;">
+                <!--              <span th:text="${question.voteCount}">0</span>-->
+                <span>0</span>
+              </div>
+
+              <!-- Downvote Button -->
+              <form th:action="@{'/questions/' + ${question.id} + '/downvote'}" method="post" style="margin: 0;">
+                <button type="submit" style="font-size:1.5em; background: none;border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
+                  <span style="font-size:25px">▼</span>
+                </button>
+              </form>
+            </div>
+          </div>
+          <div id="ans-cont">
         <p th:text="${ans.content}">Answer content here</p>
+          </div>
+        </div>
 
         <!-- Hide/Show Edit Form -->
-        <button type="button" class="toggle-edit-btn" th:attr="data-answer-id=${ans.id}">Edit</button>
+        <button type="button" style="cursor:pointer; margin-top:2em; color:grey; border:none; background-color:transparent;" class="toggle-edit-btn" th:attr="data-answer-id=${ans.id}">Edit</button>
 
         <!-- Delete Button -->
         <form th:action="@{'/answer/delete/' + ${ans.id}}" method="post" style="display: inline;">
-          <button type="submit">Delete</button>
+          <button style="cursor:pointer; border:none; background-color:transparent; color:grey;" type="submit">Delete</button>
         </form>
 
         <!-- Add Comment Button -->
-        <button type="button" class="toggle-comment-btn"
+        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;" type="button" class="toggle-comment-btn"
                 th:attr="data-answer-id=${ans.id}">Add Comment</button>
 
         <!-- Edit Form (Initially Hidden) -->
@@ -120,8 +176,8 @@
           <form th:action="@{'/answer/update/' + ${ans.id}}" method="post">
             <textarea style="width:80%; margin:2em; height:fit-content;" name="updatedContent" th:text="${ans.content}" required></textarea>
             <div id="edit-form-btn" style="text-align: right; margin-bottom:1rem;">
-              <button type="submit">Update</button>
-              <button type="button" class="cancel-edit-btn">Cancel</button>
+              <button style="cursor:pointer; border:none; background-color:transparent; color:grey;" type="submit">Update</button>
+              <button style="cursor:pointer; border:none; background-color:transparent; color:grey;" type="button" class="cancel-edit-btn">Cancel</button>
             </div>
           </form>
         </div>
@@ -131,8 +187,8 @@
           <form th:action="@{'/answers/' + ${ans.id} + '/comment/create'}" method="post">
             <textarea style="width:80%; margin:2em; height:fit-content;" name="commentText" placeholder="Add your comment..." required ></textarea>
            <div style="text-align: right; margin-bottom:1rem;">
-             <button type="submit">Submit</button>
-             <button type="button" class="cancel-comment-btn">Cancel</button>
+             <button style="cursor:pointer; border:none; background-color:transparent; color:grey;" type="submit">Submit</button>
+             <button style="cursor:pointer; border:none; background-color:transparent; color:grey;" type="button" class="cancel-comment-btn">Cancel</button>
            </div>
           </form>
         </div>
