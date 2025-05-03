@@ -24,20 +24,12 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "title", nullable = false)
-    @NotBlank
-    @Pattern(
-            regexp = "^[a-zA-Z0-9 ?!.]{10,100}$",
-            message = "Title must be 10-100 characters and contain only letters, numbers, spaces, ?, !, or ."
-    )
+    @Column(name = "title", nullable = false,columnDefinition = "TEXT")
+    @NotBlank(message = "title cannot be empty")
     private String title;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description",columnDefinition = "TEXT", nullable = false)
     @NotBlank(message = "Description cannot be empty")
-    @Pattern(
-            regexp = "^[\\s\\S]{30,1000}$",
-            message = "Description must be 30-1000 characters."
-    )
     private String description;
 
     @Column(name = "upvote")

@@ -577,4 +577,53 @@ aside.sidebar {
         display: none;
     }
 }
+------------
+.content-wrapper {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 32px;
+  padding: 40px 64px;
+  background: #f1f2f3;
+}
+
+.question-column {
+  background: #fff;
+  border-radius: 8px;
+  padding: 30px 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.help-column {
+  background: #f8f9f9;
+  border: 1px solid #e4e6e8;
+  border-radius: 6px;
+  padding: 24px;
+  height: max-content;
+}
+
+/* Style the editor container */
+#editor {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+/* Optional: Make the inner content scrollable */
+.toastui-editor-defaultUI {
+overflow-y:scroll;
+    max-height: 500px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Reduce spacing between editor and other inputs */
+.question-fields #editor {
+    margin-top: 10px;
+}
+
 

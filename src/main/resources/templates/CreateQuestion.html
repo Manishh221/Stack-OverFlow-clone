@@ -4,48 +4,37 @@
     <meta charset="UTF-8">
     <title>Ask a Public Question</title>
 
+    <!-- Styles -->
     <link rel="stylesheet" th:href="@{/css/createquestion.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 
+    <!-- Scripts -->
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"></script>
     <style>
-        .content-wrapper{
-            flex:1;
-            display:grid;
-            grid-template-columns: 1fr 300px;
-            gap:32px;
-            padding:40px 64px;
-            background:#f1f2f3;
-        }
-
-        .question-column{
-            background:#fff;border-radius:8px;
-            padding:30px 40px;box-shadow:0 2px 10px rgba(0,0,0,.05);
-            display:flex;flex-direction:column;gap:24px;
-        }
-
-        .help-column{
-            background:#f8f9f9;border:1px solid #e4e6e8;
-            border-radius:6px;padding:24px;height:max-content;
-        }
+        .toastui-editor-tabs {
+    display: none !important;
+}
     </style>
 </head>
 <body>
 
+<!-- Header -->
 <div th:replace="~{fragments/header :: header(user=${user})}"></div>
 
-<!-- ======= sidebar + main area ======= -->
+<!-- Layout -->
 <div class="layout">
     <div th:replace="fragments/Sidebar :: Sidebar"></div>
 
     <main class="content-wrapper">
-
-        <!-- ========== MAIN QUESTION FORM ========== -->
         <section class="question-column">
-
             <h1>Ask a public question</h1>
 
-            <form th:action="@{/create-question}" th:object="${question}" method="post">
-                <!-- TITLE --------------------------------------------------- -->
+            <form th:action="@{/create-question}" th:object="${question}" method="post" id="qForm">
+                <!-- Title -->
                 <div th:classappend="${#fields.hasErrors('title')} ? 'has-error'" class="question-fields">
                     <label for="title">Title*</label>
                     <div class="subtext">Be specific and imagine you’re asking a question to another person</div>
@@ -53,34 +42,39 @@
                     <p class="error-msg" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
                 </div>
 
-                <!-- DESCRIPTION -------------------------------------------- -->
+                <!-- Descriptqion -->
                 <div th:classappend="${#fields.hasErrors('description')} ? 'has-error'" class="question-fields">
-                    <label for="description">Description*</label>
+                    <label>Question</label>
                     <div class="subtext">Include all the information someone would need to answer your question</div>
-                    <textarea id="description" th:field="*{description}"></textarea>
+
+                    <input type="hidden" id="descriptionHidden" name="description" />
+                    <div id="editor"></div>
+
                     <p class="error-msg" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
                 </div>
 
+                <!-- Tags -->
                 <div class="question-fields">
-                <label for="tagInput">Tags*</label>
-                <div class="subtext">Type to search or add (max&nbsp;5)</div>
+                    <label for="tagInput">Tags*</label>
+                    <div class="subtext">Type to search or add (max&nbsp;5)</div>
 
-                <div id="tagBox" class="tag-box">
-                    <input id="tagInput" autocomplete="off" placeholder="start typing…">
+                    <div id="tagBox" class="tag-box">
+                        <input id="tagInput" autocomplete="off" placeholder="start typing…">
+                    </div>
+
+                    <ul id="tagMenu" class="tag-menu hidden">
+                        <li th:each="t : ${allTags}" th:text="${t}" class="item">java</li>
+                    </ul>
+
+                    <input type="hidden" id="tagsHidden" name="tags">
+                    <p class="error-msg" th:if="${tagsError}" th:text="${tagsError}"></p>
                 </div>
 
-                <ul id="tagMenu" class="tag-menu hidden">
-                    <li th:each="t : ${allTags}" th:text="${t}" class="item">java</li>
-                </ul>
-
-                <input type="hidden" id="tagsHidden" name="tags">
-                <p class="error-msg" th:if="${tagsError}" th:text="${tagsError}"></p>
-                <p th:field="${tags}"></p>
-                </div>
                 <button class="ask-btn" type="submit">Submit your question</button>
             </form>
         </section>
 
+        <!-- Help Sidebar -->
         <aside class="help-column">
             <div class="help-box">
                 <h2>Step&nbsp;1: Draft your question</h2>
@@ -89,39 +83,102 @@
 
                 <details class="help-step">
                     <summary>1. Summarize the problem</summary>
-                    <div class="step-content">
-                        Explain what you're trying to do and what you expected to happen.
-                    </div>
+                    <div class="step-content">Explain what you're trying to do and what you expected to happen.</div>
                 </details>
-
                 <details class="help-step">
                     <summary>2. Describe what you’ve tried</summary>
-                    <div class="step-content">
-                        Share the research or steps you've taken so far.
-                    </div>
+                    <div class="step-content">Share the research or steps you've taken so far.</div>
                 </details>
-
                 <details class="help-step">
                     <summary>3. Show some code</summary>
-                    <div class="step-content">
-                        Add relevant code snippets to illustrate your issue.
-                    </div>
+                    <div class="step-content">Add relevant code snippets to illustrate your issue.</div>
                 </details>
             </div>
         </aside>
-
     </main>
 </div>
+
+<!-- ToastUI Editor Initialization & Submit Handler -->
+<script>
+    const editor = new toastui.Editor({
+        el: document.querySelector('#editor'),
+        height: '400px',
+        initialEditType: 'markdown',
+        previewStyle: 'tab',
+        placeholder: 'Include the problem and expand on what you put in the title. Minimum 20 characters.',
+        plugins: [toastui.Editor.plugin.codeSyntaxHighlight],
+        toolbarItems: [
+            ['heading', 'bold', 'italic'],
+            ['code' ,'codeblock'],
+            ['link', 'quote','image', 'table'],
+            ['ul', 'ol',],
+        ],
+       hooks: {
+        addImageBlobHook: async (blob, callback) => {
+            const formData = new FormData();
+            formData.append('image', blob);
+
+            try {
+                const response = await fetch('/upload-image', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                callback(data.url, 'Image');
+            } catch (err) {
+                console.error('Image upload failed:', err);
+                alert("Failed to upload image.");
+            }
+        },
+        afterPreviewRender: function () {
+            document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+        }
+    }
+    });
+
+    document.querySelector('#qForm').addEventListener('submit', function (e) {
+    let html = editor.getHTML();
+    const markdown = editor.getMarkdown();
+    const hiddenInput = document.getElementById('descriptionHidden');
+
+    if (!markdown || markdown.trim().length < 20) {
+        e.preventDefault();
+        alert("Description is too short.");
+        return;
+    }
+
+    html = html.replace(/(?<!["'>])\b((https?:\/\/|www\.)[^\s<]+)/g, function (match) {
+       const href = match.startsWith('http') ? match : 'https://' + match;
+       return `<a href="${href}" target="_blank" rel="noopener noreferrer">${match}</a>`;
+    });
+
+    // Fix <a href="www.google.com"> style links
+    html = html.replace(/<a\s+[^>]*href="(?!https?:\/\/)(www\.[^"]+)"[^>]*>(.*?)<\/a>/g, function(match, href, text) {
+        return `<a href="https://${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+    });
+
+
+    hiddenInput.value = html;
+});
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+    });
+</script>
+
+<!-- Tag Input Script remains unchanged -->
 <script th:inline="javascript">
     (() => {
         const MAX = 5;
-
-        const box    = document.getElementById('tagBox');
-        const input  = document.getElementById('tagInput');
-        const menu   = document.getElementById('tagMenu');
-        const items  = Array.from(menu.querySelectorAll('.item'));
+        const box = document.getElementById('tagBox');
+        const input = document.getElementById('tagInput');
+        const menu = document.getElementById('tagMenu');
+        const items = Array.from(menu.querySelectorAll('.item'));
         const hidden = document.getElementById('tagsHidden');
-
         let selected = [];
 
         const syncHidden = () => hidden.value = selected.join(',');
@@ -130,12 +187,10 @@
             const chip = document.createElement('span');
             chip.className = 'tag-chip';
             chip.textContent = tag;
-
             const x = document.createElement('span');
             x.className = 'x';
             x.textContent = '×';
             x.onclick = () => remove(tag);
-
             chip.appendChild(x);
             box.insertBefore(chip, input);
         };
@@ -148,7 +203,7 @@
 
         const add = tag => {
             tag = tag.trim().toLowerCase();
-            const isValid = /^[a-z0-9-]{2,25}$/.test(tag); // alphanumeric & dashes, 2-25 chars
+            const isValid = /^[a-z0-9-]{2,25}$/.test(tag);
             if (tag && isValid && !selected.includes(tag) && selected.length < MAX) {
                 selected.push(tag);
                 render();
@@ -181,9 +236,6 @@
                 input.value = '';
                 filter('');
             }
-            if (e.key === 'ArrowDown') {
-                menu.querySelector('.active')?.focus();
-            }
         });
 
         items.forEach(li => li.addEventListener('mousedown', () => {
@@ -199,5 +251,6 @@
         });
     })();
 </script>
+
 </body>
 </html>

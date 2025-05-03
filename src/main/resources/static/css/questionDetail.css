@@ -223,3 +223,78 @@ body {
                                             display:flex;
                                             gap:1em;
                                         }
+
+                                        }.qwrap {
+                                           font-size: 1.1rem;
+                                           line-height: 1.7;
+                                           color: #2d2d2d;
+                                           margin-top: 1em;
+                                         }
+
+                                         .qwrap p {
+                                           margin: 0.8em 0;
+                                         }
+
+                                         .qwrap img {
+                                           width: 100%;
+                                           height: auto;
+                                           display: block;
+                                           margin: 1em auto;
+                                         }
+
+                                         .qwrap h1, .qwrap h2, .qwrap h3 {
+                                           margin-top: 1.2em;
+                                           margin-bottom: 0.5em;
+                                           font-weight: 600;
+                                         }
+
+                                         .qwrap ul, .qwrap ol {
+                                           padding-left: 2em;
+                                           margin-bottom: 1em;
+                                         }
+
+                                         .qwrap blockquote {
+                                           border-left: 4px solid #ccc;
+                                           margin: 1em 0;
+                                           padding-left: 1em;
+                                           color: #666;
+                                           background: #f9f9f9;
+                                         }
+                                             .qwrap table {
+                                             width: 100%;
+                                             border-collapse: collapse;
+                                             margin-top: 1em;
+                                             margin-bottom: 1em;
+                                           }
+
+                                           .qwrap th, .qwrap td {
+                                             border: 1px solid #ccc;
+                                             padding: 7px;
+                                             text-align: left;
+                                           }
+
+                                           .qwrap th {
+                                             background-color: #f2f2f2;
+                                           }
+
+                                             .qwrap pre {
+                                               background-color: #f6f8fa;
+                                               border: 1px solid #d1d5da;
+                                               border-radius: 6px;
+                                               padding: 1em;
+                                               font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+                                               font-size: 14px;
+                                               overflow-x: auto;
+                                               margin-bottom: 1em;
+                                               line-height: 1.5;
+                                               white-space: pre;
+                                             }
+
+                                             .qwrap code {
+                                               background-color: transparent;
+                                               padding: 0;
+                                               border: none;
+                                               font-size: inherit;
+                                               color: #24292e;
+                                             }
+

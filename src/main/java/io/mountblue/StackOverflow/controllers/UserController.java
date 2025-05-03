@@ -5,9 +5,6 @@ import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
-import io.mountblue.StackOverflow.services.QuestionService;
-import io.mountblue.StackOverflow.services.UserService;
-import io.mountblue.StackOverflow.services.UsersServiceDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -53,9 +50,6 @@ public class UserController {
     @PostMapping("/updateUser")
         public String updateUser(@ModelAttribute("user") Users user, Principal principal){
             Users existingUser = userService.findUser(user.getId());
-
-        System.out.println(user);
-
             if(existingUser==null){
                 throw new RuntimeException("User not found");
             }
@@ -83,32 +77,25 @@ public class UserController {
         return "Login";
     }
 
-    @GetMapping("/")public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
-        Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
-        List<QuestionResponseDto> questionList = questions.getContent();
-        System.out.println("The questions are: " + questionList);
-        if (!questionList.isEmpty()) {
-            System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
-        }    if (userInfo != null && userInfo.getUser() != null) {
-            model.addAttribute("user", userInfo.getUser());    }
-        model.addAttribute("questions", questions);
-        return "Home";}
+@GetMapping("/")
+public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
+    Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
+    List<QuestionResponseDto> questionList = questions.getContent();
 
-//    @GetMapping("/")
-//    public String home(@AuthenticationPrincipal UserInfo userInfo ,Model model){
-//        Page<QuestionResponseDto> questions =questionService.findAllQuestions(0);
-//        System.out.println("the questions is "+questions.getContent()+" THe content is "+questions.getContent().get(0).getVotes());
-////        model.addAttribute("user",userInfo.getUser());
-////        @AuthenticationPrincipal UserInfo userInfo ,
-//        if(userInfo.getUser() != null){
-//            model.addAttribute("user",userInfo.getUser());
-//        }
-//        model.addAttribute("questions",questions);
-////        if(userInfo.getUser() != null){
-////
-////        }
-//        return "Home";
-//    }
+    System.out.println("The questions are: " + questionList);
+
+    if (!questionList.isEmpty()) {
+        System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
+    }
+
+    if (userInfo != null && userInfo.getUser() != null) {
+        model.addAttribute("user", userInfo.getUser());
+    }
+
+    model.addAttribute("questions", questions);
+
+    return "Home";
+}
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
