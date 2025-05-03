@@ -90,6 +90,36 @@
         });
       });
     });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the 'Edit' button and the edit form
+    const editButton = document.querySelector('.toggle-edit-question-btn');
+    const editForm = document.getElementById('question-edit-form');
+    const cancelButton = document.querySelector('.cancel-question-edit-btn');
+
+    // Toggle edit form visibility when 'Edit' is clicked
+    if (editButton) {
+        editButton.addEventListener('click', function () {
+            if (editForm) {
+                // Toggle the form display: show if hidden, hide if shown
+                editForm.style.display = (editForm.style.display === 'block') ? 'none' : 'block';
+            }
+        });
+    }
+
+    // Close the edit form when 'Cancel' is clicked
+    if (cancelButton) {
+        cancelButton.addEventListener('click', function () {
+            if (editForm) {
+                // Hide the edit form
+                editForm.style.display = 'none';
+            }
+        });
+    }
+});
+
+
+
 </script>
 
 
@@ -150,6 +180,44 @@
                 <span th:each="tag : ${question.questionTags}"
                       th:text="${tag.tag.tagName}">Tag</span>
                                 </div>
+                                <!-- Question Edit/Delete Buttons -->
+                                <div class="question-actions" style="margin-top: 1em;">
+                                    <!-- Edit Button -->
+                                    <button type="button"
+                                            class="toggle-edit-question-btn"
+                                            style="cursor: pointer; border: none; background-color: transparent; color: grey;">
+                                        Edit
+                                    </button>
+
+                                    <!-- Delete Form -->
+                                    <form th:action="@{'/questions/delete/' + ${question.id}}" method="post" style="display: inline;">
+                                        <button type="submit"
+                                                style="cursor: pointer; border: none; background-color: transparent; color: grey; margin-left: 1em;">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Question Edit Form (Initially hidden) -->
+                                <div id="question-edit-form" style="display: none; margin-top: 1em; margin-bottom:3em;">
+                                    <form th:action="@{'/questions/update/' + ${question.id}}" method="post">
+        <textarea name="updatedDescription" style="width: 90%; height: 200px;"
+                  th:text="${question.description}" required></textarea>
+                                        <div style="text-align: right; margin-top: 1em;">
+                                            <button type="submit"
+                                                    style="cursor: pointer; border: none; background-color: transparent; color: grey;">
+                                                Update
+                                            </button>
+                                            <button type="button"
+                                                    class="cancel-question-edit-btn"
+                                                    style="cursor: pointer; border: none; background-color: transparent; color: grey; margin-left: 1em;">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+
                             </div>
                         </div>
                         <div class="comment-box" style="position:absolute; bottom:0; left:30rem; height:fit-content;">
@@ -157,6 +225,7 @@
                             <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}"
                                th:text="${question.user.username}">User Name</a>
                         </div>
+
                     </div>
                 </div>
 
@@ -164,12 +233,12 @@
                 </div>
             </div>
 
-    <div class="answer-box" style="margin-left:8rem;" >
+    <div class="answer-box" style="margin-left:2rem;" >
         <h3 th:text="${#lists.size(question.answerList)} + ' Answer(s)'">1 Answer</h3>
 
         <div class="answ" th:each="ans : ${question.answerList}">
             <div id="ans-wrap">
-                <div id="vote-cnt" style="margin-top:2em; margin-left:-2em;">
+                <div id="vote-cnt" style="margin-top:2em; margin-left:2em;">
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                         <!-- Upvote Button -->
                         <form th:action="@{'/questions/' + ${question.id} + '/upvote'}" method="post"
@@ -209,13 +278,13 @@
 
             <!-- Delete Button -->
             <form th:action="@{'/answer/delete/' + ${ans.id}}" method="post" style="display: inline;">
-                <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
                         type="submit">Delete
                 </button>
             </form>
 
             <!-- Add Comment Button -->
-            <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+            <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
                     type="button" class="toggle-comment-btn"
                     th:attr="data-answer-id=${ans.id}">Add Comment
             </button>
@@ -223,13 +292,13 @@
             <!-- Edit Form (Initially Hidden) -->
             <div class="edit-form" th:attr="id='edit-form-' + ${ans.id}" style="display: none;">
                 <form th:action="@{'/answer/update/' + ${ans.id}}" method="post">
-                                    <textarea style="width:80%; margin:2em; height:fit-content;" name="updatedContent"
+                                    <textarea style="width:80%; margin:2em; max-height:300px; overflow:auto;" name="updatedContent"
                                               th:utext="${ans.content}" required></textarea>
                     <div id="edit-form-btn" style="text-align: right; margin-bottom:1rem;">
                         <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
                                 type="submit">Update
                         </button>
-                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey; margin-left:1em;"
                                 type="button" class="cancel-edit-btn">Cancel
                         </button>
                     </div>
@@ -314,7 +383,7 @@
             <input type="hidden" th:field="*{id}"/>
 
             <!-- Toast UI Editor Container -->
-            <div id="editor" style="margin-bottom: 1em;"></div>
+            <div id="editor" style="margin-bottom: 1em; width:90%;"></div>
 
             <!-- Hidden Textarea (will be filled with HTML) -->
             <textarea id="answerContent" name="content" style="display: none;"
