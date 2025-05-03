@@ -34,6 +34,7 @@ public class QuestionController {
 //    --------------------------get all Questions-----------------------------------------------
     @GetMapping("/Show-all-questions/{page-number}")
     public String showAllQuestions (@PathVariable("page-number") int pageNumber, Model model) {
+
         Page<QuestionResponseDto> allQuestions = questionService.findAllQuestions(pageNumber);
 
         model.addAttribute("allQuestions", allQuestions);
@@ -139,9 +140,9 @@ public class QuestionController {
         return null;
     }
 
-    @GetMapping("/question/{id}")
-    public String showQuestion( @PathVariable Long id,Model model){
-        Question question = questionService.findQuestionById(id);
+    @GetMapping("/question/{questionId}")
+    public String showQuestion( @PathVariable Long questionId,Model model){
+        Question question = questionService.findQuestionById(questionId);
         model.addAttribute("question",question);
         model.addAttribute("answer",new Answer());
         return "QuestionDetail";
