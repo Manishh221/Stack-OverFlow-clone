@@ -34,6 +34,7 @@ public class QuestionController {
 //    --------------------------get all Questions-----------------------------------------------
     @GetMapping("/Show-all-questions/{page-number}")
     public String showAllQuestions (@PathVariable("page-number") int pageNumber, Model model) {
+
         Page<QuestionResponseDto> allQuestions = questionService.findAllQuestions(pageNumber);
 
         model.addAttribute("allQuestions", allQuestions);
