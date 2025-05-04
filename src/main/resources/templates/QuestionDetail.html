@@ -442,38 +442,54 @@
                 <div class="related-section">
                     <div class="related-title">Related</div>
 
-                    <div class="related-item">
-                        <div class="vote-box">719</div>
-                        <a href="#" class="related-link">Programmatically Lighten or Darken a hex color (or rgb, and
-                            blend colors)</a>
+<!--                    <div class="related-item">-->
+<!--                        <div class="vote-box">719</div>-->
+<!--                        <a href="#" class="related-link">Programmatically Lighten or Darken a hex color (or rgb, and-->
+<!--                            blend colors)</a>-->
+<!--                    </div>-->
+
+<!--                    <div class="related-item">-->
+<!--                        <div class="vote-box">507</div>-->
+<!--                        <a href="#" class="related-link">TypeScript Type 'string' is not assignable to type</a>-->
+<!--                    </div>-->
+
+<!--                    <div class="related-item">-->
+<!--                        <div class="vote-box zero">0</div>-->
+<!--                        <a href="#" class="related-link">Error &#45;&#45; Cast to Number failed for value "NaN" (type number) at-->
+<!--                            path "totalOrders"</a>-->
+<!--                    </div>-->
+
+<!--                    <div class="related-item">-->
+<!--                        <div class="vote-box">403</div>-->
+<!--                        <a href="#" class="related-link">How to find what code is run by a button or element in Chrome-->
+<!--                            using Developer Tools</a>-->
+<!--                    </div>-->
+
+<!--                    <div class="related-item">-->
+<!--                        <div class="vote-box">208</div>-->
+<!--                        <a href="#" class="related-link">TypeScript TS7015: Element implicitly has an 'any' type...</a>-->
+<!--                    </div>-->
+
+<!--                    <div class="related-item">-->
+<!--                        <div class="vote-box">228</div>-->
+<!--                        <a href="#" class="related-link">Why does typeof NaN return 'number'?</a>-->
+<!--                    </div>-->
+
+
+                        <h3>Related Questions</h3>
+
+                       <div class="related-item">
+                        <ul th:if="${not #lists.isEmpty(relatedQuestions)}">
+                            <li th:each="question, stat : ${relatedQuestions}"
+                                th:if="${stat.index < 5}">
+                                <div th:text="${question.upvote}" class="vote-box">0</div>
+                                <a th:href="@{/question/{id}(id=${question.id})}"
+                                   th:text="${question.title}" class="related-title"></a><br>
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="related-item">
-                        <div class="vote-box">507</div>
-                        <a href="#" class="related-link">TypeScript Type 'string' is not assignable to type</a>
-                    </div>
-
-                    <div class="related-item">
-                        <div class="vote-box zero">0</div>
-                        <a href="#" class="related-link">Error -- Cast to Number failed for value "NaN" (type number) at
-                            path "totalOrders"</a>
-                    </div>
-
-                    <div class="related-item">
-                        <div class="vote-box">403</div>
-                        <a href="#" class="related-link">How to find what code is run by a button or element in Chrome
-                            using Developer Tools</a>
-                    </div>
-
-                    <div class="related-item">
-                        <div class="vote-box">208</div>
-                        <a href="#" class="related-link">TypeScript TS7015: Element implicitly has an 'any' type...</a>
-                    </div>
-
-                    <div class="related-item">
-                        <div class="vote-box">228</div>
-                        <a href="#" class="related-link">Why does typeof NaN return 'number'?</a>
-                    </div>
+                        <p th:if="${#lists.isEmpty(relatedQuestions)}">No related questions found.</p>
 
                 </div>
                 <script>
