@@ -6,8 +6,6 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "answervote")
-@Getter
-@Setter
 public class AnswerVote {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,4 +25,43 @@ public class AnswerVote {
     @Column(nullable = false)
     private boolean downvote;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Answer getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
+    }
+
+    public boolean isUpvote() {
+        return upvote;
+    }
+
+    public void setUpvote(boolean upvote) {
+        this.upvote = upvote;
+    }
+
+    public boolean isDownvote() {
+        return downvote;
+    }
+
+    public void setDownvote(boolean downvote) {
+        this.downvote = downvote;
+    }
 }

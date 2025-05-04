@@ -12,6 +12,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -102,7 +105,61 @@ public class QuestionController {
 //        return "Home";
 //    }
 
-//    --------------------------storing the Question------------------------------------------
+    @GetMapping("/search")
+    public String searchQuestionsFromQuery(
+            @RequestParam(required = false) String q,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model
+    ) {
+        String tag = null;
+        String user = null;
+        String title = null;
+        boolean accepted = false;
+        boolean unanswered = false;
+
+        if (q != null) {
+            // Simple pattern-based parsing
+            q = q.toLowerCase();
+
+            if (q.contains("tag:")) {
+                tag = extractValue(q, "tag:");
+            }
+            if (q.contains("user:")) {
+                user = extractValue(q, "user:");
+            }
+            if (q.contains("title:")) {
+                title = extractValue(q, "title:");
+            }
+            if (q.contains("is:accepted")) {
+                accepted = true;
+            }
+            if (q.contains("answers:0")) {
+                unanswered = true;
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("upvote")).and(Sort.by(Sort.Order.asc("downvote"))));
+        Page<Question> questionsPage = questionService.searchQuestions(tag, user, title, accepted, unanswered, pageable);
+
+        model.addAttribute("questionsPage", questionsPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", questionsPage.getTotalPages());
+        model.addAttribute("q", q); // to keep search bar value
+
+        return "questionList";
+    }
+
+    private String extractValue(String q, String key) {
+        int start = q.indexOf(key) + key.length();
+        int end = q.indexOf(" ", start);
+        if (end == -1) end = q.length();
+        String value = q.substring(start, end);
+        return value.replaceAll("\"", "").trim();
+    }
+
+
+    //    --------------------------storing the Question------------------------------------------
     @PostMapping("/create-question")
     public String createQuestion(@AuthenticationPrincipal UserInfo userInfo ,@Valid @ModelAttribute("question")Question question,
                                  BindingResult br,

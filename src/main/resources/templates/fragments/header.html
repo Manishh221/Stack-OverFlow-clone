@@ -6,7 +6,19 @@
 
   <div class="navbar-search">
     <form th:action="@{/search}" method="get">
-      <input type="text" name="query" placeholder="Search..." />
+      <div class="search-wrapper">
+        <input  autocomplete="off" type="text" name="q" class="search-input" placeholder="Search..." th:value="${q}" />
+        <div class="search-help">
+          <strong>Search examples:</strong><br>
+          <code>tag:java</code> — tag filter<br>
+          <code>user:john</code> — by username<br>
+          <code>title:spring</code> — title contains "spring"<br>
+          <code>is:accepted</code> — has accepted answer<br>
+          <code>answers:0</code> — unanswered<br><br>
+          Combine them:<br>
+          <code>tag:java user:john is:accepted</code>
+        </div>
+      </div>
       <button type="submit">Search</button>
     </form>
   </div>

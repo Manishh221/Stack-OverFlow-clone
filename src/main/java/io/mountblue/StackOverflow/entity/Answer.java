@@ -54,7 +54,7 @@ public class Answer {
     private int downvotes;
 
     @Column(name = "is_correct")
-    private boolean correct;
+    private boolean correct=false;
 
     public Long getId() {
         return id;

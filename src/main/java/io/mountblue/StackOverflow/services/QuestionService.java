@@ -4,6 +4,7 @@ import io.mountblue.StackOverflow.controllers.QuestionController;
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
 import io.mountblue.StackOverflow.entity.Question;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -15,5 +16,6 @@ public interface QuestionService {
     Question findQuestionById (Long id);
     Page<QuestionResponseDto> findAllQuestions(int pageNumber);
     QuestionResponseDto getAllQUestionData(Question question);
+    Page<Question> searchQuestions(String tag, String user, String title, boolean accepted, boolean unanswered, Pageable pageable);
 
 }

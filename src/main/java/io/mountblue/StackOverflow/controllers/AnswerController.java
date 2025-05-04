@@ -44,22 +44,20 @@ public class AnswerController {
         if(userClass==null){
             return "redirect:/login";
         }
-        if(userClass != null){
-            Users user = userClass.getUser();
-            if(user.getReputation()< Reputations.ANSWER_EVERYWHERE){
-                redirectAttributes.addFlashAttribute("reputationError", "You need at least 15 reputation to upvote.");
-                return "redirect:/question/" + questionId;
-            }
-        }
+//        if(userClass != null){
+//            Users user = userClass.getUser();
+//            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
+//                redirectAttributes.addFlashAttribute("reputationError", "You need at least 50 reputation to answer.");
+//                return "redirect:/question/" + questionId;
+//            }
+//        }
         if (bindingResult.hasErrors()) {
             Question question = questionService.findQuestionById(questionId);
             model.addAttribute("question", question);
             model.addAttribute("answer",answer);
             return "redirect:/question/" + questionId;
         }
-        if(userClass.getUser().getReputation() <= 1){
-            return  "redirect:/question/" + questionId;
-        }
+
 
 //        saving Answer
         try {
@@ -108,8 +106,8 @@ public class AnswerController {
         }
         if(userClass != null){
             Users user = userClass.getUser();
-            if(user.getReputation()< Reputations.ANSWER_EVERYWHERE){
-                throw new InsufficientReputationException("You need at least 50 reputation to answer.");
+            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
+                throw new InsufficientReputationException("You need at least 50 reputation to update answer.");
             }
         }
         Answer existedAnswer = answerService.findAnswerById(answerId);
