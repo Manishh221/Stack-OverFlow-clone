@@ -1,11 +1,10 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
-import io.mountblue.StackOverflow.entity.Answer;
-import io.mountblue.StackOverflow.entity.Question;
-import io.mountblue.StackOverflow.entity.Tag;
+import io.mountblue.StackOverflow.entity.*;
+import io.mountblue.StackOverflow.repositories.AnswerVoteRepository;
 import io.mountblue.StackOverflow.repositories.QuestionRepository;
-import io.mountblue.StackOverflow.entity.UserTags;
+import io.mountblue.StackOverflow.repositories.QuestionVoteRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.TagService;
@@ -28,12 +27,16 @@ public class QuestionController {
     private QuestionService questionService;
     private TagService tagService;
     private QuestionRepository questionRepository;
+    private QuestionVoteRepository questionVoteRepository;
+    private AnswerVoteRepository answerVoteRepository;
 
     @Autowired
-    public QuestionController(QuestionService questionService, TagService tagService,QuestionRepository questionRepository) {
+    public QuestionController(QuestionService questionService, TagService tagService,QuestionRepository questionRepository,QuestionVoteRepository questionVoteRepository,AnswerVoteRepository answerVoteRepository) {
         this.questionService = questionService;
         this.tagService = tagService;
         this.questionRepository = questionRepository;
+        this.questionVoteRepository = questionVoteRepository;
+        this.answerVoteRepository = answerVoteRepository;
     }
 
 //    --------------------------get all Questions-----------------------------------------------
@@ -168,8 +171,46 @@ public class QuestionController {
     }
 
     @GetMapping("/question/{questionId}")
-    public String showQuestion( @PathVariable Long questionId,Model model){
+    public String showQuestion( @PathVariable Long questionId,Model model,@AuthenticationPrincipal UserInfo userInfo){
         Question question = questionService.findQuestionById(questionId);
+        Optional<QuestionVote> voteOpt = questionVoteRepository.findByUserAndQuestion(userInfo.getUser(),question);
+        boolean questionupvote = false;
+        boolean questiondownvote = false;
+        boolean answerupvote = false;
+        boolean answerdownvote = false;
+        if(voteOpt.isPresent()){
+            QuestionVote vote = voteOpt.get();
+            questionupvote=vote.isUpvote();
+            questiondownvote=vote.isDownvote();
+        }
+        Map<Long, Boolean> answerUpvoteMap = new HashMap<>();
+        Map<Long, Boolean> answerDownvoteMap = new HashMap<>();
+
+        for (Answer answer : question.getAnswerList()) {
+            Optional<AnswerVote> av = answerVoteRepository.findByUserAndAnswer(userInfo.getUser(), answer);
+            answerUpvoteMap.put(answer.getId(), av.isPresent() && av.get().isUpvote());
+            answerDownvoteMap.put(answer.getId(), av.isPresent() && av.get().isDownvote());
+        }
+        int questionUpvotes = questionVoteRepository.countByQuestionAndUpvoteTrue(question);
+        int questionDownvotes = questionVoteRepository.countByQuestionAndDownvoteTrue(question);
+        Map<Long, Integer> answerVoteCountMap = new HashMap<>();
+
+        for (Answer answer : question.getAnswerList()) {
+            Optional<AnswerVote> av = answerVoteRepository.findByUserAndAnswer(userInfo.getUser(), answer);
+            answerUpvoteMap.put(answer.getId(), av.isPresent() && av.get().isUpvote());
+            answerDownvoteMap.put(answer.getId(), av.isPresent() && av.get().isDownvote());
+
+            int upvotes = answerVoteRepository.countByAnswerAndUpvoteTrue(answer);
+            int downvotes = answerVoteRepository.countByAnswerAndDownvoteTrue(answer);
+            answerVoteCountMap.put(answer.getId(), upvotes - downvotes);
+        }
+
+        model.addAttribute("answerUpvotes", answerUpvoteMap);
+        model.addAttribute("answerDownvotes", answerDownvoteMap);
+        model.addAttribute("answerVoteCounts", answerVoteCountMap);
+        model.addAttribute("questionVoteCount", questionUpvotes - questionDownvotes);
+        model.addAttribute("questionupvote",questionupvote);
+        model.addAttribute("questiondownvote",questiondownvote);
         model.addAttribute("question",question);
         model.addAttribute("answer",new Answer());
         return "QuestionDetail";

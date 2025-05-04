@@ -142,25 +142,30 @@
                 <div style="margin-top:2em;" id="vote-cont">
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                         <!-- Upvote Button -->
-                        <form th:action="@{'/questions/' + ${question.id} + '/upvote'}" method="post"
+                        <form th:action="@{'/upvote-question/' + ${question.id}}" method="post"
                               style="margin: 0;">
                             <button type="submit"
-                                    style="font-size:1.5em; background: none; border-color:gray; border-radius:50%; padding:5px; cursor: pointer;">
+                                    th:style="${questionupvote} ?
+                      'font-size:1.5em; background: lightgreen; border-color:gray; border-radius:50%; padding:5px; cursor:pointer;' :
+                      'font-size:1.5em; background: none; border-color:gray; border-radius:50%; padding:5px; cursor:pointer;'">
                                 <span style="font-size:25px">▲</span>
                             </button>
                         </form>
 
                         <!-- Vote Count -->
+
+                        <!-- Question Vote Count -->
                         <div style="font-size: 24px; font-weight: bold;">
-                            <!--              <span th:text="${question.voteCount}">0</span>-->
-                            <span th:text="${question.upvote-question.downvote}">1</span>
+                            <span th:text="${questionVoteCount}">0</span>
                         </div>
 
                         <!-- Downvote Button -->
-                        <form th:action="@{'/questions/' + ${question.id} + '/downvote'}" method="post"
+                        <form th:action="@{'/downvote-question/' + ${question.id}}" method="post"
                               style="margin: 0;">
                             <button type="submit"
-                                    style="font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
+                                    th:style="${questiondownvote} ?
+                      'font-size:1.5em; background: lightcoral; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;' :
+                      'font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;'">
                                 <span style="font-size:25px">▼</span>
                             </button>
                         </form>
@@ -241,25 +246,23 @@
                 <div id="vote-cnt" style="margin-top:2em; margin-left:2em;">
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                         <!-- Upvote Button -->
-                        <form th:action="@{'/questions/' + ${question.id} + '/upvote'}" method="post"
-                              style="margin: 0;">
+                        <form th:action="@{'/upvote-answer/' + ${ans.id} +'/'+ ${question.id}}" method="post" style="margin: 0;">
                             <button type="submit"
-                                    style="font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
+                                    th:style="${answerUpvotes[ans.id]} ?
+                      'font-size:1.5em; background: lightgreen; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;' :
+                      'font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;'">
                                 <span style="font-size:25px">▲</span>
                             </button>
                         </form>
 
-                        <!-- Vote Count -->
                         <div style="font-size: 24px; font-weight: bold;">
-                            <!--              <span th:text="${question.voteCount}">0</span>-->
-                            <span>0</span>
+                            <span th:text="${answerVoteCounts[ans.id]}">0</span>
                         </div>
-
-                        <!-- Downvote Button -->
-                        <form th:action="@{'/questions/' + ${question.id} + '/downvote'}" method="post"
-                              style="margin: 0;">
+                        <form th:action="@{'/downvote-answer/' + ${ans.id} +'/'+ ${question.id}}" method="post" style="margin: 0;">
                             <button type="submit"
-                                    style="font-size:1.5em; background: none;border-color:grey; border-radius:50%; padding:5px; cursor: pointer;">
+                                    th:style="${answerDownvotes[ans.id]} ?
+                      'font-size:1.5em; background: lightcoral; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;' :
+                      'font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;'">
                                 <span style="font-size:25px">▼</span>
                             </button>
                         </form>
@@ -474,6 +477,7 @@
                     </div>
 
                 </div>
+                <div th:replace="~{fragments/Modal :: Modal}"></div>
                 <script>
                     const editor = new toastui.Editor({
                         el: document.querySelector('#editor'),

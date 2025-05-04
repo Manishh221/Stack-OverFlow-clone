@@ -1,8 +1,10 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.constants.Reputations;
 import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Comment;
 import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.exceptions.InsufficientReputationException;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.AnswerService;
 import io.mountblue.StackOverflow.services.CommentService;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/answers/{answerId}")
@@ -26,9 +29,18 @@ public class CommentController {
     @PostMapping("/comment/create")
     public String addComment(@PathVariable Long answerId,
                              @RequestParam("commentText") String commentText,
-                             @AuthenticationPrincipal UserInfo userClass){
+                             @AuthenticationPrincipal UserInfo userClass,
+                             RedirectAttributes redirectAttributes){
         Answer answer = answerService.findAnswerById(answerId);
         Long questionId = answer.getQuestion().getId();
+        if(userClass != null){
+            Users user = userClass.getUser();
+            if(user.getReputation()< Reputations.COMMENT_EVERYWHERE){
+                redirectAttributes.addFlashAttribute("reputationError", "You need at least 15 reputation to upvote.");
+                return "redirect:/question/" + questionId;
+            }
+        }
+
         Comment comment = new Comment();
         Users user = userClass.getUser();
         comment.setName(user.getUsername());
@@ -51,8 +63,7 @@ public class CommentController {
             ){
                 commentService.deleteComment(commentId);
             }
-
-        return "redirect:/question/" + questionId;
+            return "redirect:/question/" + questionId;
     }
 
     @PostMapping("/comment/{commentId}/update")
