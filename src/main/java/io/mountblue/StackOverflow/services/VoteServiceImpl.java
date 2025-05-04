@@ -3,10 +3,7 @@ package io.mountblue.StackOverflow.services;
 import io.mountblue.StackOverflow.constants.Reputations;
 import io.mountblue.StackOverflow.controllers.AnswerController;
 import io.mountblue.StackOverflow.entity.*;
-import io.mountblue.StackOverflow.repositories.AnswerRepository;
-import io.mountblue.StackOverflow.repositories.AnswerVoteRepository;
-import io.mountblue.StackOverflow.repositories.QuestionRepository;
-import io.mountblue.StackOverflow.repositories.QuestionVoteRepository;
+import io.mountblue.StackOverflow.repositories.*;
 import io.mountblue.StackOverflow.security.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,13 +18,15 @@ public class VoteServiceImpl implements VoteServices {
     private AnswerVoteRepository answerVoteRepository;
     private QuestionRepository questionRepository;
     private AnswerRepository answerRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public VoteServiceImpl(QuestionVoteRepository questionVoteRepository, AnswerVoteRepository answerVoteRepository, QuestionRepository questionRepository,AnswerRepository answerRepository) {
+    public VoteServiceImpl(QuestionVoteRepository questionVoteRepository, AnswerVoteRepository answerVoteRepository, QuestionRepository questionRepository,AnswerRepository answerRepository,UserRepository userRepository) {
         this.questionVoteRepository = questionVoteRepository;
         this.answerVoteRepository = answerVoteRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -46,14 +45,16 @@ public class VoteServiceImpl implements VoteServices {
                 QuestionVote existingVote = existingVoteOpt.get();
                 if (existingVote.isDownvote()) {
                     questionVoteRepository.delete(existingVote);
-                    questionOwner.setReputation(questionOwner.getReputation() + Reputations.QUESTION_REPUTATION_DOWNVOTE); // Revert downvote penalty
+                    questionOwner.setReputation(questionOwner.getReputation() + Reputations.QUESTION_REPUTATION_DOWNVOTE);
+                    userRepository.save(questionOwner);
                     return;
                 }
                 if (existingVote.isUpvote()) {
                     existingVote.setUpvote(false);
                     existingVote.setDownvote(true);
                     questionVoteRepository.save(existingVote);
-                    questionOwner.setReputation(questionOwner.getReputation() - 2 * Reputations.QUESTION_REPUTATION_UPVOTE);
+                    questionOwner.setReputation(questionOwner.getReputation() + 2 * Reputations.QUESTION_REPUTATION_UPVOTE);
+                    userRepository.save(questionOwner);
                     return;
                 }
             }
@@ -65,6 +66,8 @@ public class VoteServiceImpl implements VoteServices {
             questionVoteRepository.save(vote);
 
             questionOwner.setReputation(questionOwner.getReputation() - Reputations.QUESTION_REPUTATION_DOWNVOTE);
+            userRepository.save(questionOwner);
+
         }
     }
 
@@ -87,6 +90,7 @@ public class VoteServiceImpl implements VoteServices {
                 if (existingVote.isUpvote()) {
                     questionVoteRepository.delete(existingVote);
                     questionOwner.setReputation(questionOwner.getReputation() - Reputations.QUESTION_REPUTATION_UPVOTE);
+                    userRepository.save(questionOwner);
                     return;
                 }
 
@@ -96,6 +100,7 @@ public class VoteServiceImpl implements VoteServices {
                     questionVoteRepository.save(existingVote);
 
                     questionOwner.setReputation(questionOwner.getReputation() + 2 * Reputations.QUESTION_REPUTATION_UPVOTE);
+                    userRepository.save(questionOwner);
                     return;
                 }
             }
@@ -108,6 +113,7 @@ public class VoteServiceImpl implements VoteServices {
             questionVoteRepository.save(vote);
 
             questionOwner.setReputation(questionOwner.getReputation() + Reputations.QUESTION_REPUTATION_UPVOTE);
+            userRepository.save(questionOwner);
         }
     }
 
@@ -130,6 +136,7 @@ public class VoteServiceImpl implements VoteServices {
                 if (existingVote.isDownvote()) {
                     answerVoteRepository.delete(existingVote);
                     answerAuthor.setReputation(answerAuthor.getReputation() + Reputations.ANSWER_REPUTATION_DOWNVOTE);
+                    userRepository.save(answerAuthor);
                     return;
                 }
 
@@ -138,6 +145,7 @@ public class VoteServiceImpl implements VoteServices {
                     existingVote.setDownvote(true);
                     answerVoteRepository.save(existingVote);
                     answerAuthor.setReputation(answerAuthor.getReputation() - 2 * Reputations.ANSWER_REPUTATION_UPVOTE);
+                    userRepository.save(answerAuthor);
                     return;
                 }
             }
@@ -149,6 +157,7 @@ public class VoteServiceImpl implements VoteServices {
             answerVoteRepository.save(vote);
 
             answerAuthor.setReputation(answerAuthor.getReputation() - Reputations.ANSWER_REPUTATION_DOWNVOTE);
+            userRepository.save(answerAuthor);
         }
     }
 
@@ -171,6 +180,7 @@ public class VoteServiceImpl implements VoteServices {
                 if (existingVote.isUpvote()) {
                     answerVoteRepository.delete(existingVote);
                     answerAuthor.setReputation(answerAuthor.getReputation() - Reputations.ANSWER_REPUTATION_UPVOTE);
+                    userRepository.save(answerAuthor);
                     return;
                 }
 
@@ -179,6 +189,7 @@ public class VoteServiceImpl implements VoteServices {
                     existingVote.setUpvote(true);
                     answerVoteRepository.save(existingVote);
                     answerAuthor.setReputation(answerAuthor.getReputation() + 2 * Reputations.ANSWER_REPUTATION_UPVOTE);
+                    userRepository.save(answerAuthor);
                     return;
                 }
             }
@@ -191,6 +202,7 @@ public class VoteServiceImpl implements VoteServices {
             answerVoteRepository.save(vote);
 
             answerAuthor.setReputation(answerAuthor.getReputation() + Reputations.ANSWER_REPUTATION_UPVOTE);
+            userRepository.save(answerAuthor);
         }
     }
 
