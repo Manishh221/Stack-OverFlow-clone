@@ -6,6 +6,7 @@ import io.mountblue.StackOverflow.entity.Users;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
 import java.util.Locale;
 
 public class QuestionSpecification {
@@ -43,4 +44,32 @@ public class QuestionSpecification {
     public static Specification<Question> hasNoAnswers() {
         return (root, query, cb) -> cb.isEmpty(root.get("answerList"));
     }
+
+    public static Specification<Question> hasNoAcceptedAnswer() {
+        return (root, query, cb) -> {
+            Join<Question, ?> answers = root.join("answerList", JoinType.LEFT);
+            return cb.isFalse(answers.get("accepted"));
+        };
+    }
+
+    public static Specification<Question> isDaysOld(int days) {
+        return (root, query, cb) -> {
+            if (days <= 0) return null;
+            return cb.greaterThanOrEqualTo(
+                    root.get("createdAt"),
+                    java.time.LocalDateTime.now().minusDays(days)
+            );
+        };
+    }
+
+    public static Specification<Question> hasAnyTag(List<String> tagNames) {
+        return (root, query, cb) -> {
+            if (tagNames == null || tagNames.isEmpty()) return null;
+            Join<Question, QuestionTag> tags = root.join("questionTags", JoinType.INNER);
+            CriteriaBuilder.In<String> inClause = cb.in(cb.lower(tags.get("tag").get("tagName")));
+            tagNames.forEach(tag -> inClause.value(tag.toLowerCase(Locale.ROOT)));
+            return inClause;
+        };
+    }
+
 }
