@@ -100,27 +100,25 @@ public class QuestionController {
         return "ReviewQuestion";
     }
 
-//    @GetMapping("/")
-//    public String home() {
-//        return "Home";
-//    }
+@GetMapping("/search")
+public String searchQuestionsFromQuery(
+        @RequestParam(required = false) String q,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) Boolean noAnswers,
+        @RequestParam(required = false) Boolean noAccepted,
+        @RequestParam(required = false) Integer daysOld,
+        @RequestParam(required = false, defaultValue = "newest") String sortBy,
+        @RequestParam(required = false) List<String> tags,
+        Model model
+) {
+    String tag = null, user = null, title = null;
+    boolean accepted = false, unanswered = false;
 
-    @GetMapping("/search")
-    public String searchQuestionsFromQuery(
-            @RequestParam(required = false) String q,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            Model model
-    ) {
-        String tag = null;
-        String user = null;
-        String title = null;
-        boolean accepted = false;
-        boolean unanswered = false;
+    if ((noAccepted == null && noAnswers == null && daysOld == null && (tags == null || tags.isEmpty()))
+            && q != null && !q.isBlank()) {
 
-        if (q != null) {
-            // Simple pattern-based parsing
-            q = q.toLowerCase();
+        q = q.toLowerCase();
 
             if (q.contains("tag:")) {
                 tag = extractValue(q, "tag:");
@@ -131,24 +129,46 @@ public class QuestionController {
             if (q.contains("title:")) {
                 title = extractValue(q, "title:");
             }
-            if (q.contains("is:accepted")) {
-                accepted = true;
-            }
-            if (q.contains("answers:0")) {
-                unanswered = true;
-            }
+            accepted = q.contains("is:accepted");
+            unanswered = q.contains("answers:0");
+
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("upvote")).and(Sort.by(Sort.Order.asc("downvote"))));
-        Page<Question> questionsPage = questionService.searchQuestions(tag, user, title, accepted, unanswered, pageable);
 
-        model.addAttribute("questionsPage", questionsPage);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", questionsPage.getTotalPages());
-        model.addAttribute("q", q); // to keep search bar value
+    Sort sort = switch (sortBy.toLowerCase()) {
+        case "recent" -> Sort.by(Sort.Order.desc("updatedAt"));
+        default -> Sort.by(Sort.Order.desc("createdAt")); // "newest"
+    };
 
-        return "questionList";
-    }
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    Page<Question> questionsPage = questionService.advancedSearch(
+            tag,
+            user,
+            title,
+            accepted,
+            unanswered,
+            noAccepted != null && noAccepted,
+            noAnswers != null && noAnswers,
+            daysOld,
+            tags,
+            pageable
+    );
+
+    Page<QuestionResponseDto> dtoPage = questionsPage.map(questionService::getAllQUestionData);
+
+    model.addAttribute("questionsPage", dtoPage);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", questionsPage.getTotalPages());
+    model.addAttribute("q", q);
+    model.addAttribute("sortBy", sortBy);
+    model.addAttribute("noAnswers", noAnswers);
+    model.addAttribute("noAccepted", noAccepted);
+    model.addAttribute("daysOld", daysOld);
+    model.addAttribute("selectedTags", tags);
+
+    return "questionList";
+}
 
     private String extractValue(String q, String key) {
         int start = q.indexOf(key) + key.length();
