@@ -1,10 +1,14 @@
 package io.mountblue.StackOverflow.dto;
 
 import io.mountblue.StackOverflow.entity.Tag;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class QuestionResponseDto {
 
     private Long id;

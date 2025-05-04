@@ -1,24 +1,25 @@
+<!-- templates/fragments/QuestionList.html -->
+<div th:fragment="questionCard (question)" class="question-card">
 
-<div th:fragment="questionCard (question)">
-    <div class="question-card">
-        <div class="meta">
-            <div>[[${question.votes}]] votes</div>
-            <div>[[${question.answers}]] answers</div>
-            <div>[[${question.views}]] views</div>
+    <div class="votes-answers" id="vote-answer-block">
+        <div class="vote-count"><strong th:text="${question.votes}">0</strong> votes</div>
+        <div class="answer-count"><strong th:text="${question.answers}">0</strong> answers</div>
+    </div>
+
+    <div class="question-content" id="question-content-block">
+        <a th:href="@{'/question/' + ${question.id}}" class="question-title" id="question-title">
+            <strong th:text="${question.title}">Question Title</strong>
+        </a>
+
+        <p class="question-description" th:text="${question.description}">Description...</p>
+
+        <div class="tags" id="tags-container">
+            <span th:each="tag : ${question.tags}" class="tag" th:text="${tag}">tag</span>
         </div>
-        <div class="content">
-            <a th:href="@{'/questions/' + ${question.id}}" class="title">
-                [[${question.title}]]
-            </a>
-            <p class="excerpt">
-                [[${#strings.abbreviate(question.description, 150)}]]
-            </p>
-            <div class="tags">
-                <span th:each="tag : ${question.tags}" class="tag">[[${tag.name}]]</span>
-            </div>
-            <div class="author">
-                asked by [[${question.author.username}]] • [[${#dates.format(question.createdAt, 'dd MMM yyyy')}]]
-            </div>
+
+        <div class="meta" id="meta-info">
+            <span th:text="'asked by ' + ${question.author} + ' • ' + ${question.timeAgo}">meta</span>
         </div>
     </div>
+
 </div>
