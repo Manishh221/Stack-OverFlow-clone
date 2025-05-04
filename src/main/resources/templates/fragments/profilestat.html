@@ -23,7 +23,7 @@
                 Your about me section is currently blank. Would you like to
                 add one?
             </p>
-            <p th:unless="${user.about == null or user.about.isEmpty()}" th:text="${user.about}"></p>
+            <p th:unless="${user.about == null or user.about.isEmpty()}" th:utext="${user.about}"></p>
         </div>
 
     </div>
