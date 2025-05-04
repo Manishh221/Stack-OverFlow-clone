@@ -1,0 +1,24 @@
+
+<div th:fragment="questionCard (question)">
+    <div class="question-card">
+        <div class="meta">
+            <div>[[${question.votes}]] votes</div>
+            <div>[[${question.answers}]] answers</div>
+            <div>[[${question.views}]] views</div>
+        </div>
+        <div class="content">
+            <a th:href="@{'/questions/' + ${question.id}}" class="title">
+                [[${question.title}]]
+            </a>
+            <p class="excerpt">
+                [[${#strings.abbreviate(question.description, 150)}]]
+            </p>
+            <div class="tags">
+                <span th:each="tag : ${question.tags}" class="tag">[[${tag.name}]]</span>
+            </div>
+            <div class="author">
+                asked by [[${question.author.username}]] • [[${#dates.format(question.createdAt, 'dd MMM yyyy')}]]
+            </div>
+        </div>
+    </div>
+</div>
