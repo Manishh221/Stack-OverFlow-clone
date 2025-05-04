@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService{
@@ -160,17 +161,24 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
         return questionResponseDto;
     }
 
-//    public List<Question> getRelatedQuestions(Long questionId) {
-//        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
-//        if (optionalQuestion.isEmpty()) {
-//            throw new RuntimeException("Question not found");
-//        }
-//
-//        Question question = optionalQuestion.get();
-////        Set<Tag> tags = question.getTags();
-//
-//        return questionRepository.findRelatedQuestionsByTags(tags, questionId);
-//    }
+    public List<Question> getRelatedQuestions(Long questionId) {
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
+        if (optionalQuestion.isEmpty()) {
+            throw new RuntimeException("Question not found");
+        }
+
+        Question question = optionalQuestion.get();
+        Set<Tag> tags = question.getQuestionTags()
+                .stream()
+                .map(QuestionTag::getTag)
+                .collect(Collectors.toSet());
+
+        if (tags.isEmpty()) return new ArrayList<>();
+
+        if (tags.isEmpty()) return new ArrayList<>();
+
+        return questionRepository.findRelatedQuestionsByTags(tags, questionId);
+    }
 
 
 }

@@ -15,5 +15,5 @@ public interface QuestionService {
     Question findQuestionById (Long id);
     Page<QuestionResponseDto> findAllQuestions(int pageNumber);
     QuestionResponseDto getAllQUestionData(Question question);
-
+    List<Question> getRelatedQuestions(Long questionId);
 }

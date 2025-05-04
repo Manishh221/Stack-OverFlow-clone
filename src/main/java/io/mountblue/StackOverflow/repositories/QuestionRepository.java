@@ -12,9 +12,12 @@ import java.util.Set;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    @Query("SELECT DISTINCT q FROM Question q JOIN q.tags t " +
+    @Query("SELECT DISTINCT q FROM Question q " +
+            "JOIN q.questionTags qt " +
+            "JOIN qt.tag t " +
             "WHERE t IN :tags AND q.id <> :questionId " +
             "ORDER BY q.createdAt DESC")
     List<Question> findRelatedQuestionsByTags(@Param("tags") Set<Tag> tags,
                                               @Param("questionId") Long questionId);
+
 }

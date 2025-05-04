@@ -172,6 +172,18 @@ public class QuestionController {
         Question question = questionService.findQuestionById(questionId);
         model.addAttribute("question",question);
         model.addAttribute("answer",new Answer());
+        List<Question> relatedQuestions = questionService.getRelatedQuestions(questionId);
+        model.addAttribute("relatedQuestions", relatedQuestions);
+
+        if (relatedQuestions.size() >= 0){
+        for (var e: relatedQuestions){
+            System.out.println(e.getTitle());
+        }
+
+        }else {
+            System.out.println("no question found");
+        }
+
         return "QuestionDetail";
     }
 }
