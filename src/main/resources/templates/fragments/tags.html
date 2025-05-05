@@ -7,9 +7,10 @@
 
     <!-- Top Bar -->
         <div class="tag-header">
-        <h3 th:text="${#lists.size(allTags)} + ' Tags'">0 Tags</h3>
+            <h3 th:text="${allTags != null} ? |${#lists.size(allTags)} Tags| : '0 Tags'">0 Tags</h3>
 
-    </div>
+
+        </div>
 
 
      <div class="tag-section" >

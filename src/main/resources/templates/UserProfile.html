@@ -75,7 +75,7 @@
             </div>
 
             <div th:if="${profiletab == 'settings'}">
-                <div th:replace="~{fragments/settingstat :: settingstat(user=${user})}"></div>
+                <div th:replace="~{fragments/settingstat :: settingstat(user=${user} ,settingtab=${settingtab})}"></div>
             </div>
 
         </div>

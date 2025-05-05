@@ -62,25 +62,4 @@ public class TagServiceImpl implements TagService {
         return tags;
     }
 
-
-    @Override
-    public Page<TagWithCountDTO> findPaginatedTags(Pageable pageable) {
-        return tagRepository.findAllTagsWithQuestionCount(pageable);
-    }
-
-    @Override
-    public Page<TagWithCountDTO> searchTags(String keyword, Pageable pageable) {
-        return tagRepository.searchTagWithQuestionCount(keyword, pageable);
-    }
-
-    @Override
-    public Page<TagWithCountDTO> searchTagsSortedByQuestionCount(String keyword, Pageable pageable) {
-        return tagRepository.searchTagWithQuestionCountSorted(keyword, pageable);
-    }
-
-    @Override
-    public Page<TagWithCountDTO> findAllTagsSortedByQuestionCount(Pageable pageable) {
-        return tagRepository.findAllTagsSortedByQuestionCount(pageable);
-    }
-
 }

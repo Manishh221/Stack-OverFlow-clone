@@ -121,7 +121,8 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
-                          @RequestParam(value = "activitytab",defaultValue = "question") String activityTab) {
+                          @RequestParam(value = "activitytab",defaultValue = "question") String activityTab,
+                          @RequestParam(value = "settingtab",defaultValue = "editProfile") String settingTab) {
         Users user = userService.findUser(id);
 
         List<Tag> userAllTags = userTagsRepository.findAllTagsByUserId(id);
@@ -130,6 +131,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("profiletab",profileTab);
         model.addAttribute("activitytab",activityTab);
+        model.addAttribute("settingtab",settingTab);
         return "UserProfile";
     }
 

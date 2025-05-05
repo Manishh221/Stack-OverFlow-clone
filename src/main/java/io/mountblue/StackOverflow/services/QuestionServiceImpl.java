@@ -163,18 +163,6 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
         return questionResponseDto;
     }
 
-    public Page<Question> searchQuestions(String tag, String user, String title, boolean accepted, boolean unanswered, Pageable pageable) {
-        Specification<Question> spec = Specification.where(null);
-
-        if (tag != null) spec = spec.and(QuestionSpecification.hasTag(tag));
-        if (user != null) spec = spec.and(QuestionSpecification.hasUser(user));
-        if (title != null) spec = spec.and(QuestionSpecification.hasTitleContaining(title));
-        if (accepted) spec = spec.and(QuestionSpecification.hasAcceptedAnswer());
-        if (unanswered) spec = spec.and(QuestionSpecification.hasNoAnswers());
-
-        return questionRepository.findAll(spec, pageable);
-    }
-
     public List<Question> getRelatedQuestions(Long questionId) {
         Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         if (optionalQuestion.isEmpty()) {
@@ -194,6 +182,7 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
         return questionRepository.findRelatedQuestionsByTags(tags, questionId);
     }
 
+    @Override
     public Page<Question> searchQuestions(String tag, String user, String title, boolean accepted, boolean unanswered, Pageable pageable) {
         Specification<Question> spec = Specification.where(null);
 
