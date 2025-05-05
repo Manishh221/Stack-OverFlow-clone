@@ -11,11 +11,14 @@ public interface TagService {
 
     List<Tag> findAllTags();
 
-    Page<TagWithCountDTO> searchTagsSortedByQuestionCount(String keyword, Pageable pageable);
-
     List<Tag> findAllTagsByQuestionId(Long questionId);
 
     Page<TagWithCountDTO> findPaginatedTags(Pageable pageable);
 
     Page<TagWithCountDTO> searchTags(String keyword, Pageable pageable);
+
+    Page<TagWithCountDTO> searchTagsSortedByQuestionCount(String keyword, Pageable pageable);
+
+    Page<TagWithCountDTO> findAllTagsSortedByQuestionCount(Pageable pageable);
+
 }

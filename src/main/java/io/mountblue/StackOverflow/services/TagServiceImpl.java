@@ -42,6 +42,12 @@ public class TagServiceImpl implements TagService {
         return tagRepository.searchTagWithQuestionCountSorted(keyword, pageable);
     }
 
+    @Override
+    public Page<TagWithCountDTO> findAllTagsSortedByQuestionCount(Pageable pageable) {
+        return tagRepository.findAllTagsSortedByQuestionCount(pageable);
+    }
+
+
 
     @Override
     public List<Tag> findAllTagsByQuestionId(Long questionId) {
