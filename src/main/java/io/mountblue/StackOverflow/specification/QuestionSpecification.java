@@ -47,8 +47,21 @@ public class QuestionSpecification {
 
     public static Specification<Question> hasNoAcceptedAnswer() {
         return (root, query, cb) -> {
-            Join<Question, ?> answers = root.join("answerList", JoinType.LEFT);
-            return cb.isFalse(answers.get("accepted"));
+            // Subquery to check if there exists an accepted answer
+            Subquery<Long> subquery = query.subquery(Long.class);
+            Root<Question> subRoot = subquery.from(Question.class);
+            Join<Object, Object> answers = subRoot.join("answerList", JoinType.LEFT);
+
+            subquery.select(subRoot.get("id"))
+                    .where(
+                            cb.and(
+                                    cb.equal(subRoot.get("id"), root.get("id")),
+                                    cb.isTrue(answers.get("accepted"))
+                            )
+                    );
+
+            // Where NOT EXISTS accepted answer
+            return cb.not(cb.exists(subquery));
         };
     }
 

@@ -6,6 +6,13 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"></script>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header(user=${user})}"></div>
@@ -13,43 +20,43 @@
 <div class="layout">
     <div th:replace="fragments/Sidebar :: Sidebar"></div>
     <!-- Filter Panel -->
-    <form th:action="@{/search}" method="get">
-        <input type="hidden" name="q" th:value="${q}" />
+<!--    <form th:action="@{/search}" method="get">-->
+<!--        <input type="hidden" name="q" th:value="${q}" />-->
 
-        <fieldset>
-            <legend>Filter by</legend>
-            <label>
-                <input type="checkbox" name="noAnswers" th:checked="${noAnswers}"/> No answers
-            </label><br/>
+<!--        <fieldset>-->
+<!--            <legend>Filter by</legend>-->
+<!--            <label>-->
+<!--                <input type="checkbox" name="noAnswers" th:checked="${noAnswers}"/> No answers-->
+<!--            </label><br/>-->
 
-            <label>
-                <input type="checkbox" name="noAccepted" th:checked="${noAccepted}"/> No accepted answer
-            </label><br/>
+<!--            <label>-->
+<!--                <input type="checkbox" name="noAccepted" th:checked="${noAccepted}"/> No accepted answer-->
+<!--            </label><br/>-->
 
-            <label>
-                <input type="number" name="daysOld" th:value="${daysOld}" placeholder="Days old" min="0" /> Days old
-            </label>
-        </fieldset>
+<!--            <label>-->
+<!--                <input type="number" name="daysOld" th:value="${daysOld}" placeholder="Days old" min="0" /> Days old-->
+<!--            </label>-->
+<!--        </fieldset>-->
 
-        <fieldset>
-            <legend>Sort by</legend>
-            <label>
-                <input type="radio" name="sortBy" value="newest" th:checked="${sortBy == 'newest'}"/> Newest
-            </label><br/>
+<!--        <fieldset>-->
+<!--            <legend>Sort by</legend>-->
+<!--            <label>-->
+<!--                <input type="radio" name="sortBy" value="newest" th:checked="${sortBy == 'newest'}"/> Newest-->
+<!--            </label><br/>-->
 
-            <label>
-                <input type="radio" name="sortBy" value="recent" th:checked="${sortBy == 'recent'}"/> Recent activity
-            </label>
-        </fieldset>
+<!--            <label>-->
+<!--                <input type="radio" name="sortBy" value="recent" th:checked="${sortBy == 'recent'}"/> Recent activity-->
+<!--            </label>-->
+<!--        </fieldset>-->
 
-        <fieldset>
-            <legend>Tagged with (OR logic)</legend>
-            <input type="text" name="tags" placeholder="e.g. java,spring"
-                   th:value="${#strings.listJoin(selectedTags, ',')}" />
-        </fieldset>
+<!--        <fieldset>-->
+<!--            <legend>Tagged with (OR logic)</legend>-->
+<!--            <input type="text" name="tags" placeholder="e.g. java,spring"-->
+<!--                   th:value="${#strings.listJoin(selectedTags, ',')}" />-->
+<!--        </fieldset>-->
 
-        <button type="submit">Apply filter</button>
-    </form>
+<!--        <button type="submit">Apply filter</button>-->
+<!--    </form>-->
     <main class="content-wrapper">
 
         <!-- Welcome Section with Cards -->
@@ -92,7 +99,7 @@
 
                 <div class="post-details">
                     <a th:href="@{'/question/' + ${post.id}}" class="post-title" th:text="${post.title}">Sample Post Title</a>
-                    <div class="post-excerpt" th:text="${post.description}">
+                    <div class="post-excerpt truncate-two-lines" th:utext="${post.description}">
                         This is a short excerpt from the question to give a quick overview...
                     </div>
                     <div class="tags">
