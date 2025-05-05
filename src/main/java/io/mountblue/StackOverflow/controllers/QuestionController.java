@@ -100,7 +100,7 @@ public class QuestionController {
         return "ReviewQuestion";
     }
 
-@GetMapping("/search")
+@GetMapping("/question")
 public String searchQuestionsFromQuery(
         @RequestParam(required = false) String q,
         @RequestParam(defaultValue = "0") int page,
@@ -134,10 +134,9 @@ public String searchQuestionsFromQuery(
 
         }
 
-
     Sort sort = switch (sortBy.toLowerCase()) {
         case "recent" -> Sort.by(Sort.Order.desc("updatedAt"));
-        default -> Sort.by(Sort.Order.desc("createdAt")); // "newest"
+        default -> Sort.by(Sort.Order.desc("createdAt"));
     };
 
     Pageable pageable = PageRequest.of(page, size, sort);
@@ -167,7 +166,7 @@ public String searchQuestionsFromQuery(
     model.addAttribute("daysOld", daysOld);
     model.addAttribute("selectedTags", tags);
 
-    return "questionList";
+    return "NewestQuestions";
 }
 
     private String extractValue(String q, String key) {
@@ -294,4 +293,6 @@ public String searchQuestionsFromQuery(
         model.addAttribute("loggedInUser",userInfo.getUser());
         return "QuestionDetail";
     }
+
+
 }

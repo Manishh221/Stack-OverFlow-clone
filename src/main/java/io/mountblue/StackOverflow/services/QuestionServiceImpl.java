@@ -174,7 +174,7 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
             boolean noAcceptedAnswer,
             boolean noAnswer,
             Integer daysOld,
-            List<String> tags, // multiple tags for OR filter
+            List<String> tags,
             Pageable pageable
     ) {
         Specification<Question> spec = Specification.where(null);
