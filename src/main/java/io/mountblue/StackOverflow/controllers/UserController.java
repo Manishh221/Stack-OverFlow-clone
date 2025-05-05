@@ -1,13 +1,17 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
+import io.mountblue.StackOverflow.entity.Tag;
+import io.mountblue.StackOverflow.entity.UserTags;
 import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.repositories.UserTagsRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
 import io.mountblue.StackOverflow.services.UsersServiceDetails;
+import org.springframework.core.metrics.StartupStep;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,16 +31,19 @@ public class UserController {
     private UserService userService;
     private PasswordEncoder passwordEncoder;
     private QuestionService questionService;
+    private UserTagsRepository userTagsRepository;
 
-    public UserController(UserService userService,PasswordEncoder passwordEncoder,QuestionService questionService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder,
+                          QuestionService questionService, UserTagsRepository userTagsRepository) {
         this.userService = userService;
-        this.passwordEncoder=passwordEncoder;
-        this.questionService=questionService;
+        this.passwordEncoder = passwordEncoder;
+        this.questionService = questionService;
+        this.userTagsRepository = userTagsRepository;
     }
 
     @GetMapping("/signup")
-    public String showSignup(Model model){
-        model.addAttribute("user",new Users());
+    public String showSignup(Model model) {
+        model.addAttribute("user", new Users());
         return "Signup";
     }
 
@@ -51,21 +58,25 @@ public class UserController {
     }
 
     @PostMapping("/updateUser")
-        public String updateUser(@ModelAttribute("user") Users user, Principal principal){
-            Users existingUser = userService.findUser(user.getId());
-            if(existingUser==null){
-                throw new RuntimeException("User not found");
-            }
+    public String updateUser(@ModelAttribute("user") Users user, Principal principal) {
+        Users existingUser = userService.findUser(user.getId());
+
+        System.out.println(user);
+
+        if (existingUser == null) {
+            throw new RuntimeException("User not found");
+        }
         if (principal != null) {
             String email = principal.getName();
             Users loggedInUser = userService.loadUserByEmail(email);
-            if((Objects.equals(loggedInUser.getRole(), "ADMIN")) || (Objects.equals(loggedInUser.getEmail(), user.getEmail()))){
+            if ((Objects.equals(loggedInUser.getRole(), "ADMIN")) || (Objects.equals(loggedInUser.getEmail(), user.getEmail()))) {
                 user.setUpdatedAt(LocalDateTime.now());
+                System.out.println("Tghe user is " + user);
                 userService.createNewUser(user);
 
             }
         }
-        return "redirect:/user/" + user.getId();
+        return "redirect:/user/" + user.getId() + "?profiletab=profile";
     }
 
     @PostMapping("/deleteUser/{id}")
@@ -82,30 +93,31 @@ public class UserController {
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserInfo userInfo, Model model) {
         Page<QuestionResponseDto> questions = questionService.findAllQuestions(0);
+        List<QuestionResponseDto> questionList = questions.getContent();
 
-        // Only print if the list has content
-        if (!questions.isEmpty()) {
-            System.out.println("Questions: " + questions.getContent());
-//            System.out.println("First question votes: " + questions.getContent().get(0).getVotes());
-            model.addAttribute("username", userInfo.getUser().getUsername());
-        } else {
-            System.out.println("No questions found.");
-            model.addAttribute("username", "User");
+        System.out.println("The questions are: " + questionList);
+
+        if (!questionList.isEmpty()) {
+            System.out.println("The first question's vote count is: " + questionList.get(0).getVotes());
         }
 
-        if (userInfo.getUser() != null) {
+        if (userInfo != null && userInfo.getUser() != null) {
             model.addAttribute("user", userInfo.getUser());
         }
 
         model.addAttribute("questions", questions);
+
         return "Home";
     }
-
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
                           @RequestParam(value = "activitytab",defaultValue = "question") String activityTab) {
         Users user = userService.findUser(id);
+
+        List<Tag> userAllTags = userTagsRepository.findAllTagsByUserId(id);
+        System.out.println("all users tags are: " + userAllTags);
+
         model.addAttribute("user", user);
         model.addAttribute("profiletab",profileTab);
         model.addAttribute("activitytab",activityTab);

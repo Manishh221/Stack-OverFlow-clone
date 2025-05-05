@@ -1,4 +1,4 @@
-<div id="profile-desc" th:fragment="activitystat">
+<div id="profile-desc" th:fragment="activitystat" xmlns:th="http://www.w3.org/1999/xhtml">
     <div id="activity-bar">
         <ul>
             <li
@@ -7,9 +7,14 @@
                     th:href="@{'/user/' + ${user.id} + '?profiletab=activity' + '&activitytab=question'}"
             >Question</a>
             </li>
+
             <li th:classappend="${activitytab=='answer'} ? 'activity-tab' : ''"><a
                     th:href="@{'/user/' + ${user.id} + '?profiletab=activity' + '&activitytab=answer'}"
             >Answers</a></li>
+
+            <li th:classappend="${activitytab=='tags'} ? 'activity-tab' : ''"><a
+                    th:href="@{'/user/' + ${user.id} + '?profiletab=activity' + '&activitytab=tags'}"
+            >Tags</a></li>
         </ul>
     </div>
 
@@ -19,6 +24,10 @@
 
     <div class="user-main" th:if="${activitytab == 'answer'}">
         <div th:replace="~{fragments/answer :: answer(user=${user})}"></div>
+    </div>
+
+    <div class="user-main" th:if="${activitytab == 'tags'}">
+        <div th:replace="~{fragments/tags :: tagBox(allTags=${tagList})}"></div>
     </div>
 
 </div>

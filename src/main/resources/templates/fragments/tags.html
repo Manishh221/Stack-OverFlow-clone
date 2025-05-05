@@ -1,0 +1,36 @@
+<!-- templates/fragments/tag-fragment.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="tagBox(allTags)" >
+
+    <!-- Top Bar -->
+        <div class="tag-header">
+        <h3 th:text="${#lists.size(allTags)} + ' Tags'">0 Tags</h3>
+        <div class="sort-toggle">
+            <button class="sort-button active">Score</button>
+            <button class="sort-button">Name</button>
+        </div>
+    </div>
+
+     <div class="tag-section" >
+
+    <!-- If Empty -->
+    <div class="tag-box" th:if="${#lists.isEmpty(allTags)}">
+        You have not participated in any <a href="#">tags</a>
+    </div>
+
+    <!-- If Not Empty -->
+    <div class="tag-list" th:if="${!#lists.isEmpty(allTags)}">
+        <div class="tag-row" th:each="tag : ${allTags}">
+            <span class="tag-name" th:text="${tag.tagName}">tag-name</span>
+            <hr>
+<!--            <span class="tag-score">0 <span class="unit">score</span></span>-->
+<!--            <span class="tag-posts">1 <span class="unit">post</span></span>-->
+        </div>
+    </div>
+</div>
+     </div>
+</body>
+</html>

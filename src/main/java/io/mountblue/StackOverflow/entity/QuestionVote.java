@@ -6,10 +6,9 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "questionvote")
-@Getter
-@Setter
 public class QuestionVote {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
@@ -26,4 +25,43 @@ public class QuestionVote {
     @Column(nullable = false)
     private boolean downvote;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public boolean isUpvote() {
+        return upvote;
+    }
+
+    public void setUpvote(boolean upvote) {
+        this.upvote = upvote;
+    }
+
+    public boolean isDownvote() {
+        return downvote;
+    }
+
+    public void setDownvote(boolean downvote) {
+        this.downvote = downvote;
+    }
 }

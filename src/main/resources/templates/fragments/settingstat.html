@@ -1,0 +1,27 @@
+
+                <div id="profile-desc" th:fragment="settingstat" xmlns:th="http://www.w3.org/1999/xhtml">
+                    <div id="activity-bar">
+                        <p class="personal-info-heading">Personal information</p>
+                        <ul>
+                            <li
+                                    th:classappend="${settingtab=='editProfile'} ? 'setting-tab' : ''"
+                            ><a
+                                    th:href="@{'/user/' + ${user.id} + '?profiletab=settings' + '&settingtab=editProfile'}"
+                            >Edit Profile</a>
+                            </li>
+                            <li th:classappend="${settingtab=='delete'} ? 'setting-tab' : ''">
+                                <a
+                                        th:href="@{'/user/' + ${user.id} + '?profiletab=settings' + '&settingtab=delete'}"
+                                >Delete Profile</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="user-main" th:if="${settingtab == 'editProfile'}">
+                        <div th:replace="~{fragments/editProfile:: editProfile(user=${user})}"></div>
+                    </div>
+
+                    <div class="user-main" th:if="${settingtab == 'delete'}">
+                        <div th:replace="~{fragments/deleteProfile :: deleteProfile(user=${user})}"></div>
+                    </div>
+
+                </div>

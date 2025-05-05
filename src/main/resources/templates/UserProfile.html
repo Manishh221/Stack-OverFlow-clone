@@ -30,6 +30,7 @@
                          th:text="${#strings.toUpperCase(#strings.substring(user.username, 0, 1))}"></div>
                     <div id="profile-title">
                         <p id="profile-name" th:text="${user.username}"></p>
+                        <p th:if="${user.title!=null}" id="profile-tl" style="color:grey;" th:text="${user.title}"></p>
                         <p id="about-login">
                             <span th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy HH:mm')}"></span>
                             <span th:if="${user.lastLoginAt != null}"
@@ -37,9 +38,27 @@
                         </p>
                     </div>
                 </div>
-                <form id="profile-btn" th:action="@{/updateUser}" method="post">
-                    <button type="submit">Edit</button>
-                </form>
+
+
+<!--                <form id="profile-btn" th:action="@{/updateUser}" method="post">-->
+<!--                    <button type="submit">Edit</button>-->
+<!--                </form>-->
+
+                <div class="button-container">
+
+                    <a href="http://localhost:8080/user/1?profiletab=settings" class="custom-button">
+                        <img src="https://res.cloudinary.com/dtmsrjwaf/image/upload/v1746209274/pencil_dlktla.png" class="icon" alt="Edit icon">
+                        Edit Profile
+                    </a>
+
+                    <a href="/network-profile" class="custom-button">
+                        <img src="https://res.cloudinary.com/dtmsrjwaf/image/upload/v1746209684/computer-icons-stack-exchange-stack-overflow-clip-art-png-favpng-gg65m9N2JvW44R5MAVu7St9gA_t_qqk9n8.jpg" class="icon" alt="Network icon">
+                        Network profile
+                    </a>
+                </div>
+
+
+
             </div>
 
             <div class="profile-tabs">
@@ -50,17 +69,28 @@
                 <a th:href="@{'/user/' + ${user.id} + '?profiletab=activity'}"
                    th:classappend="${profiletab == 'activity'} ? ' active-tab' : ''"
                    id="tab-activity">Activity</a>
+
+                <a th:href="@{'/user/' + ${user.id} + '?profiletab=settings'}"
+                   th:classappend="${profiletab == 'settings'} ? ' active-tab' : ''"
+                   id="tab-settings">Settings</a>
+
             </div>
 
                 <div  th:if="${profiletab == 'profile'}">
                     <div th:replace="~{fragments/profilestat :: profilestat(user=${user})}"></div>
                 </div>
-                <div th:if="${profiletab == 'activity'}">
-                    <div th:replace="~{fragments/activitystat :: activitystat(user=${user},  activitytab=${activitytab})}"></div>
-                </div>
+
+            <div th:if="${profiletab == 'activity'}">
+                <div th:replace="~{fragments/activitystat :: activitystat(user=${user}, activitytab=${activitytab}, tagList=${tagList})}"></div>
+            </div>
+
+            <div th:if="${profiletab == 'settings'}">
+                <div th:replace="~{fragments/settingstat :: settingstat(user=${user})}"></div>
+            </div>
 
         </div>
     </div>
 </div>
+
 </body>
 </html>

@@ -70,12 +70,17 @@
 #profile-title{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap:-1em;
+    height:fit-content;
 }
 #profile-name{
     height: fit-content;
     margin: 0;
     font-size: 2em;
+}
+#profile-tl{
+    margin-top:-0.2em;
+    margin-bottom:-1em;
 }
 #about-login span{
     color: var(--font-color);
@@ -87,10 +92,14 @@
     color: var(--font-color);
 }
 
+.public-information{
+    font-size: 22px;
+    margin-bottom: 13px;
+}
 
 .profile-tabs {
     display: flex;
-    gap: 0.3rem;
+    gap: 1.3rem;
 }
 
 .profile-tabs a {
@@ -155,10 +164,12 @@
     width: 100%;
   }
 
-#activity-bar{
+#activity-bar {
     min-width: fit-content;
+    padding-top: 8px;
     height: 100%;
 }
+
 #activity-bar ul{
     list-style: none;
     display: flex;
@@ -172,9 +183,10 @@
     background-color: rgb(230, 227, 227);
     border-radius: 1rem;
 }
-#activity-bar a{
+#activity-bar a {
     text-decoration: none;
     color: var(--font-color);
+    margin-left: -7px;
     width: 100%;
 }
 
@@ -320,3 +332,544 @@
   border-radius:1rem;}
 
 
+/*  USER PROFILE CSS*/
+
+body {
+    font-family: Arial, sans-serif;
+.buttons button:last-child {
+        background-color: #ffffff;
+        color: #007BFF;
+        border: none;
+    }
+
+.buttons button:last-child:hover {
+    background-color: #e1e1e1;
+}
+}
+
+.personal-info-heading {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+/* delete profile css */
+
+   .delete-profile {
+       padding: 20px;
+       background-color: #fff;
+       max-width: 800px;
+       font-family: Arial, sans-serif;
+   }
+
+   .delete-profile h2 {
+       margin-top: 0;
+       font-size: 18px;
+       font-weight: bold;
+       color: #000;
+   }
+
+   .delete-profile p {
+       margin: 15px 0; /* Slightly more spacing for paragraphs like in the screenshot */
+       font-size: 14px;
+       line-height: 1.5; /* Better readability */
+       color: #333;
+   }
+
+   .delete-profile ul {
+       list-style-type: disc;
+       margin: 15px 0 15px 20px; /* Adjusted spacing */
+       font-size: 14px;
+       color: #333;
+   }
+
+   .delete-profile li {
+       margin-bottom: 10px; /* Space between list items */
+       line-height: 1.5;
+   }
+
+   .delete-profile label {
+       display: block;
+       margin: 20px 0; /* More spacing around the checkbox label */
+       font-size: 14px;
+       color: #333;
+   }
+
+   .delete-profile input[type="checkbox"] {
+       margin-right: 8px; /* Slightly more space between checkbox and text */
+       vertical-align: middle;
+   }
+
+   .delete-profile button {
+       padding: 10px 20px;
+       background-color: #f44336; /* Matches the red color in the screenshot */
+       color: white;
+       border: none;
+       border-radius: 4px;
+       cursor: pointer;
+       font-size: 14px;
+       font-weight: 500;
+   }
+
+   .delete-profile button:disabled {
+       background-color: #cccccc; /* Grayed out when disabled */
+       cursor: not-allowed;
+   }
+
+   .delete-profile button:enabled:hover {
+       background-color: #d32f2f; /* Darker red on hover */
+   }
+
+/* edit profile css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #ffffff;
+}
+
+h1#edit-profile-header {
+    font-size: 25px;
+}
+
+.form-container {
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    padding: 26px;
+    padding-bottom: 7px;
+}
+
+..profile-info {
+     padding: 0px;
+     padding-left: 29px;
+     background-color: #fff;
+     max-width: 800px;
+ }
+.profile-info h2 {
+    margin-top: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+.profile-info h3 {
+    margin: 15px 0 5px;
+    font-size: 14px;
+    color: #666;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #4e4646;
+}
+
+.private-info small {
+    color: #666;
+    padding-left: 13px;
+}
+
+h5{
+    margin: 6px;
+    margin-left: 0px;
+    color: #4e4646;
+}
+
+.private-information{
+    padding-top: 42px;
+}
+
+
+.input-full-name {
+    width: 50%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.full-name {
+
+     width: 100%;
+     padding: 27px;
+     box-sizing: border-box;
+     border-radius: 4px;
+     box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.profile-picture {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profile-picture img {
+    width: 100px;
+    height: 100px;
+}
+.profile-picture button {
+    padding: 5px 10px;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.profile-picture button:hover {
+    background-color: #555;
+}
+.editor-toolbar {
+    display: flex;
+    gap: 5px;
+    margin-bottom: -1px;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #e1e1e1;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+}
+.editor-toolbar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.editor-toolbar button:hover {
+    background-color: #e1e1e1;
+}
+.form-group textarea {
+    height: 183px;
+    border-radius: 0 0 4px 4px;
+}
+.links .form-group {
+    display: flex;
+    gap: 10px;
+}
+.links .form-group input {
+    flex: 1;
+}
+.links .form-group img {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+.private-info small {
+    color: #666;
+    font-size: 12px;
+}
+.buttons button {
+    padding: 11px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.buttons button:first-child {
+    background-color: #007BFF;
+    color: white;
+}
+.buttons button:first-child:hover {
+    background-color: #0056b3;
+}
+.buttons button:last-child {
+    background-color: #fff;
+    color: #007BFF;
+    border: 1px solid #007BFF;
+}
+.buttons button:last-child:hover {
+    background-color: #e1e1e1;
+}
+
+/*  edit and beside button*/
+
+
+.button-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-bottom: 63px;
+}
+
+.custom-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+     color: #3f3333;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.custom-button:hover {
+    background-color: #f8f9f9;
+    border-color: #b3b3b3;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+
+/* footer fragment css */
+
+  /* Footer container */
+        .footer {
+            background-color: #232629; /* Exact dark background */
+            color: #9199a1; /* Exact light gray text */
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; /* Stack Overflow's font stack */
+            font-size: 12px;
+            line-height: 1.5;
+            padding: 32px 0;
+        }
+
+        /* Footer content wrapper */
+        .footer-content {
+            max-width: 1264px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 16px; /* Adjusted padding to match screenshot */
+        }
+
+        /* Logo section */
+        .footer-logo {
+            flex: 0 0 64px; /* Fixed width for logo column */
+            margin-right: 24px;
+        }
+
+        .footer-logo img {
+            width: 32px;
+            height: 37px;
+            display: block;
+        }
+
+        /* Footer columns */
+        .footer-columns {
+            display: flex;
+            flex: 1;
+            justify-content: space-between;
+        }
+
+        .footer-column {
+            flex: 1;
+            margin-right: 24px;
+        }
+
+        .footer-column:last-child {
+            margin-right: 0;
+        }
+
+        .footer-column h5 {
+            color: #babfc4; /* Exact heading color */
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0 0 12px 0; /* Exact spacing */
+            letter-spacing: 0.5px; /* Subtle letter spacing for headings */
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-column li {
+            margin-bottom: 6px; /* Exact spacing between list items */
+        }
+
+        .footer-column a {
+            color: #9199a1;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .footer-column a:hover {
+            color: #07c; /* Exact hover color */
+        }
+
+        /* Social and copyright section */
+        .footer-social-copyright {
+            max-width: 1264px;
+            margin: 24px auto 0;
+            padding: 0 16px;
+            font-size: 11px;
+            color: #6a737c; /* Exact copyright text color */
+            line-height: 1.5;
+        }
+
+        .footer-social-copyright a {
+            color: #9199a1;
+            text-decoration: none;
+            margin-right: 12px; /* Exact spacing between social links */
+        }
+
+        .footer-social-copyright a:hover {
+            color: #07c;
+        }
+
+        .footer-social-copyright span {
+            margin-left: 12px; /* Exact spacing before copyright text */
+        }
+
+
+/*  text */
+
+ label {
+      font-weight: bold;
+    }
+
+    .editor-container {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      max-width: 800px;
+      background-color: #fff;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+      gap: 8px;
+    }
+
+    .toolbar button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px 6px;
+    }
+
+   .editorr {
+       min-height: 150px;
+       padding: 10px;
+       font-size: 14px;
+       outline: none;
+       padding-left: 23px;
+       white-space: pre-wrap; /* Ensures that line breaks are maintained */
+       word-wrap: break-word; /* Prevents words from overflowing */
+   }
+
+
+
+    .editor:focus {
+      background-color: #fdfdfd;
+    }
+
+    .bottom-bar {
+      text-align: center;
+      border-top: 1px solid #ccc;
+      font-size: 10px;
+      color: #999;
+      padding: 4px;
+    }
+
+  .preview-boxx {
+         border: none;
+         margin-top: 1px;
+         padding: 10px;
+         background: #ffffff;
+         min-height: 30px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      padding-left: 26px;
+  }
+
+
+/* activity/tag section: */
+
+.tag-section {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tag-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.sort-toggle {
+    display: flex;
+    gap: 6px;
+}
+
+.sort-button {
+    padding: 4px 10px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.sort-button.active {
+    font-weight: bold;
+    background-color: #e0e0e0;
+}
+
+.tag-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tag-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 11px;
+    border-bottom: 1px solid #e1e1e1;
+    border-radius: 6px;
+    align-items: center;
+    background-color: #fff;
+}
+
+.tag-name {
+    background-color: #f1f2f3;
+    color: #3b4045;
+    padding: 5px 11px;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 13px;
+    font-family: sans-serif;
+}
+
+.tag-score, .tag-posts {
+    font-size: 13px;
+    color: #2f2f2f;
+}
+
+.unit {
+    color: #777;
+    margin-left: 2px;
+}

@@ -1,18 +1,23 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.constants.Reputations;
 import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Question;
+import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.exceptions.InsufficientReputationException;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.AnswerService;
 import io.mountblue.StackOverflow.services.QuestionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AnswerController {
@@ -33,20 +38,24 @@ public class AnswerController {
     @PostMapping("/answer/create/{questionId}")
     public String createAnswer(@PathVariable Long questionId, @Valid @ModelAttribute("answer") Answer answer,
                                BindingResult bindingResult, Model model,
-                               @AuthenticationPrincipal UserInfo userClass){
+                               @AuthenticationPrincipal UserInfo userClass,
+                               RedirectAttributes redirectAttributes){
+        //        checking user logged in
+        if(userClass==null){
+            return "redirect:/login";
+        }
+//        if(userClass != null){
+//            Users user = userClass.getUser();
+//            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
+//                redirectAttributes.addFlashAttribute("reputationError", "You need at least 50 reputation to answer.");
+//                return "redirect:/question/" + questionId;
+//            }
+//        }
         if (bindingResult.hasErrors()) {
             Question question = questionService.findQuestionById(questionId);
             model.addAttribute("question", question);
             model.addAttribute("answer",answer);
             return "redirect:/question/" + questionId;
-        }
-
-//        checking user logged in
-        if(userClass==null){
-            return "redirect:/login";
-        }
-        if(userClass.getUser().getReputation() <= 1){
-            return  "redirect:/question/" + questionId;
         }
 
 
@@ -95,7 +104,12 @@ public class AnswerController {
         if (userClass == null) {
             return "redirect:/login";
         }
-
+        if(userClass != null){
+            Users user = userClass.getUser();
+            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
+                throw new InsufficientReputationException("You need at least 50 reputation to update answer.");
+            }
+        }
         Answer existedAnswer = answerService.findAnswerById(answerId);
         if (existedAnswer == null) {
             model.addAttribute("errorMessage", "Answer not found.");

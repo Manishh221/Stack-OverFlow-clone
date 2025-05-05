@@ -14,7 +14,7 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "username",unique = true)
+    @Column(name = "username")
     private String username;
 
     @Column(name = "email", nullable = false,unique = true)
@@ -51,6 +51,8 @@ public class Users {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
+
+
 
     public Long getId() {
         return id;

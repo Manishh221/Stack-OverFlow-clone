@@ -1,9 +1,10 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
-import io.mountblue.StackOverflow.entity.Answer;
-import io.mountblue.StackOverflow.entity.Question;
-import io.mountblue.StackOverflow.entity.Tag;
+import io.mountblue.StackOverflow.entity.*;
+import io.mountblue.StackOverflow.repositories.AnswerVoteRepository;
+import io.mountblue.StackOverflow.repositories.QuestionRepository;
+import io.mountblue.StackOverflow.repositories.QuestionVoteRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.TagService;
@@ -11,12 +12,16 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -24,16 +29,23 @@ public class QuestionController {
 
     private QuestionService questionService;
     private TagService tagService;
+    private QuestionRepository questionRepository;
+    private QuestionVoteRepository questionVoteRepository;
+    private AnswerVoteRepository answerVoteRepository;
 
     @Autowired
-    public QuestionController(QuestionService questionService, TagService tagService) {
+    public QuestionController(QuestionService questionService, TagService tagService,QuestionRepository questionRepository,QuestionVoteRepository questionVoteRepository,AnswerVoteRepository answerVoteRepository) {
         this.questionService = questionService;
         this.tagService = tagService;
+        this.questionRepository = questionRepository;
+        this.questionVoteRepository = questionVoteRepository;
+        this.answerVoteRepository = answerVoteRepository;
     }
 
 //    --------------------------get all Questions-----------------------------------------------
     @GetMapping("/Show-all-questions/{page-number}")
     public String showAllQuestions (@PathVariable("page-number") int pageNumber, Model model) {
+
         Page<QuestionResponseDto> allQuestions = questionService.findAllQuestions(pageNumber);
 
         model.addAttribute("allQuestions", allQuestions);
@@ -93,7 +105,61 @@ public class QuestionController {
 //        return "Home";
 //    }
 
-//    --------------------------storing the Question------------------------------------------
+    @GetMapping("/search")
+    public String searchQuestionsFromQuery(
+            @RequestParam(required = false) String q,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model
+    ) {
+        String tag = null;
+        String user = null;
+        String title = null;
+        boolean accepted = false;
+        boolean unanswered = false;
+
+        if (q != null) {
+            // Simple pattern-based parsing
+            q = q.toLowerCase();
+
+            if (q.contains("tag:")) {
+                tag = extractValue(q, "tag:");
+            }
+            if (q.contains("user:")) {
+                user = extractValue(q, "user:");
+            }
+            if (q.contains("title:")) {
+                title = extractValue(q, "title:");
+            }
+            if (q.contains("is:accepted")) {
+                accepted = true;
+            }
+            if (q.contains("answers:0")) {
+                unanswered = true;
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("upvote")).and(Sort.by(Sort.Order.asc("downvote"))));
+        Page<Question> questionsPage = questionService.searchQuestions(tag, user, title, accepted, unanswered, pageable);
+
+        model.addAttribute("questionsPage", questionsPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", questionsPage.getTotalPages());
+        model.addAttribute("q", q); // to keep search bar value
+
+        return "questionList";
+    }
+
+    private String extractValue(String q, String key) {
+        int start = q.indexOf(key) + key.length();
+        int end = q.indexOf(" ", start);
+        if (end == -1) end = q.length();
+        String value = q.substring(start, end);
+        return value.replaceAll("\"", "").trim();
+    }
+
+
+    //    --------------------------storing the Question------------------------------------------
     @PostMapping("/create-question")
     public String createQuestion(@AuthenticationPrincipal UserInfo userInfo ,@Valid @ModelAttribute("question")Question question,
                                  BindingResult br,
@@ -133,15 +199,75 @@ public class QuestionController {
     }
 
 //    ------------------------storing updated question-----------------------------------------
-    @PostMapping("/update/Question")
-    public String updateQuestion(@ModelAttribute("question") Question question, List<String> tags) {
+    @PostMapping("/questions/update/{id}")
+    public String updateQuestion(@AuthenticationPrincipal UserInfo userInfo,@PathVariable Long id,@RequestParam("updatedDescription") String updatedDescription) {
 
-        return null;
+        Question existingQuestion = questionService.findQuestionById(id);
+        if(userInfo.getUser().getRole().equals("ADMIN") || (userInfo.getUser().getEmail().equals(existingQuestion.getUser().getEmail())) || (userInfo.getUser().getReputation()>1)){
+        existingQuestion.setDescription(updatedDescription);
+        existingQuestion.setUpdatedAt(LocalDateTime.now());
+
+        questionRepository.save(existingQuestion);
+        }else{
+            return "redirect:/login";
+        }
+
+        return  "redirect:/question/" + id;
     }
 
-    @GetMapping("/question/{id}")
-    public String showQuestion( @PathVariable Long id,Model model){
-        Question question = questionService.findQuestionById(id);
+    @PostMapping("/questions/delete/{id}")
+    public String deleteQuestion(@AuthenticationPrincipal UserInfo userInfo,@PathVariable Long id) {
+
+        Question existingQuestion = questionService.findQuestionById(id);
+        if(userInfo.getUser().getRole().equals("ADMIN") || (userInfo.getUser().getEmail().equals(existingQuestion.getUser().getEmail()))){
+            questionService.deleteQuestionById(id);
+        }else{
+            return "redirect:/login";
+        }
+        return  "redirect:/";
+    }
+
+    @GetMapping("/question/{questionId}")
+    public String showQuestion( @PathVariable Long questionId,Model model,@AuthenticationPrincipal UserInfo userInfo){
+        Question question = questionService.findQuestionById(questionId);
+        Optional<QuestionVote> voteOpt = questionVoteRepository.findByUserAndQuestion(userInfo.getUser(),question);
+        boolean questionupvote = false;
+        boolean questiondownvote = false;
+        boolean answerupvote = false;
+        boolean answerdownvote = false;
+        if(voteOpt.isPresent()){
+            QuestionVote vote = voteOpt.get();
+            questionupvote=vote.isUpvote();
+            questiondownvote=vote.isDownvote();
+        }
+        Map<Long, Boolean> answerUpvoteMap = new HashMap<>();
+        Map<Long, Boolean> answerDownvoteMap = new HashMap<>();
+
+        for (Answer answer : question.getAnswerList()) {
+            Optional<AnswerVote> av = answerVoteRepository.findByUserAndAnswer(userInfo.getUser(), answer);
+            answerUpvoteMap.put(answer.getId(), av.isPresent() && av.get().isUpvote());
+            answerDownvoteMap.put(answer.getId(), av.isPresent() && av.get().isDownvote());
+        }
+        int questionUpvotes = questionVoteRepository.countByQuestionAndUpvoteTrue(question);
+        int questionDownvotes = questionVoteRepository.countByQuestionAndDownvoteTrue(question);
+        Map<Long, Integer> answerVoteCountMap = new HashMap<>();
+
+        for (Answer answer : question.getAnswerList()) {
+            Optional<AnswerVote> av = answerVoteRepository.findByUserAndAnswer(userInfo.getUser(), answer);
+            answerUpvoteMap.put(answer.getId(), av.isPresent() && av.get().isUpvote());
+            answerDownvoteMap.put(answer.getId(), av.isPresent() && av.get().isDownvote());
+
+            int upvotes = answerVoteRepository.countByAnswerAndUpvoteTrue(answer);
+            int downvotes = answerVoteRepository.countByAnswerAndDownvoteTrue(answer);
+            answerVoteCountMap.put(answer.getId(), upvotes - downvotes);
+        }
+
+        model.addAttribute("answerUpvotes", answerUpvoteMap);
+        model.addAttribute("answerDownvotes", answerDownvoteMap);
+        model.addAttribute("answerVoteCounts", answerVoteCountMap);
+        model.addAttribute("questionVoteCount", questionUpvotes - questionDownvotes);
+        model.addAttribute("questionupvote",questionupvote);
+        model.addAttribute("questiondownvote",questiondownvote);
         model.addAttribute("question",question);
         model.addAttribute("answer",new Answer());
         return "QuestionDetail";

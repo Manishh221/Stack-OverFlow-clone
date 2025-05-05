@@ -7,6 +7,7 @@ import java.util.List;
 
 public class QuestionResponseDto {
 
+    private Long id;
     private String title;
     private String description;
     private List<String> tags;
@@ -14,6 +15,14 @@ public class QuestionResponseDto {
     private String timeAgo;
     private int votes;
     private int answers;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

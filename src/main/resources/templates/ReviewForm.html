@@ -16,7 +16,6 @@
 <form th:action="@{/questions/submit}"
       th:object="${questionForm}" method="post">
 
-    <!-- ---------------- TITLE ---------------- -->
     <div class="form-group"
          th:classappend="${#fields.hasErrors('title')} ? 'has-error'">
         <label>Title</label>

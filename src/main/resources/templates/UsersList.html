@@ -12,16 +12,15 @@
 <div th:replace="fragments/Sidebar :: Sidebar"></div>
   <div class="userlist">
 <h1>Users</h1>
-    <div class="search-sort">
+    <div class="search-sort" style="width:1000px; display:flex; justify-content:space-between;">
     <form th:action="@{/users}" method="get" class="user-search-form">
-      <input type="text" name="keyword" placeholder="Search users..."
+      <input style="width:200px;" type="text" name="keyword" placeholder="Filter by user"
              th:value="${keyword}" />
-      <button type="submit">Search</button>
     </form>
-    <div class="sort-controls">
-      <a th:href="@{/users(sort='reputation', keyword=${keyword})}"
+    <div class="sort-controls" style="border:1px solid grey; border-radius:0.2em; padding:0.2em;">
+      <a style="border:none;" th:href="@{/users(sort='reputation', keyword=${keyword})}"
          th:classappend="${sort == 'reputation'} ? 'active-sort'" >Reputation</a>
-      <a th:href="@{/users(sort='new', keyword=${keyword})}"
+      <a style="border:none;" th:href="@{/users(sort='new', keyword=${keyword})}"
          th:classappend="${sort == 'new'} ? 'active-sort'" >New users</a>
     </div>
     </div>

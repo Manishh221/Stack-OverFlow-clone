@@ -1,6 +1,7 @@
 package io.mountblue.StackOverflow.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -23,9 +24,9 @@ public class Answer {
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private Users user;
 
-    @NotNull(message = "is required")
+    @NotBlank(message = "Content is required and cannot be empty or just whitespace.")
     @Size(min = 1, message = "is required")
-    @Column(name = "content", nullable = false)
+    @Column(name = "content",columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @ManyToOne
@@ -45,6 +46,15 @@ public class Answer {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name="upvotes")
+    private int upvotes;
+
+    @Column(name="downvotes")
+    private int downvotes;
+
+    @Column(name = "is_correct")
+    private boolean correct=false;
 
     public Long getId() {
         return id;
@@ -108,5 +118,29 @@ public class Answer {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public int getDownvotes() {
+        return downvotes;
+    }
+
+    public void setDownvotes(int downvotes) {
+        this.downvotes = downvotes;
+    }
+
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
     }
 }
