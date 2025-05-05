@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping("/adduser")
-    public String addUser(@ModelAttribute("user") Users user) {
+    public String addUser(@ModelAttribute("user") Users user){
         user.setCreatedAt(LocalDateTime.now());
         List<String> splitList = List.of(user.getEmail().split("@"));
         user.setUsername(splitList.get(0));
@@ -89,13 +89,13 @@ public class UserController {
 
 
     @PostMapping("/deleteUser/{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
-        return "redirect:/";
+        public String deleteUser(@PathVariable Long id){
+            userService.deleteUser(id);
+            return "redirect:/";
     }
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(){
         return "Login";
     }
 
@@ -120,20 +120,16 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public String getUser(@PathVariable Long id, Model model, @RequestParam(value = "profiletab") String profileTab,
-                          @RequestParam(value = "activitytab", defaultValue = "question") String activityTab,
-                          @RequestParam(value = "settingtab", defaultValue = "editProfile") String editProfile) {
+    public String getUser(@PathVariable Long id, Model model,@RequestParam(value = "profiletab") String profileTab,
+                          @RequestParam(value = "activitytab",defaultValue = "question") String activityTab) {
         Users user = userService.findUser(id);
 
         List<Tag> userAllTags = userTagsRepository.findAllTagsByUserId(id);
         System.out.println("all users tags are: " + userAllTags);
 
         model.addAttribute("user", user);
-        model.addAttribute("profiletab", profileTab);
-        model.addAttribute("activitytab", activityTab);
-        model.addAttribute("settingtab", editProfile);
-        model.addAttribute("tagList", userAllTags);
-
+        model.addAttribute("profiletab",profileTab);
+        model.addAttribute("activitytab",activityTab);
         return "UserProfile";
     }
 
@@ -164,7 +160,8 @@ public class UserController {
         return "UsersList";
     }
 
+
+
+
+
 }
-
-
-

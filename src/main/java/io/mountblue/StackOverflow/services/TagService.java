@@ -10,7 +10,8 @@ import java.util.List;
 public interface TagService {
 
     List<Tag> findAllTags();
-    List<Tag> findAllTagsByQuestionId(Long QuestionId);
+
+    List<Tag> findAllTagsByQuestionId(Long questionId);
 
     Page<TagWithCountDTO> findPaginatedTags(Pageable pageable);
 

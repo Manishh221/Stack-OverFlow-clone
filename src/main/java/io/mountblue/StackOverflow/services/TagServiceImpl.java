@@ -14,12 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TagServiceImpl implements TagService{
+public class TagServiceImpl implements TagService {
+    private final TagRepository tagRepository;
+    private final QuestionTagRepository questionTagRepository;
 
-   private TagRepository tagRepository;
-   private QuestionTagRepository questionTagRepository;
-
-   @Autowired
     public TagServiceImpl(TagRepository tagRepository, QuestionTagRepository questionTagRepository) {
         this.tagRepository = tagRepository;
         this.questionTagRepository = questionTagRepository;
@@ -27,20 +25,41 @@ public class TagServiceImpl implements TagService{
 
     @Override
     public List<Tag> findAllTags() {
-
         return tagRepository.findAll();
     }
 
     @Override
+    public Page<TagWithCountDTO> findPaginatedTags(Pageable pageable) {
+        return tagRepository.findAllTagsWithQuestionCount(pageable);
+    }
+
+    @Override
+    public Page<TagWithCountDTO> searchTags(String keyword, Pageable pageable) {
+        return tagRepository.searchTagWithQuestionCount(keyword, pageable);
+    }
+
+    @Override
+    public Page<TagWithCountDTO> searchTagsSortedByQuestionCount(String keyword, Pageable pageable) {
+        return tagRepository.searchTagWithQuestionCountSorted(keyword, pageable);
+    }
+
+    @Override
+    public Page<TagWithCountDTO> findAllTagsSortedByQuestionCount(Pageable pageable) {
+        return tagRepository.findAllTagsSortedByQuestionCount(pageable);
+    }
+
+
+
+    @Override
     public List<Tag> findAllTagsByQuestionId(Long questionId) {
-       List<QuestionTag> questionTags = questionTagRepository.findByQuestionId(questionId);
-       List<Tag> tags = new ArrayList<>();
+        List<QuestionTag> questionTags = questionTagRepository.findByQuestionId(questionId);
+        List<Tag> tags = new ArrayList<>();
 
-       for (var theQuestionTag : questionTags) {
-           tags.add(theQuestionTag.getTag());
-       }
+        for (var questionTag : questionTags) {
+            tags.add(questionTag.getTag());
+        }
 
-       return tags;
+        return tags;
     }
 
 
