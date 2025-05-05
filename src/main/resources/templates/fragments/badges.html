@@ -1,0 +1,34 @@
+<!-- badges.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+
+<div th:fragment="badge(user)">
+
+    <p class="count-badges"
+       th:text="${user.reputation >= 100 ? '3 Badges' : (user.reputation >= 50 ? '2 Badges' : '1 Badge')}">
+    </p>
+
+    <div class="badge-container">
+
+    <span th:if="${user.reputation >= 0}">
+        <span class="badge bronze-badge"><span class="dot bronze-dot"></span>Autobiographer</span>
+    </span>
+
+        <span th:if="${user.reputation >= 50}">
+        <span class="badge silver-badge"><span class="dot silver-dot"></span>Good Answer</span>
+    </span>
+
+        <span th:if="${user.reputation >= 100}">
+        <span class="badge gold-badge"><span class="dot gold-dot"></span>Genius</span>
+    </span>
+
+    </div>
+
+
+</div>
+</body>
+</html>

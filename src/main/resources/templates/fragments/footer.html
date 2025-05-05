@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footer Fragment with Logo</title>
+    <style>
+        #custom-footer {
+            background-color: #2f3136;
+            color: #b1b1b1;
+            padding: 20px 40px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            position: relative;
+        }
+
+        /* Logo Styling */
+        .footer-logo {
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            width: 32px; /* Stack Overflow logo ka size match karne ke liye */
+            height: 32px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 50px; /* Logo ke neeche space ke liye */
+        }
+
+        #custom-footer a {
+            color: #b1b1b1;
+            text-decoration: none;
+        }
+
+        #custom-footer a:hover {
+            color: #ffffff;
+        }
+
+        #custom-footer h3 {
+            color: #ffffff;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        #custom-footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #custom-footer ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .footer-bottom {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #777;
+        }
+
+        .footer-bottom a {
+            color: #777;
+        }
+
+        .footer-bottom a:hover {
+            color: #aaa;
+        }
+
+        @media (max-width: 768px) {
+            #custom-footer {
+                flex-direction: column;
+            }
+
+            .footer-section {
+                min-width: 100%;
+            }
+
+            .footer-logo {
+                position: static;
+                margin-bottom: 20px;
+            }
+
+            .footer-content {
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<footer id="custom-footer">
+    <!-- Logo -->
+    <img src="https://res.cloudinary.com/dtmsrjwaf/image/upload/v1746442598/aaz74ojv7_ikksrj.webp" alt="Your Logo" class="footer-logo">
+
+    <!-- Footer Content -->
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Main Section</h3>
+            <ul>
+                <li><a href="#">Questions</a></li>
+                <li><a href="#">Help</a></li>
+                <li><a href="#">Chat</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="#">Teams</a></li>
+                <li><a href="#">Advertising</a></li>
+                <li><a href="#">Talent</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Press</a></li>
+                <li><a href="#">Work Here</a></li>
+                <li><a href="#">Legal</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Cookie Settings</a></li>
+                <li><a href="#">Cookie Policy</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Other Links</h3>
+            <ul>
+                <li><a href="#">Technology</a></li>
+                <li><a href="#">Culture & Recreation</a></li>
+                <li><a href="#">Life & Arts</a></li>
+                <li><a href="#">Science</a></li>
+                <li><a href="#">Professional</a></li>
+                <li><a href="#">Business</a></li>
+                <li><a href="#">API</a></li>
+                <li><a href="#">Data</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                <a href="#">Blog</a> |
+                <a href="#">Facebook</a> |
+                <a href="#">Twitter</a> |
+                <a href="#">LinkedIn</a> |
+                <a href="#">Instagram</a>
+            </p>
+            <p>
+                Site design / logo © 2025 Your Company Name, Inc; user contributions licensed under <a href="#">CC BY-SA</a>, rev 2025.5.5.12345
+            </p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

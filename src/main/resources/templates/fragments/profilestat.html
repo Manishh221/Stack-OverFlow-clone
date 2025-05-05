@@ -22,14 +22,16 @@
         <h3>About</h3>
         <div>
 
-                 <div>
-                        <p th:if="${user.about == null || user.about.isEmpty()}" class="empty-about">
+                 <div th:if="${user.about == null || user.about.isEmpty()}">
+                        <p class="empty-about">
                         Your about me section is currently blank. Would you <br>
-                            like to add one? <a href="http://localhost:8080/user/202?profiletab=settings">Edit profile</a>
+                            like to add one? <a href="http://localhost:8080/user/203?profiletab=settings">Edit profile</a>
                         </p>
                 </div>
 
-            <p th:unless="${user.about == null or user.about.isEmpty()}" th:utext="${user.about}"></p>
+             <p th:if="${!user.about.isEmpty()}" th:utext="${user.about}"></p>
+
+
         </div>
     </div>
 

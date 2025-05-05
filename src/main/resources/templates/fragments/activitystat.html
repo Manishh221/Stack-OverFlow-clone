@@ -15,6 +15,11 @@
             <li th:classappend="${activitytab=='tags'} ? 'activity-tab' : ''"><a
                     th:href="@{'/user/' + ${user.id} + '?profiletab=activity' + '&activitytab=tags'}"
             >Tags</a></li>
+
+            <li th:classappend="${activitytab=='badges'} ? 'activity-tab' : ''"><a
+                    th:href="@{'/user/' + ${user.id} + '?profiletab=activity' + '&activitytab=badges'}"
+            >Badges</a></li>
+
         </ul>
     </div>
 
@@ -28,6 +33,10 @@
 
     <div class="user-main" th:if="${activitytab == 'tags'}">
         <div th:replace="~{fragments/tags :: tagBox(allTags=${tagList})}"></div>
+    </div>
+
+    <div class="user-main" th:if="${activitytab == 'badges'}">
+        <div th:replace="~{fragments/badges :: badge(user=${user})}"></div>
     </div>
 
 </div>
