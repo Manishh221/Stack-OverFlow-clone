@@ -270,6 +270,9 @@ public class QuestionController {
         model.addAttribute("questiondownvote",questiondownvote);
         model.addAttribute("question",question);
         model.addAttribute("answer",new Answer());
+        List<Question> relatedQuestions = questionService.getRelatedQuestions(questionId);
+        model.addAttribute("relatedQuestions", relatedQuestions);
+
         return "QuestionDetail";
     }
 }

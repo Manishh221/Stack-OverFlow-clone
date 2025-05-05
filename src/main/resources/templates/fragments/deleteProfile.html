@@ -23,6 +23,16 @@
             <button type="submit" id="deleteButton" disabled>Delete profile</button>
         </form>
     </div>
+
+    <script>
+        const checkbox = document.getElementById('confirmDeletion');
+        const button = document.getElementById('deleteButton');
+
+        checkbox.addEventListener('change', function () {
+            button.disabled = !this.checked;
+        });
+    </script>
+
 </div>
 </body>
 </html>

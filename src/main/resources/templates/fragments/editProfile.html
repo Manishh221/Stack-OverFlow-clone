@@ -1,86 +1,170 @@
 <div th:fragment="editProfile(user)" xmlns:th="http://www.w3.org/1999/xhtml">
+    <!-- Inside the fragment: -->
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"></script>
+
     <div class="profile-info">
         <h1 id="edit-profile-header">Edit your profile</h1>
         <hr>
-            <p>Public information</p>
+        <p>Public information</p>
 
         <form th:action="@{/updateUser}" th:object="${user}" method="post" enctype="multipart/form-data">
             <div class="form-container">
+                <b>Profile image</b>
+                <div class="profile-picture" style="position: relative; text-align: center;">
+                    <div id="profile-img" style="position: relative;">
+                        <img th:src="${user.avatar != null} ? @{${user.avatar}} : @{/images/default-avatar.png}"
+                             id="avatarPreview"
+                             style="min-height:9rem; min-width:9rem; border:1px solid black; display: block; object-fit: cover; margin: 0 auto;">
 
-<!--                                <label>Profile image</label>-->
-<!--                                <div class="profile-picture">-->
-<!--                                    <img th:src="@{${(user.profileImage != null) ? user.profileImage : 'https://via.placeholder.com/100/FF69B4/FFFFFF?text=Profile'}}" alt="Profile Image" />-->
-<!--                                    <input type="file" name="profileImageFile" id="profileImageFile" accept="image/*" style="display: none;" />-->
-<!--                                    <button type="button" onclick="document.getElementById('profileImageFile').click();">Change picture</button>-->
-<!--                                </div>-->
+                        <!-- Hidden File Input -->
+                        <input type="file" name="profileImage" id="profileImageFile" style="display: none;"
+                               accept="image/*"/>
 
-<!--                            </div>-->
-
-<!--                            <div class="form-group">-->
-<!--                                <label>Display name</label>-->
-<!--                                <input type="text" th:field="*{displayName}">-->
-<!--                            </div>-->
-
-
-                <div class="form-group">
-
-                    <div class="form-group">
-                        <label>Display name</label>
-                        <input type="text" th:field="*{username}">
+                        <!-- Upload Button -->
+                        <button type="button"
+                                onclick="document.getElementById('profileImageFile').click();"
+                                style="
+                        position: absolute;
+                        bottom: 0;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 100%;
+                        background-color: #333;
+                        color: white;
+                        padding: 6px 10px;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                    ">
+                            Upload Picture
+                        </button>
                     </div>
 
-                    <label>Title</label>
-                    <input type="text" th:field="*{title}" placeholder="No title has been set">
-                    <input type="hidden" th:field="*{id}" />
-                    <input type="hidden" th:field="*{password}" />
-                    <input type="hidden" th:field="*{createdAt}" />
-                    <input type="hidden" th:field="*{answers}" />
-                    <input type="hidden" th:field="*{questions}" />
-                    <input type="hidden" th:field="*{lastLoginAt}" />
-                    <input type="hidden" th:field="*{reputation}" />
-                    <input type="hidden" th:field="*{role}" />
-                    <input type="hidden" th:field="*{email}" />
-
-
+                    <!-- Filename shown here -->
+                    <p id="file-name" style="font-size: 0.9rem; color: gray; margin-top: 0.5rem;"></p>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label>About me</label>
-                    <div class="editor-toolbar">
-                        <button type="button">B</button>
-                        <button type="button">I</button>
-                        <button type="button">♡</button>
-                        <button type="button">♢</button>
-                        <button type="button">♣</button>
-                        <button type="button">♠</button>
-                        <button type="button">≡</button>
-                        <button type="button">≅</button>
-                        <button type="button">≟</button>
-                        <button type="button">⍁</button>
-                    </div>
-                    <textarea th:field="*{about}"></textarea>
-                </div>
 
+            <div class="form-group">
+                <label>Display name</label>
+                <input type="text" th:field="*{username}">
+            </div>
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" th:field="*{title}" placeholder="No title has been set">
+                <input type="hidden" th:field="*{id}"/>
+                <input type="hidden" th:field="*{password}"/>
+                <input type="hidden" th:field="*{createdAt}"/>
+                <input type="hidden" th:field="*{answers}"/>
+                <input type="hidden" th:field="*{questions}"/>
+                <input type="hidden" th:field="*{lastLoginAt}"/>
+                <input type="hidden" th:field="*{reputation}"/>
+                <input type="hidden" th:field="*{role}"/>
+                <input type="hidden" th:field="*{email}"/>
+            </div>
+
+            <div th:classappend="${#fields.hasErrors('about')} ? 'has-error'" class="question-fields">
+                <label>About</label>
+                <input type="hidden" id="aboutHidden" th:field="*{about}"/>
+                <div id="aboutEditor"></div>
             </div>
 
             <div class="private-information">
                 <div class="private-info">
-                    <p>Private information<small>Not shown publicly</small></p>
+                    <p>Private information<small> Not shown publicly</small></p>
                 </div>
 
-                <div class="full-name" >
-                  <h5>Full name</h5>
+                <div class="full-name">
+                    <h5>Full name</h5>
                     <input class="input-full-name" type="text">
                 </div>
-
             </div>
-<br><br>
-                <div class="buttons">
-                    <button type="submit">Save profile</button>
-                    <button type="button" onclick="window.location.href='/profile'">Cancel</button>
-                </div>
 
+            <br><br>
+            <div class="buttons">
+                <button type="submit">Save profile</button>
+                <button type="button" onclick="window.location.href='/profile'">Cancel</button>
+            </div>
         </form>
-
     </div>
+
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const { codeSyntaxHighlight } = toastui.Editor.plugin;
+
+            const input = document.getElementById('profileImageFile');
+            const fileNameDisplay = document.getElementById('file-name');
+            const avatarPreview = document.getElementById('avatarPreview');
+
+            if (input && fileNameDisplay && avatarPreview) {
+                input.addEventListener('change', () => {
+                    const file = input.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        fileNameDisplay.textContent = `Selected file: ${file.name}`;
+                        avatarPreview.src = URL.createObjectURL(file);
+                    } else {
+                        fileNameDisplay.textContent = '';
+                    }
+                });
+            }
+
+            const aboutEditorElement = document.querySelector('#aboutEditor');
+            const aboutHiddenInput = document.querySelector('#aboutHidden');
+
+            if (aboutEditorElement && aboutHiddenInput) {
+                const aboutEditor = new toastui.Editor({
+                    el: aboutEditorElement,
+                    height: '300px',
+                    initialEditType: 'markdown',
+                    previewStyle: 'tab',
+                    placeholder: 'Write something about yourself...',
+                    plugins: [codeSyntaxHighlight],
+                    toolbarItems: [
+                        ['heading', 'bold', 'italic'],
+                        ['code', 'image'],
+                        ['link', 'quote'],
+                        ['ul', 'ol']
+                    ],
+                    hooks: {
+                        addImageBlobHook: async (blob, callback) => {
+                            const formData = new FormData();
+                            formData.append('image', blob);
+
+                            try {
+                                const response = await fetch('/upload-image', {
+                                    method: 'POST',
+                                    body: formData
+                                });
+
+                                const data = await response.json();
+                                callback(data.url, 'Image');
+                            } catch (err) {
+                                console.error('Image upload failed:', err);
+                                alert("Failed to upload image.");
+                            }
+                        }
+                    }
+                });
+
+                // Set existing value (if any)
+                if (aboutHiddenInput.value) {
+                    aboutEditor.setHTML(aboutHiddenInput.value);
+                }
+
+                // Ensure the correct form is selected
+                const form = aboutEditorElement.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function (e) {
+                        aboutHiddenInput.value = aboutEditor.getHTML(); // Sync content
+                    });
+                }
+            }
+        });
+    </script>
+
+
 </div>
+

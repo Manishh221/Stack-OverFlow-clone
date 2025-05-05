@@ -17,17 +17,20 @@ public class Users {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "email", nullable = false,unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "reputation")
     private int reputation;
 
-    @Column(name = "role",nullable = false)
-    private String role="USER";
+    @Column(name = "role", nullable = false)
+    private String role = "USER";
 
     @Column(columnDefinition = "TEXT")
     private String title;
@@ -36,23 +39,24 @@ public class Users {
     private String about;
 
     @CreationTimestamp
-    @Column(name = "created_at",updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Column(name = "last_login")
     private LocalDateTime lastLoginAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserTags> userTags;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
-
-
 
     public Long getId() {
         return id;
@@ -60,6 +64,14 @@ public class Users {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUsername() {
@@ -156,6 +168,33 @@ public class Users {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public List<UserTags> getUserTags() {
+        return userTags;
+    }
+
+    public void setUserTags(List<UserTags> userTags) {
+        this.userTags = userTags;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", reputation=" + reputation +
+                ", role='" + role + '\'' +
+                ", title='" + title + '\'' +
+                ", about='" + about + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", lastLoginAt=" + lastLoginAt +
+                ", answers=" + answers +
+                ", questions=" + questions +
+                '}';
     }
 }
 

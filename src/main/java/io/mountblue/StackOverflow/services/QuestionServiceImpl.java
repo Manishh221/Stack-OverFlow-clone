@@ -20,10 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService{
@@ -165,6 +163,25 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
         return questionResponseDto;
     }
 
+    public List<Question> getRelatedQuestions(Long questionId) {
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
+        if (optionalQuestion.isEmpty()) {
+            throw new RuntimeException("Question not found");
+        }
+
+        Question question = optionalQuestion.get();
+        Set<Tag> tags = question.getQuestionTags()
+                .stream()
+                .map(QuestionTag::getTag)
+                .collect(Collectors.toSet());
+
+        if (tags.isEmpty()) return new ArrayList<>();
+
+        if (tags.isEmpty()) return new ArrayList<>();
+
+        return questionRepository.findRelatedQuestionsByTags(tags, questionId);
+    }
+
     public Page<Question> searchQuestions(String tag, String user, String title, boolean accepted, boolean unanswered, Pageable pageable) {
         Specification<Question> spec = Specification.where(null);
 
@@ -176,8 +193,6 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
 
         return questionRepository.findAll(spec, pageable);
     }
-
-
 
 
 }
