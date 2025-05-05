@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <!-- Scripts -->
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -266,6 +266,11 @@
                                 <span style="font-size:25px">▼</span>
                             </button>
                         </form>
+                        <div>
+                            <span th:if="${ans.accepted}">
+                                <i class="fa-solid fa-check" style="font-weight:bold; font-size:2em; color: #55f452;"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div id="ans-cont" style="margin-top:2em; margin-left:1.5em;">
@@ -283,6 +288,11 @@
             <form th:action="@{'/answer/delete/' + ${ans.id}}" method="post" style="display: inline;">
                 <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
                         type="submit">Delete
+                </button>
+            </form>
+            <form th:if="${loggedInUser.email==question.user.email}"  th:action="@{'/answer/accept/' + ${ans.id}}" method="post" style="display: inline;">
+                <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
+                        type="submit" th:text="${ans.accepted ? 'Reject' : 'Accept'}">Accept
                 </button>
             </form>
 

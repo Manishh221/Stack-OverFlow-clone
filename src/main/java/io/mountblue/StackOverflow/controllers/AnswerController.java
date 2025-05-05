@@ -5,6 +5,7 @@ import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Question;
 import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.exceptions.InsufficientReputationException;
+import io.mountblue.StackOverflow.repositories.AnswerRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.AnswerService;
 import io.mountblue.StackOverflow.services.QuestionService;
@@ -19,14 +20,18 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
+
 @Controller
 public class AnswerController {
     private final AnswerService answerService;
     private final QuestionService questionService;
+    private final AnswerRepository answerRepository;
 
-    public AnswerController(AnswerService answerService, QuestionService questionService) {
+    public AnswerController(AnswerService answerService, QuestionService questionService, AnswerRepository answerRepository) {
         this.answerService = answerService;
         this.questionService = questionService;
+        this.answerRepository = answerRepository;
     }
 
     @InitBinder
@@ -94,6 +99,24 @@ public class AnswerController {
 //        redirecting back to question
         return "redirect:/question/" + questionId ;
     }
+
+    @PostMapping("/answer/accept/{answerId}")
+    public String acceptAnswer(@PathVariable Long answerId, @AuthenticationPrincipal UserInfo userClass){
+
+        Answer answer = answerService.findAnswerById(answerId);
+        if (userClass.getUser().getEmail().equals(answer.getQuestion().getUser().getEmail())){
+            if(answer.isAccepted()){
+                answer.setAccepted(false);
+            }else{
+                answer.setAccepted(true);
+            }
+            answer.setUpdatedAt(LocalDateTime.now());
+            answerRepository.save(answer);
+            return "redirect:/question/" + answer.getQuestion().getId();
+        }
+        return "redirect:/login";
+      }
+
 
     @PostMapping("answer/update/{answerId}")
     public String updateAnswer(@PathVariable Long answerId,

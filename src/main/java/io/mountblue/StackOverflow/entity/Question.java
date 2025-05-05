@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

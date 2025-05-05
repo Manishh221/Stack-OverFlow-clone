@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ques_tags")
-@AllArgsConstructor
-@NoArgsConstructor
 public class QuestionTag {
 
     @Id
