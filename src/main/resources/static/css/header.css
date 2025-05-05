@@ -83,3 +83,41 @@
 img{
     width:7em;
 }
+
+.search-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 8px;
+        font-size: 1rem;
+    }
+
+    .search-help {
+        display: none;
+        position: absolute;
+        top: 110%;
+        left: 0;
+        width: 100%;
+        background-color: #f1f1f1;
+        color: #333;
+        border-radius: 6px;
+        padding: 10px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        font-size: 0.9rem;
+        z-index: 10;
+    }
+
+    .search-wrapper:focus-within .search-help {
+        display: block;
+    }
+
+    .search-help code {
+        background: #e0e0e0;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: monospace;
+    }
