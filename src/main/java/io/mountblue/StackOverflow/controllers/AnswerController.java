@@ -1,13 +1,17 @@
 package io.mountblue.StackOverflow.controllers;
 
+import io.mountblue.StackOverflow.constants.Reputations;
 import io.mountblue.StackOverflow.entity.Answer;
 import io.mountblue.StackOverflow.entity.Question;
+import io.mountblue.StackOverflow.entity.Users;
+import io.mountblue.StackOverflow.exceptions.InsufficientReputationException;
 import io.mountblue.StackOverflow.security.UserInfo;
 import io.mountblue.StackOverflow.services.AnswerService;
 import io.mountblue.StackOverflow.services.QuestionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,69 +35,40 @@ public class AnswerController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
-//    @PostMapping("/answer/create/{questionId}")
-//    public String createAnswer(@PathVariable Long questionId, @Valid @ModelAttribute("answer") Answer answer,
-//                               BindingResult bindingResult, Model model,
-//                               @AuthenticationPrincipal UserInfo userClass){
-//        if (bindingResult.hasErrors()) {
-//            Question question = questionService.findQuestionById(questionId);
-//            model.addAttribute("question", question);
-//            model.addAttribute("answer",answer);
-//            return "redirect:/question/" + questionId;
+    @PostMapping("/answer/create/{questionId}")
+    public String createAnswer(@PathVariable Long questionId, @Valid @ModelAttribute("answer") Answer answer,
+                               BindingResult bindingResult, Model model,
+                               @AuthenticationPrincipal UserInfo userClass,
+                               RedirectAttributes redirectAttributes){
+        //        checking user logged in
+        if(userClass==null){
+            return "redirect:/login";
+        }
+//        if(userClass != null){
+//            Users user = userClass.getUser();
+//            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
+//                redirectAttributes.addFlashAttribute("reputationError", "You need at least 50 reputation to answer.");
+//                return "redirect:/question/" + questionId;
+//            }
 //        }
-//
-////        checking user logged in
-//        if (userClass == null || userClass.getUser() == null) {
-//            return "redirect:/login";
-//        }
-//        if (userClass.getUser().getReputation() <= 1) {
-//            return "redirect:/question/" + questionId;
-//        }
-//
-//
-////        saving Answer
-//        try {
-//            answerService.saveAnswer(answer, questionId, userClass);
-//        } catch (Exception e) {
-//            model.addAttribute("errorMessage", "Error saving answer: " + e.getMessage());
-//            return "redirect:/question/" + questionId;
-//        }
-////        after saving back to question
-//        return "redirect:/question/" + questionId;
-//    }
-@PostMapping("/answer/create/{questionId}")
-public String createAnswer(@PathVariable Long questionId,
-                           @Valid @ModelAttribute("answer") Answer answer,
-                           BindingResult bindingResult,
-                           Model model,
-                           RedirectAttributes redirectAttributes,
-                           @AuthenticationPrincipal UserInfo userClass) {
+        if (bindingResult.hasErrors()) {
+            Question question = questionService.findQuestionById(questionId);
+            model.addAttribute("question", question);
+            model.addAttribute("answer",answer);
+            return "redirect:/question/" + questionId;
+        }
 
-    System.out.println("answer is " + answer.getContent());
-    if (userClass == null || userClass.getUser() == null) {
-        return "redirect:/login";
-    }
 
-    if (userClass.getUser().getReputation() <= 1) {
-        redirectAttributes.addFlashAttribute("errorMessage", "You need more reputation to post an answer.");
+//        saving Answer
+        try {
+            answerService.saveAnswer(answer, questionId, userClass);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error saving answer: " + e.getMessage());
+            return "redirect:/question/" + questionId;
+        }
+//        after saving back to question
         return "redirect:/question/" + questionId;
     }
-
-    if (bindingResult.hasErrors()) {
-        Question question = questionService.findQuestionById(questionId);
-        model.addAttribute("question", question);
-        model.addAttribute("answer", answer);
-        return "redirect:/question/" + questionId;
-    }
-
-    try {
-        answerService.saveAnswer(answer, questionId, userClass);
-    } catch (Exception e) {
-        redirectAttributes.addFlashAttribute("errorMessage", "Error saving answer: " + e.getMessage());
-    }
-
-    return "redirect:/question/" + questionId;
-}
 
     @PostMapping("/answer/delete/{answerId}")
     public String deleteAnswer(@PathVariable Long answerId, Model model,
@@ -129,15 +104,21 @@ public String createAnswer(@PathVariable Long questionId,
         if (userClass == null) {
             return "redirect:/login";
         }
-
+        if(userClass != null){
+            Users user = userClass.getUser();
+            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
+                throw new InsufficientReputationException("You need at least 50 reputation to update answer.");
+            }
+        }
         Answer existedAnswer = answerService.findAnswerById(answerId);
         if (existedAnswer == null) {
             model.addAttribute("errorMessage", "Answer not found.");
             return "error";
         }
 
-
-        if (userClass.getUser().getReputation() <=1) {
+        // Authorization check
+        if (!userClass.getUser().getEmail().equals(existedAnswer.getUser().getEmail())
+                && !userClass.getUser().getRole().equals("ADMIN")) {
             return "redirect:/login";
         }
 

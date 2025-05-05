@@ -47,6 +47,15 @@ public class Answer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name="upvotes")
+    private int upvotes;
+
+    @Column(name="downvotes")
+    private int downvotes;
+
+    @Column(name = "is_correct")
+    private boolean correct=false;
+
     public Long getId() {
         return id;
     }
@@ -109,5 +118,29 @@ public class Answer {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public int getDownvotes() {
+        return downvotes;
+    }
+
+    public void setDownvotes(int downvotes) {
+        this.downvotes = downvotes;
+    }
+
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
     }
 }

@@ -4,6 +4,7 @@ import io.mountblue.StackOverflow.controllers.QuestionController;
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
 import io.mountblue.StackOverflow.entity.Question;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

@@ -7,11 +7,13 @@ import io.mountblue.StackOverflow.repositories.QuestionTagRepository;
 import io.mountblue.StackOverflow.repositories.TagRepository;
 import io.mountblue.StackOverflow.repositories.UserTagsRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
+import io.mountblue.StackOverflow.specification.QuestionSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -178,6 +180,18 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
         if (tags.isEmpty()) return new ArrayList<>();
 
         return questionRepository.findRelatedQuestionsByTags(tags, questionId);
+    }
+
+    public Page<Question> searchQuestions(String tag, String user, String title, boolean accepted, boolean unanswered, Pageable pageable) {
+        Specification<Question> spec = Specification.where(null);
+
+        if (tag != null) spec = spec.and(QuestionSpecification.hasTag(tag));
+        if (user != null) spec = spec.and(QuestionSpecification.hasUser(user));
+        if (title != null) spec = spec.and(QuestionSpecification.hasTitleContaining(title));
+        if (accepted) spec = spec.and(QuestionSpecification.hasAcceptedAnswer());
+        if (unanswered) spec = spec.and(QuestionSpecification.hasNoAnswers());
+
+        return questionRepository.findAll(spec, pageable);
     }
 
 
