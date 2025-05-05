@@ -8,14 +8,11 @@
     <!-- Top Bar -->
         <div class="tag-header">
         <h3 th:text="${#lists.size(allTags)} + ' Tags'">0 Tags</h3>
-        <div class="sort-toggle">
-            <button class="sort-button active">Score</button>
-            <button class="sort-button">Name</button>
-        </div>
+
     </div>
 
-     <div class="tag-section" >
 
+     <div class="tag-section" >
     <!-- If Empty -->
     <div class="tag-box" th:if="${#lists.isEmpty(allTags)}">
         You have not participated in any <a style="text-decoration: none" href="#">tags</a>
