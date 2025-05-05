@@ -1,0 +1,61 @@
+<!-- fragments/UserBadge.html -->
+<style>
+    .user-badge {
+        background-color: #f0f8ff;
+        border: 1px solid #dbeafe;
+        border-radius: 6px;
+        padding: 8px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        max-width: fit-content;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-badge img {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        margin-right: 8px;
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .timestamp {
+        font-size: 12px;
+        color: #555;
+    }
+
+    .username {
+        font-weight: bold;
+        color: #0074cc;
+    }
+
+    .reputation {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .badges {
+        color: #a68100;
+        margin-left: 4px;
+    }
+</style>
+
+<div th:fragment="userBadge(user, timestamp)">
+    <div class="user-badge">
+        <img th:src="@{${user.profileImageUrl}}" alt="User Avatar" />
+        <div class="user-info">
+            <div class="timestamp" th:text="${timestamp}">asked 2 mins ago</div>
+            <div class="username" th:text="${user.username}">Hakkelaar</div>
+            <div>
+                <span class="reputation" th:text="${user.reputation}">55</span>
+                <span class="badges">● <span th:text="${user.badges}">7</span></span>
+            </div>
+        </div>
+    </div>
+</div>
