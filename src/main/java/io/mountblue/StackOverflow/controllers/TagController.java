@@ -28,21 +28,34 @@ public class TagController {
             @RequestParam(defaultValue = "createdAt") String sort,
             Model model) {
 
-        Sort sorting;
-        if ("question".equals(sort)) {
-            sorting = Sort.by(Sort.Direction.DESC, "questionCount");
+        Pageable pageable;
+
+        if ("createdAt".equals(sort)) {
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         } else {
-            sorting = Sort.by(Sort.Direction.DESC, "createdAt");
+            pageable = PageRequest.of(page, size);
         }
 
-        Pageable pageable = PageRequest.of(page, size, sorting);
         Page<TagWithCountDTO> tagsPage;
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            tagsPage = tagService.searchTags(keyword, pageable);
+            switch (sort) {
+                case "question":
+                    tagsPage = tagService.searchTagsSortedByQuestionCount(keyword, pageable);
+                    break;
+                default:
+                    tagsPage = tagService.searchTags(keyword, pageable);
+            }
             model.addAttribute("keyword", keyword);
         } else {
-            tagsPage = tagService.findPaginatedTags(pageable);
+            switch (sort) {
+                case "question":
+                    tagsPage = tagService.findAllTagsSortedByQuestionCount(pageable);
+                    break;
+                default:
+                    pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+                    tagsPage = tagService.findPaginatedTags(pageable);
+            }
         }
 
         model.addAttribute("tags", tagsPage.getContent());
@@ -52,6 +65,7 @@ public class TagController {
 
         return "TagsList";
     }
+
 
 
 }
