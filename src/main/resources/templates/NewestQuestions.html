@@ -3,165 +3,191 @@
 <head>
     <title>Newest Questions</title>
     <link rel="stylesheet" th:href="@{/css/questions.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header(user=${user})}"></div>
 
-<div id="main-container">
-    <!-- ─────────────  HEADER  ───────────── -->
-    <h1 class="page-title">Newest Questions</h1>
+<div class="layout">
+    <div th:replace="fragments/Sidebar :: Sidebar"></div>
 
-    <div class="question-header-meta">
-        <div class="question-count">24,232,065 questions</div>
+    <div id="main-container">
+        <!-- ─── HEADER ─── -->
+        <h1 class="page-title">Newest Questions</h1>
 
-        <div class="filter-sort-tag-controls">
-            <!-- sort tabs -->
-            <nav class="filter-tabs">
-                <a href="#" class="tab active">Newest</a>
-                <a href="#" class="tab">Active</a>
-                <a href="#" class="tab">Bountied <span class="badge">47</span></a>
-                <a href="#" class="tab">Unanswered</a>
-                <button class="tab more-button">More ▾</button>
-            </nav>
+        <div class="question-header-meta">
+            <div class="question-count"
+                 th:text="${questionsPage.totalElements} + ' questions'">…</div>
 
-            <!-- filter toggle -->
-            <button id="filter-toggle" class="filter-button">
-                <span class="icon">🔍</span> Filter
-            </button>
-        </div>
-    </div>
+            <div class="filter-sort-tag-controls">
+                <!-- ─ Sort tabs keep params alive ─ -->
+                <nav class="filter-tabs">
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=${noAnswers},
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy='newest',
+                                   page=0,
+                                   size=${size})}"
+                       class="tab"
+                       th:classappend="${sortBy=='newest'} ? 'active'">Newest</a>
 
-    <!-- ─────────────  FILTER PANEL  ───────────── -->
-    <section class="filter-panel" id="filter-panel" hidden>
-        <form id="filter-form" method="get" action="#">
-            <div class="filter-grid">
-                <!-- Filter by -->
-                <div class="filter-section">
-                    <strong>Filter by</strong>
-                    <label><input type="checkbox" name="noAnswers"> No answers</label>
-                    <label><input type="checkbox" name="noAccepted"> No accepted answer</label>
-                    <label><input type="checkbox" name="noStaging"> No Staging Ground</label>
-                    <label><input type="checkbox" name="hasBounty"> Has bounty</label>
-                    <label><input type="number" name="daysOld" placeholder="Days old" class="days-old"></label>
-                </div>
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=${noAnswers},
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy='recent',
+                                   page=0,
+                                   size=${size})}"
+                       class="tab"
+                       th:classappend="${sortBy=='recent'} ? 'active'">Active</a>
 
-                <!-- Sorted by -->
-                <div class="filter-section">
-                    <strong>Sorted by</strong>
-                    <label><input type="radio" name="sort" value="newest" checked> Newest</label>
-                    <label><input type="radio" name="sort" value="activity"> Recent activity</label>
-                    <label><input type="radio" name="sort" value="score"> Highest score</label>
-                    <label><input type="radio" name="sort" value="frequent"> Most frequent</label>
-                    <label><input type="radio" name="sort" value="bounty"> Bounty ending soon</label>
-                    <label><input type="radio" name="sort" value="trending"> Trending</label>
-                    <label><input type="radio" name="sort" value="active"> Most activity</label>
-                </div>
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=true,
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy=${sortBy},
+                                   page=0,
+                                   size=${size})}"
+                       class="tab"
+                       th:classappend="${noAnswers} ? 'active'">Unanswered</a>
+                </nav>
 
-                <!-- Tagged with -->
-                <div class="filter-section">
-                    <strong>Tagged with</strong>
-                    <label><input type="radio" name="tagType" value="my-tags"> My watched tags</label>
-                    <label><input type="radio" name="tagType" value="custom-tags" checked> The following tags:</label>
-                    <input type="text" name="tags" placeholder="e.g. javascript or python">
-                </div>
-            </div>
-
-            <div class="filter-actions">
-                <button type="submit" class="apply-filter">Apply filter</button>
-                <button type="button" class="save-filter">Save custom filter</button>
-                <a href="#" class="cancel-filter" id="filter-cancel">Cancel</a>
-            </div>
-        </form>
-    </section>
-    <!-- ─────────────  /HEADER  ───────────── -->
-
-    <!-- ─────────────  QUESTION LIST  ───────────── -->
-    <div class="question-list" id="question-list">
-        <div th:each="question : ${questions}" class="question-card">
-
-            <div class="votes-answers">
-                <div><strong th:text="${question.votes}">0</strong> votes</div>
-                <div><strong th:text="${question.answers}">0</strong> answers</div>
-
-            </div>
-
-            <div class="question-content">
-                <a th:href="@{'/question/' + ${question.id}}" class="question-title">
-                    <strong th:text="${question.title}">Question Title</strong>
-                </a>
-
-                <p th:text="${question.description}" class="question-description">
-                    Question excerpt…
-                </p>
-
-                <div class="tags">
-                    <span th:each="tag : ${question.tags}" class="tag" th:text="${tag}">tag</span>
-                </div>
-
-                <div class="meta">
-                    <span th:text="'asked by ' + ${question.author} + ' • ' + ${question.timeAgo}"></span>
-                </div>
+                <button id="filter-toggle" class="filter-button">
+                    <span class="icon">🔍</span> Filter
+                </button>
             </div>
         </div>
-    </div>
-    <!-- ─────────────  /QUESTION LIST  ───────────── -->
 
-    <!-- ─────────────  PAGINATION  ───────────── -->
-    <!-- ─────────────  PAGINATION  ───────────── -->
-    <div class="pager-wrapper">
+        <!-- ─── FILTER PANEL ─── -->
+        <section class="filter-panel" id="filter-panel" th:attr="hidden=${false} ? ${#lists.isEmpty(#request.getParameterMap())}">
+            <form id="filter-form" method="get" th:action="@{/question}">
+                <!-- keep page + size -->
+                <input type="hidden" name="page"  th:value="${currentPage}">
+                <input type="hidden" name="size"  th:value="${size}">
+                <input type="hidden" name="sortBy" th:value="${sortBy}">
 
-        <!-- page numbers -->
-        <ul class="pager">
-            <!-- first 5 pages -->
-            <li th:each="i : ${#numbers.sequence(1,5)}"
-                th:classappend="${i == currentPage + 1} ? 'active'">
-                <a th:href="@{/search(q=${q},page=${i-1})}" th:text="${i}">1</a>
-            </li>
+                <div class="filter-grid">
+                    <!-- Search -->
+                    <div class="filter-section">
+                        <strong>Search text</strong>
+                        <input type="text" name="q" th:value="${q}" placeholder="keywords…">
+                    </div>
 
-            <!-- ellipsis -->
-            <li class="ellipsis" th:if="${totalPages > 6}">…</li>
+                    <!-- Flags -->
+                    <div class="filter-section">
+                        <strong>Filter by</strong>
+                        <label><input type="checkbox" name="noAnswers"
+                                      th:checked="${noAnswers}"> No answers</label>
+                        <label><input type="checkbox" name="noAccepted"
+                                      th:checked="${noAccepted}"> No accepted answer</label>
+                        <label>
+                            <input type="number" name="daysOld" class="days-old"
+                                   th:value="${daysOld}" placeholder="Days old">
+                        </label>
+                    </div>
 
-            <!-- last page -->
-            <li th:if="${totalPages > 6}"
-                th:classappend="${currentPage + 1 == totalPages} ? 'active'">
-                <a th:href="@{/search(q=${q},page=${totalPages-1})}"
-                   th:text="${totalPages}">999</a>
-            </li>
+                    <!-- Sort radio (mirrors tabs) -->
+                    <div class="filter-section">
+                        <strong>Sorted by</strong>
+                        <label><input type="radio" name="sortBy" value="newest"
+                                      th:checked="${sortBy=='newest'}"> Newest</label>
+                        <label><input type="radio" name="sortBy" value="recent"
+                                      th:checked="${sortBy=='recent'}"> Recent activity</label>
+                    </div>
 
-            <!-- next -->
-            <li>
-                <a th:href="@{/search(q=${q},page=${currentPage + 1})}"
-                   th:if="${currentPage + 1 < totalPages}">Next</a>
-            </li>
-        </ul>
+                    <!-- Tags -->
+                    <div class="filter-section">
+                        <strong>Tagged with</strong>
+                        <input type="text" name="tags"
+                               th:value="${#strings.listJoin(selectedTags, ',')}"
+                               placeholder="java,spring,postgres">
+                    </div>
+                </div>
 
-        <!-- per-page size -->
-        <div class="page-size">
-            <button th:classappend="${size==15} ? 'selected' "
-                    th:href="@{/search(q=${q},page=0,size=15)}">15</button>
-            <button th:classappend="${size==30} ? 'selected' "
-                    th:href="@{/search(q=${q},page=0,size=30)}">30</button>
-            <button th:classappend="${size==50} ? 'selected' "
-                    th:href="@{/search(q=${q},page=0,size=50)}">50</button>
-            <span class="per-label">per page</span>
+                <div class="filter-actions">
+                    <button type="submit" class="apply-filter">Apply filter</button>
+                    <a href="#" id="filter-cancel" class="cancel-filter">Cancel</a>
+                </div>
+            </form>
+        </section>
+
+        <!-- ─── QUESTION LIST ─── -->
+        <div class="question-list">
+            <div th:each="post : ${questionsPage.content}" class="post-container">
+                <div class="stats">
+                    <div><b th:text="${post.votes}">0</b> votes</div>
+                    <div><b th:text="${post.answers}">0</b> answers</div>
+                </div>
+
+                <div class="post-details">
+                    <a th:href="@{'/question/' + ${post.id}}" class="post-title"
+                       th:text="${post.title}">Title</a>
+                    <div class="post-excerpt" th:text="${post.description}"> … </div>
+
+                    <div class="tags">
+                        <span class="tag"
+                              th:each="t : ${post.tags}"
+                              th:text="${t}">java</span>
+                    </div>
+
+                    <div class="post-meta">
+                        <span th:text="${post.author}">user</span>
+                        asked <span th:text="${post.timeAgo}">…</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-    </div>
-    <!-- ─────────────  /PAGINATION  ───────────── -->
+        <!-- ─── PAGINATION ─── -->
+        <div class="pager-wrapper">
+            <ul class="pager">
+                <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                    th:if="${totalPages <= 7 || i == 1 || i == totalPages || (i >= currentPage && i <= currentPage + 2)}"
+                    th:classappend="${i == currentPage + 1} ? 'active'">
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=${noAnswers},
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy=${sortBy},
+                                   size=${size},
+                                   page=${i-1})}"
+                       th:text="${i}">1</a>
+                </li>
 
-    <!-- ─────────────  /PAGINATION  ───────────── -->
+                <li class="ellipsis" th:if="${totalPages > 7 && currentPage + 3 < totalPages}">…</li>
+
+                <li th:if="${currentPage + 1 < totalPages}">
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=${noAnswers},
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy=${sortBy},
+                                   size=${size},
+                                   page=${currentPage + 1})}">Next</a>
+                </li>
+            </ul>
+
+        </div>
+        <!-- ─── /PAGINATION ─── -->
+    </div>
 </div>
 
-<!-- ─────────────  JS  ───────────── -->
 <script>
-    const panel   = document.getElementById('filter-panel');
-    document.getElementById('filter-toggle').onclick = () => {
-        panel.hidden = !panel.hidden;
-    };
-    document.getElementById('filter-cancel').onclick = e => {
-        e.preventDefault();
-        panel.hidden = true;
-    };
+    const panel = document.getElementById('filter-panel');
+    document.getElementById('filter-toggle').onclick = () => panel.hidden = !panel.hidden;
+    document.getElementById('filter-cancel').onclick = e => { e.preventDefault(); panel.hidden = true; };
 </script>
-
 </body>
 </html>
