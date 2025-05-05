@@ -50,30 +50,13 @@ public class Users {
     private LocalDateTime lastLoginAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserTags> userTags;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
-
-    @Override
-    public String toString() {
-        return "Users{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", reputation=" + reputation +
-                ", role='" + role + '\'' +
-                ", title='" + title + '\'' +
-                ", about='" + about + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", lastLoginAt=" + lastLoginAt +
-                ", answers=" + answers +
-                ", questions=" + questions +
-                '}';
-    }
-
 
     public Long getId() {
         return id;
@@ -185,6 +168,33 @@ public class Users {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public List<UserTags> getUserTags() {
+        return userTags;
+    }
+
+    public void setUserTags(List<UserTags> userTags) {
+        this.userTags = userTags;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", reputation=" + reputation +
+                ", role='" + role + '\'' +
+                ", title='" + title + '\'' +
+                ", about='" + about + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", lastLoginAt=" + lastLoginAt +
+                ", answers=" + answers +
+                ", questions=" + questions +
+                '}';
     }
 }
 
