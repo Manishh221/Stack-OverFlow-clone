@@ -899,3 +899,77 @@ h5{
     color: #636b74;
     background-color: #f9fafa;
 }
+
+
+/*  badges css  */
+ .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .gold {
+            background-color: #FFD700;
+            color: black;
+        }
+
+        .silver {
+            background-color: #C0C0C0;
+            color: black;
+        }
+
+        .bronze {
+            background-color: #CD7F32;
+            color: white;
+        }
+
+        .none {
+            background-color: #ddd;
+            color: black;
+        }
+
+
+      /* 02 badge css */
+
+      .badge-container {
+          margin-top: 10px;
+          padding-left: 84px;
+      }
+
+      .badge {
+        background-color: #2d2d2d;
+        color: #f1f1f1;
+        padding: 6px 12px;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+        font-size: 14px;
+        font-family: 'Segoe UI', sans-serif;
+      }
+
+      .badge .dot {
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+      }
+
+      .bronze-dot {
+        background-color: #cd7f32;
+      }
+      .silver-dot {
+        background-color: #c0c0c0;
+      }
+      .gold-dot {
+        background-color: #ffd700;
+      }
+
+p.count-badges {
+     font-size: 20px;
+        padding-left: 100px;
+
+ }
