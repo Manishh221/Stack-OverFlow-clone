@@ -13,43 +13,7 @@
 <div class="layout">
     <div th:replace="fragments/Sidebar :: Sidebar"></div>
     <!-- Filter Panel -->
-    <form th:action="@{/search}" method="get">
-        <input type="hidden" name="q" th:value="${q}" />
 
-        <fieldset>
-            <legend>Filter by</legend>
-            <label>
-                <input type="checkbox" name="noAnswers" th:checked="${noAnswers}"/> No answers
-            </label><br/>
-
-            <label>
-                <input type="checkbox" name="noAccepted" th:checked="${noAccepted}"/> No accepted answer
-            </label><br/>
-
-            <label>
-                <input type="number" name="daysOld" th:value="${daysOld}" placeholder="Days old" min="0" /> Days old
-            </label>
-        </fieldset>
-
-        <fieldset>
-            <legend>Sort by</legend>
-            <label>
-                <input type="radio" name="sortBy" value="newest" th:checked="${sortBy == 'newest'}"/> Newest
-            </label><br/>
-
-            <label>
-                <input type="radio" name="sortBy" value="recent" th:checked="${sortBy == 'recent'}"/> Recent activity
-            </label>
-        </fieldset>
-
-        <fieldset>
-            <legend>Tagged with (OR logic)</legend>
-            <input type="text" name="tags" placeholder="e.g. java,spring"
-                   th:value="${#strings.listJoin(selectedTags, ',')}" />
-        </fieldset>
-
-        <button type="submit">Apply filter</button>
-    </form>
     <main class="content-wrapper">
 
         <!-- Welcome Section with Cards -->
