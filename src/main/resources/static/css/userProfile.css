@@ -200,8 +200,10 @@
   }
 
   .question-item {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 1rem;
+
+       border: 1px solid #ddd;
+       padding: 1rem;
+
   }
 
   .question-top {
@@ -269,8 +271,8 @@
       display: flex;
       flex-direction: column;
       gap: 0.3rem;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 1rem;
+      border: 1px solid #ddd;
+      padding: 1rem;
   }
 
   #profile-desc .vote-count {
@@ -606,7 +608,7 @@ h5{
     display: flex;
     gap: 8px;
     margin-top: 10px;
-    padding-bottom: 63px;
+    padding-bottom: 93px;
 }
 
 .custom-button {
@@ -872,4 +874,28 @@ h5{
 .unit {
     color: #777;
     margin-left: 2px;
+}
+
+.tag-box {
+       padding: 45px;
+       text-align: center;
+       font-size: 13px;
+       color: #636b74;
+}
+
+.empty-question-answer {
+    border: 1px solid #ccc;
+    padding: 46px;
+    text-align: center;
+    font-size: 13px;
+    color: #636b74;
+}
+
+.empty-about {
+    border: 1px solid #ccc;
+    padding: 32px;
+    font-size: 14px;
+    text-align: center;
+    color: #636b74;
+    background-color: #f9fafa;
 }

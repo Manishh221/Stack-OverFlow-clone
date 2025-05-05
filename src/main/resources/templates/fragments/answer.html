@@ -39,16 +39,18 @@
 <!--</div>-->
 
 
-
-<div id="profile-desc" th:fragment="answer(user)">
+<div id="profile-desc" th:fragment="answer(user)" xmlns:th="http://www.w3.org/1999/xhtml">
     <div id="about">
         <h3><span th:text="${#lists.size(user.answers)}">0</span> Answers</h3>
-        <div id="profile-about">
-            <p>
-                All answers show here
-                <a href="/questions">answer a question</a>
-            </p>
 
+        <div th:if="${#lists.isEmpty(user.answers)}" class="empty-question-answer">
+            <p>
+               You have not
+                <a style="text-decoration: none" href="#">answered</a> any question
+            </p>
+        </div>
+
+    <div>
             <ul class="answer-list">
                 <li class="answer-item" th:each="answer : ${user.answers}">
 <!--                    <span class="vote-count" th:text="${answer.upvote - answer.downvote} + ' votes'"></span>-->

@@ -1,4 +1,4 @@
-<div id="profile-desc" th:fragment="profilestat">
+<div id="profile-desc" th:fragment="profilestat" xmlns:th="http://www.w3.org/1999/xhtml">
     <div id="stats">
         <h3>Stats</h3>
         <div id="profile-stats">
@@ -16,15 +16,21 @@
             </div>
         </div>
     </div>
+
+
     <div id="about">
         <h3>About</h3>
-        <div id="profile-about">
-            <p th:if="${user.about == null or user.about.isEmpty()}">
-                Your about me section is currently blank. Would you like to
-                add one?
-            </p>
-            <p th:unless="${user.about == null or user.about.isEmpty()}" th:text="${user.about}"></p>
-        </div>
+        <div>
 
+                 <div>
+                        <p th:if="${user.about == null || user.about.isEmpty()}" class="empty-about">
+                        Your about me section is currently blank. Would you <br>
+                            like to add one? <a href="http://localhost:8080/user/202?profiletab=settings">Edit profile</a>
+                        </p>
+                </div>
+
+            <p th:unless="${user.about == null or user.about.isEmpty()}" th:utext="${user.about}"></p>
+        </div>
     </div>
+
 </div>

@@ -18,4 +18,5 @@ public interface QuestionService {
     QuestionResponseDto getAllQUestionData(Question question);
     Page<Question> searchQuestions(String tag, String user, String title, boolean accepted, boolean unanswered, Pageable pageable);
 
+    List<Question> getRelatedQuestions(Long questionId);
 }
