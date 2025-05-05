@@ -124,6 +124,9 @@ public class UserController {
                           @RequestParam(value = "activitytab", defaultValue = "question") String activityTab,
                           @RequestParam(value = "settingtab", defaultValue = "editProfile") String editProfile) {
         Users user = userService.findUser(id);
+        if (user.getAbout().equals("<p><br></p>")) {
+            user.setAbout("");
+        }
 
         List<Tag> userAllTags = userTagsRepository.findAllTagsByUserId(id);
         System.out.println("all users tags are: " + userAllTags);
