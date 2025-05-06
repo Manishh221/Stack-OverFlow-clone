@@ -39,7 +39,7 @@
                 <!-- Reputation Card -->
                 <div class="rep-card">
                     <h3>Reputation</h3>
-                    <div class="rep-score">1</div>
+                    <div class="rep-score" th:text="${user.reputation}">1</div>
                     <div class="rep-graph"><div class="rep-line"></div></div>
                     <p class="rep-text">
                         Earn reputation by <a href="#">Asking</a>, <a href="#">Answering</a> & <a href="#">Editing</a>.
@@ -98,5 +98,8 @@
         </aside>
     </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>
