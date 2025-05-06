@@ -359,6 +359,11 @@ body {
     font-size: 14px;
     margin: 4px 0 8px;
 }
+.post-dt{
+    border:1px solid red;
+}
+.post-ex{
+}
 
 .tags {
     display: flex;

@@ -62,7 +62,7 @@
 
                 <div class="post-details">
                     <a th:href="@{'/question/' + ${post.id}}" class="post-title" th:text="${post.title}">Sample Post Title</a>
-                    <div class="post-excerpt truncate-two-lines" th:utext="${post.description}">
+                    <div style="max-width:300px; overflow-wrap:break-word;" class="post-excerpt truncate-two-lines" th:utext="${post.description}">
                         This is a short excerpt from the question to give a quick overview...
                     </div>
                     <div class="tags">
@@ -98,8 +98,8 @@
         </aside>
     </main>
 </div>
-
 <div th:replace="~{fragments/footer :: footer}"></div>
+
 
 </body>
 </html>

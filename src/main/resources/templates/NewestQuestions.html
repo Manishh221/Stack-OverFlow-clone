@@ -135,7 +135,7 @@
                 <div class="post-details">
                     <a th:href="@{'/question/' + ${post.id}}" class="post-title"
                        th:text="${post.title}">Title</a>
-                    <div class="post-excerpt html-desc" th:utext="${post.description}">
+                    <div  class="post-excerpt html-desc"  th:utext="${post.description}">
                         This is a short excerpt from the question to give a quick overview...
                     </div>
 
@@ -348,5 +348,6 @@
     document.getElementById('filter-toggle').onclick = () => panel.hidden = !panel.hidden;
     document.getElementById('filter-cancel').onclick = e => { e.preventDefault(); panel.hidden = true; };
 </script>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

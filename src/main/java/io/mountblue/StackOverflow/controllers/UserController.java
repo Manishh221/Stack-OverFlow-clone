@@ -122,7 +122,7 @@ public class UserController {
                           @RequestParam(value = "activitytab",defaultValue = "question") String activityTab,
                           @RequestParam(value = "settingtab",defaultValue = "editProfile") String settingTab) {
         Users user = userService.findUser(id);
-        if (user.getAbout().equals("<p><br></p>")) {
+        if (user.getAbout()==null || user.getAbout().equals("<p><br></p>")) {
             user.setAbout("");
         }
 
