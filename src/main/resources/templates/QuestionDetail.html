@@ -188,11 +188,11 @@
                                 <!-- Question Edit/Delete Buttons -->
                                 <div class="question-actions" style="margin-top: 1em;">
                                     <!-- Edit Button -->
-                                    <button type="button"
-                                            class="toggle-edit-question-btn"
-                                            style="cursor: pointer; border: none; background-color: transparent; color: grey;">
+                                    <a th:href="@{'/questions/edit/' + ${question.id}}"
+                                       class="btn btn-sm btn-outline-secondary me-2"
+                                       role="button">
                                         Edit
-                                    </button>
+                                    </a>
 
                                     <!-- Delete Form -->
                                     <form th:action="@{'/questions/delete/' + ${question.id}}" method="post" style="display: inline;">
