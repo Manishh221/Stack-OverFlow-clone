@@ -1,324 +1,394 @@
-*{
+/* questionDetail.css */
+
+/* Global reset & fonts */
+* {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
 body {
-            background-color: white;
-        }
-        .question-container{
-            max-width:900px;
-            margin:auto;
-        }
-        .question-box {
-            padding: 1.5em;
-            margin-bottom: 1.5em;
-            position:relative;
-        }
-        .tags span {
-            background-color: gray;
-            color: black;
-            padding: 0.2em 0.6em;
-            border-radius: 3px;
-            margin-right: 5px;
-            font-size: 0.85em;
-        }
-        .comment-box {
-            background-color: #f0f8ff;
-            padding: 0.5em;
-            border-left: 3px solid #0077cc;
-            margin-top: 1em;
-            width:30%;
-            display:flex;
-            flex-direction:column;
-            gap:0.5em;
-            position:relative;
-            left:70%;
-            bottom:1em;
-        }
-        .meta {
-            color: gray;
-            font-size: 0.9em;
-        }
-        textarea {
-                    width: 100%;
-                    height: 200px;
-                    padding: 10px;
-                    font-family: inherit;
-                    font-size: 1em;
-                    margin-bottom: 1em;
-                }
-                .form-section {
-                    width:100%;
-                    display:flex;
-                    gap:1em;
-                }
-                .form-box label{
-                    margin-bottom:1em;
-                }
-                .form-box {
-                    min-width: 300px;
-                }
-                .form-box input[type="text"], input[type="email"] {
-                    width: 100%;
-                    padding: 0.6em;
-                    margin-bottom: 0.8em;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size:1em;
-                }
-                .postbtn {
-                    background-color: #0a95ff;
-                    color: white;
-                    padding: 0.6em 1em;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    font-size:1em;
-                }
-                .related, .ask-box {
-                    border: 1px solid #ddd;
-                    padding: 1em;
-                    border-radius: 6px;
-                    background: #f9f9f9;
-                }
-                .tags span {
-                    background: gray;
-                    color: black;
-                    padding: 0.2em 0.6em;
-                    margin-right: 5px;
-                    border-radius: 3px;
-                }
+    background-color: white;
+}
 
-                        .answer-box {
-                            border-top: 1px solid #ddd;
-                            padding-top: 1em;
+/* Container sizing */
+.question-container {
+    max-width: 900px;
+    margin: auto;
+    margin-right:30px;
+}
 
-                        }
-                        .footer {
-                            margin-top: 1.5em;
-                            display: flex;
-                            justify-content: end;
-                            align-items: center;
-                        }
-                        .user {
-                            display: flex;
-                            align-items: center;
-                        }
-                        .user img {
-                            border-radius: 50%;
-                            width: 32px;
-                            height: 32px;
-                            margin-right: 10px;
-                        }
-                        .user-info {
-                            font-size: 0.9em;
-                        }
-                         .sidebar-card {
-                                    margin-top:10em;
-                                    margin-right:2em;
-                                    border: 1px solid #f1c40f;
-                                    border-radius: 8px;
-                                    background-color: #fffbea;
-                                    padding: 0.7em;
-                                    width: 300px;
-                                    font-size:1em;
-                                }
+/* Question & answer boxes */
+.question-box {
+    padding: 1.5em;
+    margin-bottom: 1.5em;
+    position: relative;
+}
 
-                                .sidebar-section {
-                                    margin-bottom: 1em;
-                                }
+/* Tags */
+.tags span {
+    background-color: gray;
+    color: black;
+    padding: 0.2em 0.6em;
+    border-radius: 3px;
+    margin-right: 5px;
+    font-size: 0.85em;
+}
 
-                                .sidebar-section h4 {
-                                    margin-top: 0;
-                                    margin-bottom: 0.5em;
-                                    font-size: 1.1em;
-                                    color: #333;
-                                }
+/* Comment box (on questions) */
+.comment-box {
+    background-color: #f0f8ff;
+    padding: 0.5em;
+    border-left: 3px solid #0077cc;
+    margin-top: 1em;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    position: relative;
+    left: 70%;
+    bottom: 1em;
+}
 
-                                .sidebar-item {
-                                    display: flex;
-                                    align-items: flex-start;
-                                    margin-bottom: 0.75em;
-                                }
+/* Meta text (dates, etc.) */
+.meta {
+    color: gray;
+    font-size: 0.9em;
+}
 
-                                .sidebar-item i {
-                                    margin-right: 0.5em;
-                                    font-size: 1em;
-                                }
+/* Textareas */
+textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 1em;
+    margin-bottom: 1em;
+}
 
-                                .sidebar-item span {
-                                    font-size: 0.95em;
-                                    color: #333;
-                                }
+/* Form layout */
+.form-section {
+    width: 100%;
+    display: flex;
+    gap: 1em;
+}
 
-                                .divider {
-                                    border-top: 1px solid #e3d8aa;
-                                    margin: 0.8em 0;
-                                }
-                                .detail-cont{
-                                    display:flex;
+.form-box {
+    min-width: 300px;
+}
 
-                                }
-                                .related-section {
-                                            margin-top:2em;
-                                            margin-right:2em;
-                                            width: 380px;
-                                            font-size:1em;
-                                        }
+.form-box label {
+    margin-bottom: 1em;
+}
 
-                                        .related-title {
-                                            font-size: 1em;
-                                            font-weight: bold;
-                                            margin-bottom: 1em;
-                                        }
+.form-box input[type="text"],
+.form-box input[type="email"] {
+    width: 100%;
+    padding: 0.6em;
+    margin-bottom: 0.8em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
 
-                                        .related-item {
-                                            display: flex;
-                                            align-items: center;
-                                            margin-bottom: 0.75em;
-                                        }
+/* Post button */
+.postbtn {
+    background-color: #0a95ff;
+    color: white;
+    padding: 0.6em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
 
-                                        .vote-box {
-                                            background-color: #2f6f44;
-                                            color: white;
-                                            font-weight: bold;
-                                            padding: 4px 10px;
-                                            border-radius: 4px;
-                                            min-width: 35px;
-                                            text-align: center;
-                                            margin-right: 10px;
-                                        }
+/* Related & ask boxes */
+.related,
+.ask-box {
+    border: 1px solid #ddd;
+    padding: 1em;
+    border-radius: 6px;
+    background: #f9f9f9;
+}
 
-                                        .vote-box.zero {
-                                            background-color: #ddd;
-                                            color: #000;
-                                        }
+/* Answers section */
+.answer-box {
+    border-top: 1px solid #ddd;
+    padding-top: 1em;
+}
 
-                                        .related-link {
-                                            color: #0074cc;
-                                            text-decoration: none;
-                                        }
+/* Footer under answers */
+.footer {
+    margin-top: 1.5em;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
 
-                                        .related-link:hover {
-                                            text-decoration: underline;
-                                        }
-                                        .qwrap{
-                                            width:95%;
-                                            white-space: normal;
-                                             word-wrap: break-word;
-                                        }
+/* User info in footer */
+.user {
+    display: flex;
+    align-items: center;
+}
 
-                                        #comment{
-                                            display:flex;
-                                            align-items:center;
-                                            justify-content:space-between;
-                                        }
-                                        #comment-content{
-                                        margin:0px;
-                                            padding:1rem 0px 0px 5em;
-                                        }
-                                        #edit-form-button{
-                                            float:right;
-                                        }
-                                        #desc-wrap,#ans-wrap{
-                                            display:flex;
-                                            gap:1em;
-                                        }
+.user img {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
 
-                                        }.qwrap {
-                                           font-size: 1.1rem;
-                                           line-height: 1.7;
-                                           color: #2d2d2d;
-                                           margin-top: 1em;
-                                         }
+.user-info {
+    font-size: 0.9em;
+}
 
-                                         .qwrap p {
-                                           margin: 0.8em 0;
-                                         }
+/* Sidebar card */
+.sidebar-card {
+    margin-top: 10em;
+    margin-right: 2em;
+    border: 1px solid #f1c40f;
+    border-radius: 8px;
+    background-color: #fffbea;
+    padding: 0.7em;
+    width: 300px;
+    font-size: 1em;
+}
 
-                                         .qwrap img {
-                                           width: 100%;
-                                           height: auto;
-                                           display: block;
-                                           margin: 1em auto;
-                                         }
+.sidebar-section {
+    margin-bottom: 1em;
+}
 
-                                         .qwrap h1, .qwrap h2, .qwrap h3 {
-                                           margin-top: 1.2em;
-                                           margin-bottom: 0.5em;
-                                           font-weight: 600;
-                                         }
+.sidebar-section h4 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+    color: #333;
+}
 
-                                         .qwrap ul, .qwrap ol {
-                                           padding-left: 2em;
-                                           margin-bottom: 1em;
-                                         }
+.sidebar-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.75em;
+}
 
-                                         .qwrap blockquote {
-                                           border-left: 4px solid #ccc;
-                                           margin: 1em 0;
-                                           padding-left: 1em;
-                                           color: #666;
-                                           background: #f9f9f9;
-                                         }
-                                             .qwrap table {
-                                             width: 100%;
-                                             border-collapse: collapse;
-                                             margin-top: 1em;
-                                             margin-bottom: 1em;
-                                           }
+.sidebar-item i {
+    margin-right: 0.5em;
+    font-size: 1em;
+}
 
-                                           .qwrap th, .qwrap td {
-                                             border: 1px solid #ccc;
-                                             padding: 7px;
-                                             text-align: left;
-                                           }
+.sidebar-item span {
+    font-size: 0.95em;
+    color: #333;
+}
 
-                                           .qwrap th {
-                                             background-color: #f2f2f2;
-                                           }
+.divider {
+    border-top: 1px solid #e3d8aa;
+    margin: 0.8em 0;
+}
 
-                                             .qwrap pre {
+/* Main layout flex */
+.detail-cont {
+    display: flex;
+}
 
-                                               background-color: #f6f8fa;
-                                               border: 1px solid #d1d5da;
-                                               border-radius: 6px;
-                                               padding: 1em;
-                                               font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-                                               font-size: 14px;
-                                               overflow-x: auto;
-                                               margin-bottom: 1em;
-                                               line-height: 1.5;
-                                               white-space: pre;
-                                             }
-                                             #ans-cont pre{
-                                             background-color: #f6f8fa;
-                                          border: 1px solid #d1d5da;
-                                               border-radius: 6px;
-                                                 padding: 1em;
-                                                font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-                                                font-size: 14px;
-                                                 overflow-x: auto;
-                                                   margin-bottom: 1em;
-                                                   line-height: 1.5;
-                                                    white-space: pre;
-                                             }
-                                             #ans-cont code{
-                                             background-color: transparent;
-                                                                                            padding: 0;
-                                                                                            border: none;
-                                                                                            font-size: inherit;
-                                                                                            color: #24292e;
-                                                                                            max-height:500px;
-                                                                                            overflow:auto;
-                                             }
+/* Related links on the right */
+.related-section {
+    margin-top: 2em;
+    margin-right: 2em;
+    width: 380px;
+    font-size: 1em;
+}
 
-                                             .qwrap code {
-                                               background-color: transparent;
-                                               padding: 0;
-                                               border: none;
-                                               font-size: inherit;
-                                               color: #24292e;
-                                                max-height:500px;
-                                                 overflow:auto;
-                                             }
+.related-title {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
 
+.related-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75em;
+}
+
+.vote-box {
+    background-color: #2f6f44;
+    color: white;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 4px;
+    min-width: 35px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.vote-box.zero {
+    background-color: #ddd;
+    color: #000;
+}
+
+.related-link {
+    color: #0074cc;
+    text-decoration: none;
+}
+
+.related-link:hover {
+    text-decoration: underline;
+}
+
+/* Content wrapper styling */
+.qwrap {
+    width: 95%;
+    white-space: normal;
+    word-wrap: break-word;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #2d2d2d;
+    margin-top: 1em;
+}
+
+.qwrap p {
+    margin: 0.8em 0;
+}
+
+.qwrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 1em auto;
+}
+
+.qwrap h1,
+.qwrap h2,
+.qwrap h3 {
+    margin-top: 1.2em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.qwrap ul,
+.qwrap ol {
+    padding-left: 2em;
+    margin-bottom: 1em;
+}
+
+.qwrap blockquote {
+    border-left: 4px solid #ccc;
+    margin: 1em 0;
+    padding-left: 1em;
+    color: #666;
+    background: #f9f9f9;
+}
+
+.qwrap table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.qwrap th,
+.qwrap td {
+    border: 1px solid #ccc;
+    padding: 7px;
+    text-align: left;
+}
+
+.qwrap th {
+    background-color: #f2f2f2;
+}
+
+.qwrap pre {
+    background-color: #f6f8fa;
+    border: 1px solid #d1d5da;
+    border-radius: 6px;
+    padding: 1em;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 14px;
+    overflow-x: auto;
+    margin-bottom: 1em;
+    line-height: 1.5;
+    white-space: pre;
+}
+
+#ans-cont pre {
+    background-color: #f6f8fa;
+    border: 1px solid #d1d5da;
+    border-radius: 6px;
+    padding: 1em;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 14px;
+    overflow-x: auto;
+    margin-bottom: 1em;
+    line-height: 1.5;
+    white-space: pre;
+}
+
+#ans-cont code,
+.qwrap code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: inherit;
+    color: #24292e;
+    max-height: 500px;
+    overflow: auto;
+}
+
+/* Comment layout under answers */
+#comment {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#comment-content {
+    margin: 0;
+    padding: 1rem 0 0 5em;
+}
+
+/* Initial flex for desc & answers (will be overridden below) */
+#desc-wrap,
+#ans-wrap {
+    display: flex;
+    gap: 1em;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Override / additions for Stack Overflow–style alignment: */
+
+/* 1) Force votes + content side-by-side, aligned at top */
+#desc-wrap,
+#ans-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 1em;
+    margin-bottom: 1.5em;
+}
+
+/* 2) Fix vote column width */
+#vote-cont,
+#vote-cnt {
+    flex: 0 0 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 3) Content takes the rest */
+#desc-cont,
+#ans-cont {
+    flex: 1;
+}
+
+/* 4) Indent comments under content, remove absolute offsets */
+.comment-box {
+    position: relative !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: calc(100% - 60px);
+    margin-left: 60px;
+}
+
+/* 5) Align comment forms & threads under answers */
+.comment-input,
+.comments {
+    margin-left: 60px;
+}
