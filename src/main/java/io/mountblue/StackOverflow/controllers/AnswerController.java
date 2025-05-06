@@ -52,7 +52,7 @@ public class AnswerController {
         if(userClass != null){
             Users user = userClass.getUser();
             if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
-                redirectAttributes.addFlashAttribute("reputationError", "You need at least 50 reputation to answer.");
+                redirectAttributes.addFlashAttribute("reputationAnswerError", "You need at least 50 reputation to answer.");
                 return "redirect:/question/" + questionId;
             }
         }
@@ -131,7 +131,7 @@ public class AnswerController {
         if(userClass != null){
             Users user = userClass.getUser();
             if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
-                redirectAttributes.addFlashAttribute("reputationError", "You need at least 200 reputation to answer.");
+                redirectAttributes.addFlashAttribute("reputationAnswerError", "You need at least 200 reputation to answer.");
                 return "redirect:/question/" + existedAnswer.getQuestion().getId();
             }
         }

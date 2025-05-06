@@ -36,7 +36,7 @@ public class CommentController {
         if(userClass != null){
             Users user = userClass.getUser();
             if(user.getReputation()< Reputations.COMMENT_EVERYWHERE){
-                redirectAttributes.addFlashAttribute("reputationError", "You need at least 30 reputation to comment.");
+                redirectAttributes.addFlashAttribute("reputationCommentError", "You need at least 30 reputation to comment.");
                 return "redirect:/question/" + questionId;
             }
         }
