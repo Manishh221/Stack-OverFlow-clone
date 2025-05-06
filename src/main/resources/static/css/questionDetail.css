@@ -5,13 +5,14 @@ body {
             background-color: white;
         }
         .question-container{
-            max-width:900px;
+            max-width:600px;
             margin:auto;
         }
         .question-box {
             padding: 1.5em;
             margin-bottom: 1.5em;
             position:relative;
+            max-width:600px;
         }
         .tags span {
             background-color: gray;
@@ -229,6 +230,7 @@ body {
                                            line-height: 1.7;
                                            color: #2d2d2d;
                                            margin-top: 1em;
+
                                          }
 
                                          .qwrap p {
@@ -278,7 +280,6 @@ body {
                                            }
 
                                              .qwrap pre {
-
                                                background-color: #f6f8fa;
                                                border: 1px solid #d1d5da;
                                                border-radius: 6px;
@@ -289,6 +290,14 @@ body {
                                                margin-bottom: 1em;
                                                line-height: 1.5;
                                                white-space: pre;
+                                               max-width:500px;
+                                             }
+                                             .answer-box{
+                                                max-width:700px;
+                                             }
+                                             #ans-cont{
+                                                max-width:650px;
+                                                overflow-wrap: break-word;
                                              }
                                              #ans-cont pre{
                                              background-color: #f6f8fa;
@@ -301,15 +310,11 @@ body {
                                                    margin-bottom: 1em;
                                                    line-height: 1.5;
                                                     white-space: pre;
+                                                    max-width:500px;
                                              }
                                              #ans-cont code{
                                              background-color: transparent;
-                                                                                            padding: 0;
-                                                                                            border: none;
-                                                                                            font-size: inherit;
-                                                                                            color: #24292e;
-                                                                                            max-height:500px;
-                                                                                            overflow:auto;
+                                                                                       overflow:auto;
                                              }
 
                                              .qwrap code {
