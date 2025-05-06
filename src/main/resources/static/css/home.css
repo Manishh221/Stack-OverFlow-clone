@@ -405,3 +405,97 @@ body {
 .card.right-box {
     padding: 16px 24px;
 }
+
+/* footer css */
+
+#custom-footer {
+             background-color: #2f3136;
+             color: #b1b1b1;
+             padding: 20px 40px;
+             font-family: Arial, sans-serif;
+             font-size: 12px;
+             position: relative;
+         }
+
+         /* Logo Styling */
+         .footer-logo {
+             position: absolute;
+             top: 20px;
+             left: 40px;
+             width: 32px; /* Stack Overflow logo ka size match karne ke liye */
+             height: 32px;
+         }
+
+         .footer-content {
+             display: flex;
+             justify-content: space-between;
+             flex-wrap: wrap;
+             margin-top: 50px; /* Logo ke neeche space ke liye */
+         }
+
+         #custom-footer a {
+             color: #b1b1b1;
+             text-decoration: none;
+         }
+
+         #custom-footer a:hover {
+             color: #ffffff;
+         }
+
+         #custom-footer h3 {
+             color: #ffffff;
+             font-size: 14px;
+             margin-bottom: 10px;
+             text-transform: uppercase;
+         }
+
+         #custom-footer ul {
+             list-style: none;
+             padding: 0;
+             margin: 0;
+         }
+
+         #custom-footer ul li {
+             margin-bottom: 8px;
+         }
+
+         .footer-section {
+             flex: 1;
+             min-width: 150px;
+             margin-bottom: 20px;
+         }
+
+         .footer-bottom {
+             width: 100%;
+             text-align: center;
+             margin-top: 20px;
+             font-size: 11px;
+             color: #777;
+         }
+
+         .footer-bottom a {
+             color: #777;
+         }
+
+         .footer-bottom a:hover {
+             color: #aaa;
+         }
+
+         @media (max-width: 768px) {
+             #custom-footer {
+                 flex-direction: column;
+             }
+
+             .footer-section {
+                 min-width: 100%;
+             }
+
+             .footer-logo {
+                 position: static;
+                 margin-bottom: 20px;
+             }
+
+             .footer-content {
+                 margin-top: 0;
+             }
+         }
