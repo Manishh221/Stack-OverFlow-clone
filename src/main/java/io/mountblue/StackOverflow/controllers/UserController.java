@@ -132,6 +132,7 @@ public class UserController {
         model.addAttribute("profiletab",profileTab);
         model.addAttribute("activitytab",activityTab);
         model.addAttribute("settingtab",settingTab);
+        model.addAttribute("tagList",userAllTags);
         return "UserProfile";
     }
 
