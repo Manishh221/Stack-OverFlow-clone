@@ -16,6 +16,18 @@ public interface QuestionService {
     Question findQuestionById (Long id);
     Page<QuestionResponseDto> findAllQuestions(int pageNumber);
     QuestionResponseDto getAllQUestionData(Question question);
+    Page<Question> advancedSearch(
+            String tag,
+            String user,
+            String title,
+            boolean accepted,
+            boolean unanswered,
+            boolean noAcceptedAnswer,
+            boolean noAnswer,
+            Integer daysOld,
+            List<String> tags, // multiple tags for OR filter
+            Pageable pageable
+    );
     Page<Question> searchQuestions(String tag, String user, String title, boolean accepted, boolean unanswered, Pageable pageable);
 
     List<Question> getRelatedQuestions(Long questionId);

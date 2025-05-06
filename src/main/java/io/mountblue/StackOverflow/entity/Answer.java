@@ -21,11 +21,10 @@ public class Answer {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id")
     private Users user;
 
     @NotBlank(message = "Content is required and cannot be empty or just whitespace.")
-    @Size(min = 1, message = "is required")
     @Column(name = "content",columnDefinition = "TEXT", nullable = false)
     private String content;
 
@@ -53,8 +52,8 @@ public class Answer {
     @Column(name="downvotes")
     private int downvotes;
 
-    @Column(name = "is_correct")
-    private boolean correct=false;
+    @Column(name = "is_accepted")
+    private boolean accepted=false;
 
     public Long getId() {
         return id;
@@ -136,11 +135,11 @@ public class Answer {
         this.downvotes = downvotes;
     }
 
-    public boolean isCorrect() {
-        return correct;
+    public boolean isAccepted() {
+        return accepted;
     }
 
-    public void setCorrect(boolean correct) {
-        this.correct = correct;
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

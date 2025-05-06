@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Newest Questions</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/questionDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/questions.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header(user=${user})}"></div>
+
+<div class="layout" style="height:100%;">
+    <div th:replace="fragments/Sidebar :: Sidebar"></div>
+
+    <div id="main-container" style="flex:1;">
+        <!-- ─── HEADER ─── -->
+        <h1 class="page-title">Newest Questions</h1>
+
+        <div class="question-header-meta">
+            <div class="question-count"
+                 th:text="${questionsPage.totalElements} + ' questions'">…</div>
+
+            <div class="filter-sort-tag-controls">
+                <!-- ─ Sort tabs keep params alive ─ -->
+                <nav class="filter-tabs">
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=${noAnswers},
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy='newest',
+                                   page=0,
+                                   size=${size})}"
+                       class="tab"
+                       th:classappend="${sortBy=='newest'} ? 'active'">Newest</a>
+
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=${noAnswers},
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy='recent',
+                                   page=0,
+                                   size=${size})}"
+                       class="tab"
+                       th:classappend="${sortBy=='recent'} ? 'active'">Active</a>
+
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=true,
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy=${sortBy},
+                                   page=0,
+                                   size=${size})}"
+                       class="tab"
+                       th:classappend="${noAnswers} ? 'active'">Unanswered</a>
+                </nav>
+
+                <button id="filter-toggle" class="filter-button">
+                    <span class="icon">🔍</span> Filter
+                </button>
+            </div>
+        </div>
+
+        <!-- ─── FILTER PANEL ─── -->
+        <section class="filter-panel" id="filter-panel" th:attr="hidden=${false} ? ${#lists.isEmpty(#request.getParameterMap())}">
+            <form id="filter-form" method="get" th:action="@{/question}">
+                <!-- keep page + size -->
+                <input type="hidden" name="page"  th:value="${currentPage}">
+                <input type="hidden" name="size"  th:value="${size}">
+                <input type="hidden" name="sortBy" th:value="${sortBy}">
+
+                <div class="filter-grid">
+
+                    <!-- Flags -->
+                    <div class="filter-section">
+                        <strong>Filter by</strong>
+                        <label><input type="checkbox" name="noAnswers"
+                                      th:checked="${noAnswers}"> No answers</label>
+                        <label><input type="checkbox" name="noAccepted"
+                                      th:checked="${noAccepted}"> No accepted answer</label>
+                        <label>
+                            <input type="number" name="daysOld" class="days-old"
+                                   th:value="${daysOld}" placeholder="Days old">
+                        </label>
+                    </div>
+
+                    <!-- Sort radio (mirrors tabs) -->
+                    <div class="filter-section">
+                        <strong>Sorted by</strong>
+                        <label><input type="radio" name="sortBy" value="newest"
+                                      th:checked="${sortBy=='newest'}"> Newest</label>
+                        <label><input type="radio" name="sortBy" value="recent"
+                                      th:checked="${sortBy=='recent'}"> Recent activity</label>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="filter-section">
+                        <strong>Tagged with</strong>
+                        <input type="text" name="tags"
+                               th:value="${#strings.listJoin(selectedTags, ',')}"
+                               placeholder="java,spring,postgres">
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="apply-filter">Apply filter</button>
+                    <a th:href="@{/question}" style="text-decoration:none;" class="apply-filter">Reset</a>
+                    <a href="#" id="filter-cancel" class="cancel-filter">Cancel</a>
+                </div>
+            </form>
+        </section>
+
+        <!-- ─── QUESTION LIST ─── -->
+        <div class="question-list">
+            <div th:each="post : ${questionsPage.content}" class="post-container">
+                <div class="stats">
+                    <div><b th:text="${post.votes}">0</b> votes</div>
+                    <div><b th:text="${post.answers}">0</b> answers</div>
+                </div>
+
+                <div class="post-details">
+                    <a th:href="@{'/question/' + ${post.id}}" class="post-title"
+                       th:text="${post.title}">Title</a>
+                    <div  class="post-excerpt html-desc"  th:utext="${post.description}">
+                        This is a short excerpt from the question to give a quick overview...
+                    </div>
+
+                    <div class="tags">
+                        <span style="background-color:#D3D3D3;" class="tag"
+                              th:each="t : ${post.tags}"
+                              th:text="${t}">java</span>
+                    </div>
+
+                    <div class="post-meta">
+                        <span th:text="${post.author}">user</span>
+                        asked <span th:text="${post.timeAgo}">…</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── PAGINATION ─── -->
+        <div class="pager-wrapper">
+            <ul class="pager">
+                <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                    th:if="${totalPages <= 7 || i == 1 || i == totalPages || (i >= currentPage && i <= currentPage + 2)}"
+                    th:classappend="${i == currentPage + 1} ? 'active'">
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=${noAnswers},
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy=${sortBy},
+                                   size=${size},
+                                   page=${i-1})}"
+                       th:text="${i}">1</a>
+                </li>
+
+                <li class="ellipsis" th:if="${totalPages > 7 && currentPage + 3 < totalPages}">…</li>
+
+                <li th:if="${currentPage + 1 < totalPages}">
+                    <a th:href="@{/question(
+                                   q=${q},
+                                   noAnswers=${noAnswers},
+                                   noAccepted=${noAccepted},
+                                   daysOld=${daysOld},
+                                   tags=${selectedTags},
+                                   sortBy=${sortBy},
+                                   size=${size},
+                                   page=${currentPage + 1})}">Next</a>
+                </li>
+            </ul>
+
+        </div>
+        <!-- ─── /PAGINATION ─── -->
+    </div>
+
+    <div class="sidebar" style="margin-left:3rem;">
+        <div class="sidebar-card">
+            <div class="sidebar-section">
+                <h4>The Overflow Blog</h4>
+                <div class="sidebar-item">
+                    <i>✏️</i>
+                    <span>How self-supervised language revolutionized natural language processing and...</span>
+                </div>
+                <div class="sidebar-item">
+                    <i>✏️</i>
+                    <span>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="sidebar-section" style="">
+                <h4>Featured on Meta</h4>
+                <div class="sidebar-item">
+                    <i>💬</i>
+                    <span>Updates to advertising guidelines</span>
+                </div>
+                <div class="sidebar-item">
+                    <i>💬</i>
+                    <span>Evolving comments: An experiment to encourage engagement and follow-up questions</span>
+                </div>
+                <div class="sidebar-item">
+                    <i>📄</i>
+                    <span>Policy: Generative AI (e.g., ChatGPT) is banned</span>
+                </div>
+                <div class="sidebar-item">
+                    <i>📄</i>
+                    <span>Discussions learnings and potential next steps</span>
+                </div>
+            </div>
+        </div>
+        <div class="related-section">
+            <div class="related-title">Related</div>
+
+            <div class="related-item">
+                <div class="vote-box">719</div>
+                <a href="#" class="related-link">Programmatically Lighten or Darken a hex color (or rgb, and
+                    blend colors)</a>
+            </div>
+
+            <div class="related-item">
+                <div class="vote-box">507</div>
+                <a href="#" class="related-link">TypeScript Type 'string' is not assignable to type</a>
+            </div>
+
+            <div class="related-item">
+                <div class="vote-box zero">0</div>
+                <a href="#" class="related-link">Error -- Cast to Number failed for value "NaN" (type number) at
+                    path "totalOrders"</a>
+            </div>
+
+            <div class="related-item">
+                <div class="vote-box">403</div>
+                <a href="#" class="related-link">How to find what code is run by a button or element in Chrome
+                    using Developer Tools</a>
+            </div>
+
+            <div class="related-item">
+                <div class="vote-box">208</div>
+                <a href="#" class="related-link">TypeScript TS7015: Element implicitly has an 'any' type...</a>
+            </div>
+
+            <div class="related-item">
+                <div class="vote-box">228</div>
+                <a href="#" class="related-link">Why does typeof NaN return 'number'?</a>
+            </div>
+
+        </div>
+        <!--                <div th:replace="~{fragments/Modal :: Modal}"></div>-->
+        <script>
+            const editor = new toastui.Editor({
+                el: document.querySelector('#editor'),
+                height: '400px',
+                initialEditType: 'markdown',
+                previewStyle: 'tab',
+                placeholder: 'Include the problem and expand on what you put in the title. Minimum 20 characters.',
+                plugins: [toastui.Editor.plugin.codeSyntaxHighlight],
+                toolbarItems: [
+                    ['heading', 'bold', 'italic'],
+                    ['code', 'codeblock'],
+                    ['link', 'quote', 'image', 'table'],
+                    ['ul', 'ol']
+                ],
+                hooks: {
+                    addImageBlobHook: async (blob, callback) => {
+                        const formData = new FormData();
+                        formData.append('image', blob);
+
+                        try {
+                            const response = await fetch('/upload-image', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            const data = await response.json();
+                            callback(data.url, 'Image');
+                        } catch (err) {
+                            console.error('Image upload failed:', err);
+                            alert("Failed to upload image.");
+                        }
+                    },
+                    afterPreviewRender: () => {
+                        document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+                    }
+                }
+            });
+
+            document.querySelector('#answerForm').addEventListener('submit', function (e) {
+                const html = editor.getHTML();
+                const markdown = editor.getMarkdown();
+                const hiddenInput = document.getElementById('answerContent');
+
+                if (!markdown || markdown.trim().length < 20) {
+                    e.preventDefault();
+                    alert("Description is too short.");
+                    return;
+                }
+
+                const linkified = html.replace(/(?<!["'>])\b((https?:\/\/|www\.)[^\s<]+)/g, match => {
+                    const href = match.startsWith('http') ? match : 'https://' + match;
+                    return `<a href="${href}" target="_blank" rel="noopener noreferrer">${match}</a>`;
+                });
+
+                const fixedLinks = linkified.replace(/<a\s+[^>]*href="(?!https?:\/\/)(www\.[^"]+)"[^>]*>(.*?)<\/a>/g,
+                    (_, href, text) => `<a href="https://${href}" target="_blank" rel="noopener noreferrer">${text}</a>`
+                );
+
+                hiddenInput.value = fixedLinks;
+            });
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+            });
+            function truncateHtml(selector, maxChars) {
+                  document.querySelectorAll(selector).forEach(el => {
+                    const text = el.innerText;
+                    if (text.length > maxChars) {
+                      el.innerText = text.substring(0, maxChars) + '...';
+                    }
+              });
+}
+
+            truncateHtml('.html-desc', 90);
+        </script>
+    </div>
+</div>
+
+<script>
+    const panel = document.getElementById('filter-panel');
+    document.getElementById('filter-toggle').onclick = () => panel.hidden = !panel.hidden;
+    document.getElementById('filter-cancel').onclick = e => { e.preventDefault(); panel.hidden = true; };
+</script>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -5,6 +5,8 @@
     <title>User Profile</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/userProfile.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
     <style>
@@ -15,8 +17,9 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header(user=${user})}"></div>
-
-<div id="container">
+<div style="display:flex; gap:0.5em; height:100vh;">
+<div th:replace="fragments/Sidebar :: Sidebar"></div>
+<div style="flex:1; padding:2em;" id="container">
     <div id="hero">
         <div id="main-content">
             <div id="profilebox">
@@ -81,6 +84,6 @@
         </div>
     </div>
 </div>
-
+</div>
 </body>
 </html>

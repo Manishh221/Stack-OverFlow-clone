@@ -6,6 +6,13 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"></script>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header(user=${user})}"></div>
@@ -32,7 +39,7 @@
                 <!-- Reputation Card -->
                 <div class="rep-card">
                     <h3>Reputation</h3>
-                    <div class="rep-score">1</div>
+                    <div class="rep-score" th:text="${user.reputation}">1</div>
                     <div class="rep-graph"><div class="rep-line"></div></div>
                     <p class="rep-text">
                         Earn reputation by <a href="#">Asking</a>, <a href="#">Answering</a> & <a href="#">Editing</a>.
@@ -55,7 +62,7 @@
 
                 <div class="post-details">
                     <a th:href="@{'/question/' + ${post.id}}" class="post-title" th:text="${post.title}">Sample Post Title</a>
-                    <div class="post-excerpt" th:text="${post.description}">
+                    <div style="max-width:300px; overflow-wrap:break-word;" class="post-excerpt truncate-two-lines" th:utext="${post.description}">
                         This is a short excerpt from the question to give a quick overview...
                     </div>
                     <div class="tags">
@@ -91,5 +98,8 @@
         </aside>
     </main>
 </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+
 </body>
 </html>

@@ -201,6 +201,58 @@ public class QuestionServiceImpl implements QuestionService {
         return questionResponseDto;
     }
 
+    public Page<Question> advancedSearch(
+            String tag,
+            String user,
+            String title,
+            boolean accepted,
+            boolean unanswered,
+            boolean noAcceptedAnswer,
+            boolean noAnswer,
+            Integer daysOld,
+            List<String> tags,
+            Pageable pageable
+    ) {
+        Specification<Question> spec = Specification.where(null);
+
+        if (tag != null && !tag.isBlank()) {
+            spec = spec.and(QuestionSpecification.hasTag(tag));
+        }
+
+        if (tags != null && !tags.isEmpty()) {
+            spec = spec.and(QuestionSpecification.hasAnyTag(tags));
+        }
+
+        if (user != null && !user.isBlank()) {
+            spec = spec.and(QuestionSpecification.hasUser(user));
+        }
+
+        if (title != null && !title.isBlank()) {
+            spec = spec.and(QuestionSpecification.hasTitleContaining(title));
+        }
+
+        if (accepted) {
+            spec = spec.and(QuestionSpecification.hasAcceptedAnswer());
+        }
+
+        if (unanswered) {
+            spec = spec.and(QuestionSpecification.hasNoAnswers());
+        }
+
+        if (noAcceptedAnswer) {
+            spec = spec.and(QuestionSpecification.hasNoAcceptedAnswer());
+        }
+        if (noAnswer) {
+            spec = spec.and(QuestionSpecification.hasNoAnswers());
+        }
+
+        if (daysOld != null && daysOld > 0) {
+            spec = spec.and(QuestionSpecification.isDaysOld(daysOld));
+        }
+
+        return questionRepository.findAll(spec, pageable);
+    }
+
     public List<Question> getRelatedQuestions(Long questionId) {
         Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         if (optionalQuestion.isEmpty()) {

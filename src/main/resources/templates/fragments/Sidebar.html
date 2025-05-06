@@ -1,22 +1,20 @@
 <aside class="sidebar" th:fragment="Sidebar">
     <ul>
         <li class="active">
-            <a th:href="@{/}"><i class="fa-solid fa-house"></i>Home</a>
+            <a style="text-decoration:none; color:black;" th:href="@{/}"><i style="margin-right:0.3em;" class="fa-solid fa-house"></i>Home</a>
            </li>
-        <li><i class="fa-regular fa-circle-question"></i>Questions</li>
         <li>
-            <a th:href="@{/users}"><i class="fa-solid fa-user"></i>Users</a>
+            <a style="text-decoration:none; color:black;" th:href="@{/question}"><i style="margin-right:0.3em;"  class="fa-regular fa-circle-question"></i>Questions</a></li>
+        <li>
+            <a style="text-decoration:none; color:black;" th:href="@{/users}"><i style="margin-right:0.3em;"  class="fa-solid fa-user"></i>Users</a>
             </li>
-        <li>
-            <a th:href="@{/tags}">
-                <i class="fa-solid fa-tags"></i>Tags</a>
-        </li>
+        <li> <a style="text-decoration:none; color:black;" th:href="@{/tags}"><i style="margin-right:0.3em;" class="fa-solid fa-tags"></i>Tags</a></li>
 
     </ul>
 
     <div class="collectives">
         <h4>Collectives</h4>
-        <a href="#">Explore all Collectives</a>
+        <a href="/">Explore all Collectives</a>
     </div>
 
     <div class="teams">

@@ -101,22 +101,25 @@ public class QuestionController {
         return "ReviewQuestion";
     }
 
-    @GetMapping("/search")
-    public String searchQuestionsFromQuery(
-            @RequestParam(required = false) String q,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            Model model
-    ) {
-        String tag = null;
-        String user = null;
-        String title = null;
-        boolean accepted = false;
-        boolean unanswered = false;
+@GetMapping("/question")
+public String searchQuestionsFromQuery(
+        @RequestParam(required = false) String q,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) Boolean noAnswers,
+        @RequestParam(required = false) Boolean noAccepted,
+        @RequestParam(required = false) Integer daysOld,
+        @RequestParam(required = false, defaultValue = "newest") String sortBy,
+        @RequestParam(required = false) List<String> tags,
+        Model model
+) {
+    String tag = null, user = null, title = null;
+    boolean accepted = false, unanswered = false;
 
-        if (q != null) {
-            // Simple pattern-based parsing
-            q = q.toLowerCase();
+    if ((noAccepted == null && noAnswers == null && daysOld == null && (tags == null || tags.isEmpty()))
+            && q != null && !q.isBlank()) {
+
+        q = q.toLowerCase();
 
             if (q.contains("tag:")) {
                 tag = extractValue(q, "tag:");
@@ -127,24 +130,45 @@ public class QuestionController {
             if (q.contains("title:")) {
                 title = extractValue(q, "title:");
             }
-            if (q.contains("is:accepted")) {
-                accepted = true;
-            }
-            if (q.contains("answers:0")) {
-                unanswered = true;
-            }
+            accepted = q.contains("is:accepted");
+            unanswered = q.contains("answers:0");
+
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("upvote")).and(Sort.by(Sort.Order.asc("downvote"))));
-        Page<Question> questionsPage = questionService.searchQuestions(tag, user, title, accepted, unanswered, pageable);
+    Sort sort = switch (sortBy.toLowerCase()) {
+        case "recent" -> Sort.by(Sort.Order.desc("updatedAt"));
+        default -> Sort.by(Sort.Order.desc("createdAt"));
+    };
 
-        model.addAttribute("questionsPage", questionsPage);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", questionsPage.getTotalPages());
-        model.addAttribute("q", q); // to keep search bar value
+    Pageable pageable = PageRequest.of(page, size, sort);
 
-        return "questionList";
-    }
+    Page<Question> questionsPage = questionService.advancedSearch(
+            tag,
+            user,
+            title,
+            accepted,
+            unanswered,
+            noAccepted != null && noAccepted,
+            noAnswers != null && noAnswers,
+            daysOld,
+            tags,
+            pageable
+    );
+
+    Page<QuestionResponseDto> dtoPage = questionsPage.map(questionService::getAllQUestionData);
+
+    model.addAttribute("questionsPage", dtoPage);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", questionsPage.getTotalPages());
+    model.addAttribute("q", q);
+    model.addAttribute("sortBy", sortBy);
+    model.addAttribute("noAnswers", noAnswers);
+    model.addAttribute("noAccepted", noAccepted);
+    model.addAttribute("daysOld", daysOld);
+    model.addAttribute("selectedTags", tags);
+
+    return "NewestQuestions";
+}
 
     private String extractValue(String q, String key) {
         int start = q.indexOf(key) + key.length();
@@ -252,11 +276,6 @@ public class QuestionController {
         Map<Long, Boolean> answerUpvoteMap = new HashMap<>();
         Map<Long, Boolean> answerDownvoteMap = new HashMap<>();
 
-        for (Answer answer : question.getAnswerList()) {
-            Optional<AnswerVote> av = answerVoteRepository.findByUserAndAnswer(userInfo.getUser(), answer);
-            answerUpvoteMap.put(answer.getId(), av.isPresent() && av.get().isUpvote());
-            answerDownvoteMap.put(answer.getId(), av.isPresent() && av.get().isDownvote());
-        }
         int questionUpvotes = questionVoteRepository.countByQuestionAndUpvoteTrue(question);
         int questionDownvotes = questionVoteRepository.countByQuestionAndDownvoteTrue(question);
         Map<Long, Integer> answerVoteCountMap = new HashMap<>();
@@ -275,10 +294,11 @@ public class QuestionController {
         model.addAttribute("answerDownvotes", answerDownvoteMap);
         model.addAttribute("answerVoteCounts", answerVoteCountMap);
         model.addAttribute("questionVoteCount", questionUpvotes - questionDownvotes);
-        model.addAttribute("questionupvote", questionupvote);
-        model.addAttribute("questiondownvote", questiondownvote);
-        model.addAttribute("question", question);
-        model.addAttribute("answer", new Answer());
+        model.addAttribute("questionupvote",questionupvote);
+        model.addAttribute("questiondownvote",questiondownvote);
+        model.addAttribute("question",question);
+        model.addAttribute("answer",new Answer());
+        model.addAttribute("loggedInUser",userInfo.getUser());
         List<Question> relatedQuestions = questionService.getRelatedQuestions(questionId);
         model.addAttribute("relatedQuestions", relatedQuestions);
 

@@ -6,6 +6,7 @@ import io.mountblue.StackOverflow.entity.Users;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
 import java.util.Locale;
 
 public class QuestionSpecification {
@@ -43,4 +44,45 @@ public class QuestionSpecification {
     public static Specification<Question> hasNoAnswers() {
         return (root, query, cb) -> cb.isEmpty(root.get("answerList"));
     }
+
+    public static Specification<Question> hasNoAcceptedAnswer() {
+        return (root, query, cb) -> {
+            // Subquery to check if there exists an accepted answer
+            Subquery<Long> subquery = query.subquery(Long.class);
+            Root<Question> subRoot = subquery.from(Question.class);
+            Join<Object, Object> answers = subRoot.join("answerList", JoinType.LEFT);
+
+            subquery.select(subRoot.get("id"))
+                    .where(
+                            cb.and(
+                                    cb.equal(subRoot.get("id"), root.get("id")),
+                                    cb.isTrue(answers.get("accepted"))
+                            )
+                    );
+
+            // Where NOT EXISTS accepted answer
+            return cb.not(cb.exists(subquery));
+        };
+    }
+
+    public static Specification<Question> isDaysOld(int days) {
+        return (root, query, cb) -> {
+            if (days <= 0) return null;
+            return cb.greaterThanOrEqualTo(
+                    root.get("createdAt"),
+                    java.time.LocalDateTime.now().minusDays(days)
+            );
+        };
+    }
+
+    public static Specification<Question> hasAnyTag(List<String> tagNames) {
+        return (root, query, cb) -> {
+            if (tagNames == null || tagNames.isEmpty()) return null;
+            Join<Question, QuestionTag> tags = root.join("questionTags", JoinType.INNER);
+            CriteriaBuilder.In<String> inClause = cb.in(cb.lower(tags.get("tag").get("tagName")));
+            tagNames.forEach(tag -> inClause.value(tag.toLowerCase(Locale.ROOT)));
+            return inClause;
+        };
+    }
+
 }

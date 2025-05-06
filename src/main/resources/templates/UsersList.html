@@ -3,6 +3,7 @@
 <link rel="stylesheet" th:href="@{/css/header.css}" />
 <link rel="stylesheet" th:href="@{/css/usersList.css}" />
 <link rel="stylesheet" th:href="@{/css/home.css}" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <head>
   <title>Users</title>
 </head>
@@ -25,16 +26,16 @@
     </div>
     </div>
     <div class="list-cont">
-<div th:each="user : ${users}" class="user-card">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png" alt="Stack Overflow" class="user-avatar"/>
+<div th:each="userDto : ${usersPage}" class="user-card">
+    <img th:src="${userDto.user.avatar}" alt="Stack Overflow" class="user-avatar"/>
   <div class="user-info">
-    <a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.username}"></a>
-    <strong th:text="${user.reputation}"></strong>
-<!--    <div class="user-tags">-->
-<!--            <span th:each="tag : ${user.tags}">-->
-<!--                <a th:href="@{/tags/{tag}(tag=${tag})}" th:text="${tag}"></a>-->
-<!--            </span>-->
-<!--    </div>-->
+    <a th:href="@{/user/{id}(id=${userDto.user.id}, profiletab='profile')}" th:text="${userDto.user.username}"></a>
+    <strong th:text="${userDto.user.reputation}"></strong>
+      <div class="user-tags">
+      <span th:each="tag : ${userDto.tags}">
+        <a th:href="@{'/question' + '?q=tag:' + ${tag.tagName}}" th:text="${tag.tagName}" class="tag-badge"></a>
+      </span>
+      </div>
   </div>
 </div>
 </div>
@@ -55,5 +56,6 @@
 
   </div>
 </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

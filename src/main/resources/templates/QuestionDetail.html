@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <!-- Scripts -->
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -266,10 +266,15 @@
                                 <span style="font-size:25px">▼</span>
                             </button>
                         </form>
+                        <div>
+                            <span th:if="${ans.accepted}">
+                                <i class="fa-solid fa-check" style="font-weight:bold; font-size:2em; color: #55f452;"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div id="ans-cont" style="margin-top:2em; margin-left:1.5em;">
-                    <div th:utext="${ans.content}"></div>
+                    <div id="ans-content" th:utext="${ans.content}"></div>
                 </div>
             </div>
 
@@ -283,6 +288,11 @@
             <form th:action="@{'/answer/delete/' + ${ans.id}}" method="post" style="display: inline;">
                 <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
                         type="submit">Delete
+                </button>
+            </form>
+            <form th:if="${loggedInUser.email==question.user.email}"  th:action="@{'/answer/accept/' + ${ans.id}}" method="post" style="display: inline;">
+                <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
+                        type="submit" th:text="${ans.accepted ? 'Reject' : 'Accept'}">Accept
                 </button>
             </form>
 
@@ -371,7 +381,7 @@
             <div class="footer">
                 <div class="user">
                     <div class="user-info">
-                        <a href="#" th:text="${ans.user.username}">Answer User</a><br>
+                        <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}" th:text="${ans.user.username}">Answer User</a><br>
                         <!-- Example placeholder for score if available -->
                         <span th:text="${@dateUtils.format(ans.createdAt)}">179k ● 28 ● 182 ● 240</span>
                     </div>
@@ -395,8 +405,8 @@
             <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></div>
 
             <p>By clicking “Post Your Answer”, you agree to our
-                <a href="/terms">terms of service</a> and
-                acknowledge you have read our <a href="/privacy">privacy policy</a>.
+                <a href="/">terms of service</a> and
+                acknowledge you have read our <a href="/">privacy policy</a>.
             </p>
 
             <button style="margin:2rem 0 2rem 0;" class="postbtn" type="submit">Post Your Answer</button>
@@ -442,51 +452,17 @@
                 </div>
 
 
-                <div class="related-section">
+                <div class="related-section" style="max-width:350px;">
                     <div class="related-title">Related</div>
-
-<!--                    <div class="related-item">-->
-<!--                        <div class="vote-box">719</div>-->
-<!--                        <a href="#" class="related-link">Programmatically Lighten or Darken a hex color (or rgb, and-->
-<!--                            blend colors)</a>-->
-<!--                    </div>-->
-
-<!--                    <div class="related-item">-->
-<!--                        <div class="vote-box">507</div>-->
-<!--                        <a href="#" class="related-link">TypeScript Type 'string' is not assignable to type</a>-->
-<!--                    </div>-->
-
-<!--                    <div class="related-item">-->
-<!--                        <div class="vote-box zero">0</div>-->
-<!--                        <a href="#" class="related-link">Error &#45;&#45; Cast to Number failed for value "NaN" (type number) at-->
-<!--                            path "totalOrders"</a>-->
-<!--                    </div>-->
-
-<!--                    <div class="related-item">-->
-<!--                        <div class="vote-box">403</div>-->
-<!--                        <a href="#" class="related-link">How to find what code is run by a button or element in Chrome-->
-<!--                            using Developer Tools</a>-->
-<!--                    </div>-->
-
-<!--                    <div class="related-item">-->
-<!--                        <div class="vote-box">208</div>-->
-<!--                        <a href="#" class="related-link">TypeScript TS7015: Element implicitly has an 'any' type...</a>-->
-<!--                    </div>-->
-
-<!--                    <div class="related-item">-->
-<!--                        <div class="vote-box">228</div>-->
-<!--                        <a href="#" class="related-link">Why does typeof NaN return 'number'?</a>-->
-<!--                    </div>-->
-
 
                         <h3>Related Questions</h3>
 
                        <div class="related-item">
                         <ul th:if="${not #lists.isEmpty(relatedQuestions)}">
-                            <li th:each="question, stat : ${relatedQuestions}"
+                            <li style="max-width:350px;" th:each="question, stat : ${relatedQuestions}"
                                 th:if="${stat.index < 5}">
                                 <div th:text="${question.upvote}" class="vote-box">0</div>
-                                <a th:href="@{/question/{id}(id=${question.id})}"
+                                <a style="max-width:280px; overflow-wrap:break-word;" th:href="@{/question/{id}(id=${question.id})}"
                                    th:text="${question.title}" class="related-title"></a><br>
                             </li>
                         </ul>
@@ -495,7 +471,9 @@
                         <p th:if="${#lists.isEmpty(relatedQuestions)}">No related questions found.</p>
 
                 </div>
-<!--                <div th:replace="~{fragments/Modal :: Modal}"></div>-->
+                <div th:replace="~{fragments/Modal :: Modal}"></div>
+                <div th:replace="~{fragments/CommentModal :: CommentModal}"></div>
+                <div th:replace="~{fragments/AnswerModal :: AnswerModal}"></div>
                 <script>
                     const editor = new toastui.Editor({
                         el: document.querySelector('#editor'),

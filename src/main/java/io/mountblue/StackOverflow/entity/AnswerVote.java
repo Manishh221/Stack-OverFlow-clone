@@ -12,11 +12,11 @@ public class AnswerVote {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id")
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "answer_id",referencedColumnName = "id")
+    @JoinColumn(name = "answer_id")
     private Answer answer;
 
     @Column(nullable = false)

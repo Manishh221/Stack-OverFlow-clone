@@ -1,6 +1,7 @@
 package io.mountblue.StackOverflow.controllers;
 
 import io.mountblue.StackOverflow.dto.QuestionResponseDto;
+import io.mountblue.StackOverflow.dto.UserWithTags;
 import io.mountblue.StackOverflow.entity.Tag;
 import io.mountblue.StackOverflow.entity.UserTags;
 import io.mountblue.StackOverflow.entity.Users;
@@ -11,10 +12,7 @@ import io.mountblue.StackOverflow.services.QuestionService;
 import io.mountblue.StackOverflow.services.UserService;
 import org.apache.catalina.User;
 import org.springframework.core.metrics.StartupStep;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -124,6 +122,9 @@ public class UserController {
                           @RequestParam(value = "activitytab",defaultValue = "question") String activityTab,
                           @RequestParam(value = "settingtab",defaultValue = "editProfile") String settingTab) {
         Users user = userService.findUser(id);
+        if (user.getAbout()==null || user.getAbout().equals("<p><br></p>")) {
+            user.setAbout("");
+        }
 
         List<Tag> userAllTags = userTagsRepository.findAllTagsByUserId(id);
         System.out.println("all users tags are: " + userAllTags);
@@ -155,9 +156,20 @@ public class UserController {
             usersPage = userService.findPaginatedUsers(pageable);
         }
 
-        model.addAttribute("users", usersPage.getContent());
+        // 🔁 Convert Users -> UserWithTagsDTO
+        List<UserWithTags> userDTOs = usersPage.getContent().stream()
+                .map(user -> {
+                    List<Tag> tags = userTagsRepository.findAllTagsByUserId(user.getId());
+                    return new UserWithTags(user, tags);
+                })
+                .toList();
+
+        // 🔁 Wrap DTO list in a manual PageImpl
+        Page<UserWithTags> dtoPage = new PageImpl<>(userDTOs, pageable, usersPage.getTotalElements());
+
+        model.addAttribute("usersPage", dtoPage.getContent());
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", usersPage.getTotalPages());
+        model.addAttribute("totalPages", dtoPage.getTotalPages());
         model.addAttribute("sort", sort);
 
         return "UsersList";
