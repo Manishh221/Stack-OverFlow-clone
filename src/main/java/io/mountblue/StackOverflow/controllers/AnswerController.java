@@ -49,13 +49,13 @@ public class AnswerController {
         if(userClass==null){
             return "redirect:/login";
         }
-//        if(userClass != null){
-//            Users user = userClass.getUser();
-//            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
-//                redirectAttributes.addFlashAttribute("reputationError", "You need at least 50 reputation to answer.");
-//                return "redirect:/question/" + questionId;
-//            }
-//        }
+        if(userClass != null){
+            Users user = userClass.getUser();
+            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
+                redirectAttributes.addFlashAttribute("reputationError", "You need at least 50 reputation to answer.");
+                return "redirect:/question/" + questionId;
+            }
+        }
         if (bindingResult.hasErrors()) {
             Question question = questionService.findQuestionById(questionId);
             model.addAttribute("question", question);
@@ -122,28 +122,25 @@ public class AnswerController {
     public String updateAnswer(@PathVariable Long answerId,
                                @RequestParam("updatedContent") String updatedContent,
                                @AuthenticationPrincipal UserInfo userClass,
-                               Model model) {
+                               Model model, RedirectAttributes redirectAttributes) {
 
         if (userClass == null) {
             return "redirect:/login";
         }
+        Answer existedAnswer = answerService.findAnswerById(answerId);
         if(userClass != null){
             Users user = userClass.getUser();
             if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
-                throw new InsufficientReputationException("You need at least 50 reputation to update answer.");
+                redirectAttributes.addFlashAttribute("reputationError", "You need at least 200 reputation to answer.");
+                return "redirect:/question/" + existedAnswer.getQuestion().getId();
             }
         }
-        Answer existedAnswer = answerService.findAnswerById(answerId);
+
         if (existedAnswer == null) {
             model.addAttribute("errorMessage", "Answer not found.");
             return "error";
         }
 
-        // Authorization check
-        if (!userClass.getUser().getEmail().equals(existedAnswer.getUser().getEmail())
-                && !userClass.getUser().getRole().equals("ADMIN")) {
-            return "redirect:/login";
-        }
 
         // Update content
         existedAnswer.setContent(updatedContent);
