@@ -262,11 +262,6 @@ public String searchQuestionsFromQuery(
         Map<Long, Boolean> answerUpvoteMap = new HashMap<>();
         Map<Long, Boolean> answerDownvoteMap = new HashMap<>();
 
-        for (Answer answer : question.getAnswerList()) {
-            Optional<AnswerVote> av = answerVoteRepository.findByUserAndAnswer(userInfo.getUser(), answer);
-            answerUpvoteMap.put(answer.getId(), av.isPresent() && av.get().isUpvote());
-            answerDownvoteMap.put(answer.getId(), av.isPresent() && av.get().isDownvote());
-        }
         int questionUpvotes = questionVoteRepository.countByQuestionAndUpvoteTrue(question);
         int questionDownvotes = questionVoteRepository.countByQuestionAndDownvoteTrue(question);
         Map<Long, Integer> answerVoteCountMap = new HashMap<>();

@@ -381,7 +381,7 @@
             <div class="footer">
                 <div class="user">
                     <div class="user-info">
-                        <a href="#" th:text="${ans.user.username}">Answer User</a><br>
+                        <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}" th:text="${ans.user.username}">Answer User</a><br>
                         <!-- Example placeholder for score if available -->
                         <span th:text="${@dateUtils.format(ans.createdAt)}">179k ● 28 ● 182 ● 240</span>
                     </div>
@@ -405,8 +405,8 @@
             <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></div>
 
             <p>By clicking “Post Your Answer”, you agree to our
-                <a href="/terms">terms of service</a> and
-                acknowledge you have read our <a href="/privacy">privacy policy</a>.
+                <a href="/">terms of service</a> and
+                acknowledge you have read our <a href="/">privacy policy</a>.
             </p>
 
             <button style="margin:2rem 0 2rem 0;" class="postbtn" type="submit">Post Your Answer</button>
