@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class QuestionController {
@@ -34,7 +35,7 @@ public class QuestionController {
     private AnswerVoteRepository answerVoteRepository;
 
     @Autowired
-    public QuestionController(QuestionService questionService, TagService tagService,QuestionRepository questionRepository,QuestionVoteRepository questionVoteRepository,AnswerVoteRepository answerVoteRepository) {
+    public QuestionController(QuestionService questionService, TagService tagService, QuestionRepository questionRepository, QuestionVoteRepository questionVoteRepository, AnswerVoteRepository answerVoteRepository) {
         this.questionService = questionService;
         this.tagService = tagService;
         this.questionRepository = questionRepository;
@@ -42,9 +43,9 @@ public class QuestionController {
         this.answerVoteRepository = answerVoteRepository;
     }
 
-//    --------------------------get all Questions-----------------------------------------------
+    //    --------------------------get all Questions-----------------------------------------------
     @GetMapping("/Show-all-questions/{page-number}")
-    public String showAllQuestions (@PathVariable("page-number") int pageNumber, Model model) {
+    public String showAllQuestions(@PathVariable("page-number") int pageNumber, Model model) {
 
         Page<QuestionResponseDto> allQuestions = questionService.findAllQuestions(pageNumber);
 
@@ -53,23 +54,23 @@ public class QuestionController {
         return "Home";
     }
 
-//    ---------------------------finding all tags----------------------------------------------
+    //    ---------------------------finding all tags----------------------------------------------
     public List<String> allTags() {
         List<String> tags = new ArrayList<>();
 
-        for (var tag: tagService.findAllTags()) {
+        for (var tag : tagService.findAllTags()) {
             tags.add(tag.getTagName());
         }
         return tags;
     }
 
-//    ----------------ask any Question--------------------------------------------------------
+    //    ----------------ask any Question--------------------------------------------------------
     @GetMapping("/ask-question")
-    public String askQuestion(@AuthenticationPrincipal UserInfo userInfo , Model model) {
-        if(userInfo== null){
+    public String askQuestion(@AuthenticationPrincipal UserInfo userInfo, Model model) {
+        if (userInfo == null) {
             return "redirect:/login";
         }
-        model.addAttribute("user",userInfo.getUser());
+        model.addAttribute("user", userInfo.getUser());
         if (!model.containsAttribute("question")) {
             model.addAttribute("question", new Question());
         }
@@ -78,7 +79,7 @@ public class QuestionController {
         return "CreateQuestion";
     }
 
-//    ---------------------------review before submitting the question-------------------------
+    //    ---------------------------review before submitting the question-------------------------
     @PostMapping("/review")
     public String reviewQuestion(
             @Valid @ModelAttribute("question") Question question,  // runs JSR-303 validation
@@ -180,14 +181,14 @@ public String searchQuestionsFromQuery(
 
     //    --------------------------storing the Question------------------------------------------
     @PostMapping("/create-question")
-    public String createQuestion(@AuthenticationPrincipal UserInfo userInfo ,@Valid @ModelAttribute("question")Question question,
+    public String createQuestion(@AuthenticationPrincipal UserInfo userInfo, @Valid @ModelAttribute("question") Question question,
                                  BindingResult br,
                                  @RequestParam(value = "tags", required = false)
-                                 String tagsCsv,Model model) {
-        if(userInfo==null){
+                                 String tagsCsv, Model model) {
+        if (userInfo == null) {
             return "redirect:/login";
         }
-        model.addAttribute("user",userInfo.getUser());
+        model.addAttribute("user", userInfo.getUser());
         List<String> tagNames = (tagsCsv == null || tagsCsv.isBlank())
                 ? List.of()
                 : Arrays.stream(tagsCsv.split(",")).map(String::trim).filter(t -> !t.isEmpty()).toList();
@@ -199,65 +200,78 @@ public String searchQuestionsFromQuery(
             }
             return "CreateQuestion";  // same form view
         }
-
-        questionService.createNewQuestion(question, tagNames);
+        if (question.getId() != null) {
+            questionService.updateQuestion(question, tagNames);
+        } else {
+            questionService.createNewQuestion(question, tagNames);
+        }
         return "redirect:/";
     }
 
+    //    ------------------------storing updated question-----------------------------------------
 
-//    -------------------------update the Question--------------------------------------------
-    @GetMapping("/update/form/{id}")
-    public String updateForm(@PathVariable("id") Long id, Model model) {
-        Question theQuestion = questionService.findQuestionById(id);
-        List<Tag> theTag = tagService.findAllTagsByQuestionId(theQuestion.getId());
+        @GetMapping("/questions/edit/{id}")
+        public String editQuestion(@PathVariable Long id, @AuthenticationPrincipal UserInfo userInfo, Model model) {
+            if (userInfo == null) return "redirect:/login";
+            Question question = questionService.findQuestionById(id);
+            if(question==null){
+                return "redirect:/";
+            }
+            boolean isOwner = userInfo.getUser().getEmail().equals(question.getUser().getEmail());
+            boolean isAdmin = userInfo.getUser().getRole().equals("ADMIN");
+            if (!(isOwner || isAdmin)) {
+                return "redirect:/login";
+            }
+            model.addAttribute("question", question);
+            model.addAttribute("isEdit", true);
+            // ✅ 1. Set all tags for the dropdown
+            List<String> allTags = tagService.findAllTags()
+                    .stream()
+                    .map(Tag::getTagName)
+                    .collect(Collectors.toList());
+            model.addAttribute("allTags", allTags);
 
-        model.addAttribute("question", theQuestion);
-        model.addAttribute("allTags", theTag);
+            StringBuilder tagStringBuilder = new StringBuilder();
+            for (QuestionTag questionTag : question.getQuestionTags()) {
+                if (tagStringBuilder.length() > 0) {
+                    tagStringBuilder.append(", ");
+                }
+                tagStringBuilder.append(questionTag.getTag().getTagName());
+            }
 
-        return "/#";
-    }
-
-//    ------------------------storing updated question-----------------------------------------
-    @PostMapping("/questions/update/{id}")
-    public String updateQuestion(@AuthenticationPrincipal UserInfo userInfo,@PathVariable Long id,@RequestParam("updatedDescription") String updatedDescription) {
-
-        Question existingQuestion = questionService.findQuestionById(id);
-        if(userInfo.getUser().getRole().equals("ADMIN") || (userInfo.getUser().getEmail().equals(existingQuestion.getUser().getEmail())) || (userInfo.getUser().getReputation()>1)){
-        existingQuestion.setDescription(updatedDescription);
-        existingQuestion.setUpdatedAt(LocalDateTime.now());
-
-        questionRepository.save(existingQuestion);
-        }else{
-            return "redirect:/login";
+            // ✅ 2. Set selected tags as comma-separated string (for pre-fill)
+            question.setTagString(tagStringBuilder.toString());
+            model.addAttribute("tagsCsv", question.getTagStringFull());
+            System.out.println("tags string : "+question.getTagStringFull());
+            return "CreateQuestion";
         }
 
-        return  "redirect:/question/" + id;
-    }
+//    Delete question
 
     @PostMapping("/questions/delete/{id}")
-    public String deleteQuestion(@AuthenticationPrincipal UserInfo userInfo,@PathVariable Long id) {
+    public String deleteQuestion(@AuthenticationPrincipal UserInfo userInfo, @PathVariable Long id) {
 
         Question existingQuestion = questionService.findQuestionById(id);
-        if(userInfo.getUser().getRole().equals("ADMIN") || (userInfo.getUser().getEmail().equals(existingQuestion.getUser().getEmail()))){
+        if (userInfo.getUser().getRole().equals("ADMIN") || (userInfo.getUser().getEmail().equals(existingQuestion.getUser().getEmail()))) {
             questionService.deleteQuestionById(id);
-        }else{
+        } else {
             return "redirect:/login";
         }
-        return  "redirect:/";
+        return "redirect:/";
     }
 
     @GetMapping("/question/{questionId}")
-    public String showQuestion( @PathVariable Long questionId,Model model,@AuthenticationPrincipal UserInfo userInfo){
+    public String showQuestion(@PathVariable Long questionId, Model model, @AuthenticationPrincipal UserInfo userInfo) {
         Question question = questionService.findQuestionById(questionId);
-        Optional<QuestionVote> voteOpt = questionVoteRepository.findByUserAndQuestion(userInfo.getUser(),question);
+        Optional<QuestionVote> voteOpt = questionVoteRepository.findByUserAndQuestion(userInfo.getUser(), question);
         boolean questionupvote = false;
         boolean questiondownvote = false;
         boolean answerupvote = false;
         boolean answerdownvote = false;
-        if(voteOpt.isPresent()){
+        if (voteOpt.isPresent()) {
             QuestionVote vote = voteOpt.get();
-            questionupvote=vote.isUpvote();
-            questiondownvote=vote.isDownvote();
+            questionupvote = vote.isUpvote();
+            questiondownvote = vote.isDownvote();
         }
         Map<Long, Boolean> answerUpvoteMap = new HashMap<>();
         Map<Long, Boolean> answerDownvoteMap = new HashMap<>();

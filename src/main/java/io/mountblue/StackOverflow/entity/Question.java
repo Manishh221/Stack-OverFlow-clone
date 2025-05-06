@@ -51,11 +51,45 @@ public class Question {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<QuestionTag> questionTags;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    private Set<QuestionTag> questionTags=new HashSet<>();
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuestionVote> questionVotes;
+    private List<QuestionVote> questionVotes = new ArrayList<>();
+
+    @Transient
+    public Set<Tag> getTags() {
+        Set<Tag> tags = new HashSet<>();
+        if (questionTags != null) {
+            for (QuestionTag qt : questionTags) {
+                tags.add(qt.getTag());
+            }
+        }
+        return tags;
+    }
+
+    @Transient
+    private String tagString="";
+
+    @Transient
+    public String getTagStringFull() {
+        StringBuilder tags = new StringBuilder();
+        for (QuestionTag questionTag : questionTags) {
+            tags.append(questionTag.getTag().getTagName()).append(", ");
+        }
+        if (tags.length() > 0) {
+            tags.setLength(tags.length() - 2);
+        }
+        return tags.toString();
+    }
+
+    public String getTagString() {
+        return tagString;
+    }
+
+    public void setTagString(String tagString) {
+        this.tagString = tagString;
+    }
 
     public List<QuestionVote> getQuestionVotes() {
         return questionVotes;

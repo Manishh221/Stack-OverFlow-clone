@@ -24,6 +24,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Tag findOrCreateByTagName(String name){
+        Tag existingTag = tagRepository.findByTagNameIgnoreCase(name);
+        if (existingTag != null) {
+            return existingTag;
+        }
+        Tag newTag = new Tag();
+        newTag.setTagName(name);
+        return tagRepository.save(newTag);
+    }
+
+    @Override
     public List<Tag> findAllTags() {
         return tagRepository.findAll();
     }

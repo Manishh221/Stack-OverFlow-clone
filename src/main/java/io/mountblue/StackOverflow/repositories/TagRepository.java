@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
     Optional<Tag> findByTagName(String tagName);
+    Tag findByTagNameIgnoreCase(String tagName);
 
     @Query("SELECT new io.mountblue.StackOverflow.dto.TagWithCountDTO(t.tagId, t.tagName, COUNT(qt), t.createdAt) " +
             "FROM Tag t LEFT JOIN QuestionTag qt ON t.tagId = qt.tag.tagId " +

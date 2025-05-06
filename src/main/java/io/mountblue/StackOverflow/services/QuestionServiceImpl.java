@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -24,29 +25,33 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class QuestionServiceImpl implements QuestionService{
+public class QuestionServiceImpl implements QuestionService {
 
     private TagRepository tagRepository;
     private QuestionRepository questionRepository;
     private QuestionTagRepository questionTagRepository;
     private UserTagsRepository userTagsRepository;
+    private TagService tagService;
+    private QuestionTagServiceimpl questionTagService;
 
-   @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository,
-                               TagRepository tagRepository, QuestionTagRepository questionTagRepository, UserTagsRepository userTagsRepository) {
+    @Autowired
+    public QuestionServiceImpl(QuestionRepository questionRepository, QuestionTagServiceimpl questionTagService,
+                               TagRepository tagRepository, QuestionTagRepository questionTagRepository, UserTagsRepository userTagsRepository, TagService tagService) {
         this.questionRepository = questionRepository;
         this.tagRepository = tagRepository;
         this.questionTagRepository = questionTagRepository;
         this.userTagsRepository = userTagsRepository;
+        this.tagService = tagService;
+        this.questionTagService = questionTagService;
     }
 
-//  --------------  delete the question--------------------------------------
+    //  --------------  delete the question--------------------------------------
     @Override
     public void deleteQuestionById(Long id) {
         questionRepository.deleteById(id);
     }
 
-//    ---------------------get question by id------------------------------------
+    //    ---------------------get question by id------------------------------------
     @Override
     public Question findQuestionById(Long id) {
         return questionRepository.findById(id).get();
@@ -55,33 +60,33 @@ public class QuestionServiceImpl implements QuestionService{
     //  ---------------  create new  Question--------------------------------------
     @Override
     public Question createNewQuestion(Question theQuestion, List<String> tagNames) {
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        UserInfo userInfo=(UserInfo) authentication.getPrincipal();
-        Users user=userInfo.getUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserInfo userInfo = (UserInfo) authentication.getPrincipal();
+        Users user = userInfo.getUser();
         theQuestion.setUser(user);
-       Question savedQuestion = questionRepository.save(theQuestion);
+        Question savedQuestion = questionRepository.save(theQuestion);
 
         Set<QuestionTag> questionTagSet = new HashSet<>();
 
-       for (String tagName: tagNames){
-           Tag tag = tagRepository.findByTagName(tagName.trim())
-                   .orElseGet(() -> {
-                       Tag newTag = new Tag();
-                       newTag.setTagName(tagName.trim());
-                       newTag.setCreatedAt(LocalDateTime.now());
-                       return tagRepository.save(newTag);
-                   });
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByTagName(tagName.trim())
+                    .orElseGet(() -> {
+                        Tag newTag = new Tag();
+                        newTag.setTagName(tagName.trim());
+                        newTag.setCreatedAt(LocalDateTime.now());
+                        return tagRepository.save(newTag);
+                    });
 
-           UserTags userTags = new UserTags();
-           userTags.setUser(user);
-           userTags.setTag(tag);
-           userTagsRepository.save(userTags);
-           QuestionTag questionTag = new QuestionTag();
-           questionTag.setQuestion(savedQuestion);
-           questionTag.setTag(tag);
-           questionTag.setCreatedAt(LocalDateTime.now());
-           questionTagSet.add(questionTag);
-       }
+            UserTags userTags = new UserTags();
+            userTags.setUser(user);
+            userTags.setTag(tag);
+            userTagsRepository.save(userTags);
+            QuestionTag questionTag = new QuestionTag();
+            questionTag.setQuestion(savedQuestion);
+            questionTag.setTag(tag);
+            questionTag.setCreatedAt(LocalDateTime.now());
+            questionTagSet.add(questionTag);
+        }
 
         questionTagRepository.saveAll(questionTagSet);
         savedQuestion.setQuestionTags(questionTagSet);
@@ -89,46 +94,79 @@ public class QuestionServiceImpl implements QuestionService{
         return questionRepository.save(savedQuestion);
     }
 
-// -------------------------update existing question:---------------------------------------
+    // -------------------------update existing question:---------------------------------------
     @Override
-    public Question updateQuestion(Question theQuestion, List<String> tagNames) {
-            Question savedQuestion = questionRepository.save(theQuestion);
+    @Transactional
+    public Question updateQuestion(Question updatedQuestion, List<String> newTagNames) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserInfo userInfo = (UserInfo) authentication.getPrincipal();
+        Users user = userInfo.getUser();
 
-            questionTagRepository.deleteTagsByQuestionId(savedQuestion.getId());
+        Question existingQuestion = questionRepository.findById(updatedQuestion.getId())
+                .orElseThrow(() -> new RuntimeException("Question not found"));
 
-           Set<QuestionTag> questionTagSet = new HashSet<>();
+        existingQuestion.setTitle(updatedQuestion.getTitle());
+        existingQuestion.setDescription(updatedQuestion.getDescription());
+        existingQuestion.setUpdatedAt(LocalDateTime.now());
 
-           for (String tagName: tagNames){
-               Tag tag = tagRepository.findByTagName(tagName.trim())
-                       .orElseGet(() -> {
-                           Tag newTag = new Tag();
-                           newTag.setTagName(tagName.trim());
-                           newTag.setCreatedAt(LocalDateTime.now());
-                           return tagRepository.save(newTag);
-                       });
+        questionRepository.save(existingQuestion);
 
-               QuestionTag questionTag = new QuestionTag();
-               questionTag.setQuestion(savedQuestion);
-               questionTag.setTag(tag);
-               questionTag.setCreatedAt(LocalDateTime.now());
+        List<QuestionTag> currentQuestionTags = questionTagRepository.findByQuestionId(existingQuestion.getId());
+        Set<String> currentTagNames = new HashSet<>();
+        for (QuestionTag qt : currentQuestionTags) {
+            currentTagNames.add(qt.getTag().getTagName().toLowerCase());
+        }
 
-               questionTagSet.add(questionTag);
-           }
+        Set<Tag> newTags = new HashSet<>();
+        Set<String> newNames = new HashSet<>();
+        if (newTagNames != null) {
+            for (String tagName : newTagNames) {
+                String name = tagName.trim().toLowerCase();
+                if (!name.isEmpty()) {
+                    Tag tag = tagService.findOrCreateByTagName(name);
+                    newTags.add(tag);
+                    newNames.add(name);
+                }
+            }
+        }
 
-           questionTagRepository.saveAll(questionTagSet);
-           savedQuestion.setQuestionTags(questionTagSet);
+        for (QuestionTag qt : currentQuestionTags) {
+            String currentName = qt.getTag().getTagName().toLowerCase();
+            if (!newNames.contains(currentName)) {
+                questionTagService.deleteQuestionTag(qt);
+            }
+        }
 
-           return questionRepository.save(savedQuestion);
-       }
+        for (Tag tag : newTags) {
+            String tagName = tag.getTagName().toLowerCase();
+            if (!currentTagNames.contains(tagName)) {
+                QuestionTag newQuestionTag = new QuestionTag();
+                newQuestionTag.setTag(tag);
+                newQuestionTag.setQuestion(existingQuestion); // ✅ Now it's managed
+                newQuestionTag.setCreatedAt(LocalDateTime.now());
+                questionTagService.saveQuestionTag(newQuestionTag);
 
-//--------------------------find all the questions by page number------------------------------------------
-@Override
-public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
-    Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("updatedAt").descending());
-    Page<Question> questionPage = questionRepository.findAll(pageable);
+                if (!userTagsRepository.existsByUserAndTag(user, tag)) {
+                    UserTags userTag = new UserTags();
+                    userTag.setUser(user);
+                    userTag.setTag(tag);
+                    userTagsRepository.save(userTag);
+                }
+            }
+        }
 
-    return questionPage.map(this::getAllQUestionData);
-}
+        return existingQuestion;
+    }
+
+
+    //--------------------------find all the questions by page number------------------------------------------
+    @Override
+    public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("updatedAt").descending());
+        Page<Question> questionPage = questionRepository.findAll(pageable);
+
+        return questionPage.map(this::getAllQUestionData);
+    }
 
     public QuestionResponseDto getAllQUestionData(Question question) {
         List<QuestionTag> questionTag = questionTagRepository.findByQuestionId(question.getId());
@@ -154,9 +192,9 @@ public Page<QuestionResponseDto> findAllQuestions(int pageNumber) {
         questionResponseDto.setTitle(question.getTitle());
         questionResponseDto.setId(question.getId());
         questionResponseDto.setDescription(question.getDescription());
+        questionResponseDto.setTags(tags);
         questionResponseDto.setVotes(question.getUpvote() - question.getDownvote());
         questionResponseDto.setAuthor(question.getUser().getUsername());
-        questionResponseDto.setTags(tags);
         questionResponseDto.setAnswers(question.getAnswerList().size());
         questionResponseDto.setTimeAgo(timeAgo);
 
