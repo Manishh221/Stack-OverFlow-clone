@@ -75,7 +75,7 @@
         <div class="tags-grid">
             <div th:each="tag : ${tags}" class="tag-card">
                 <div class="tag-header">
-                    <a th:href="@{/search(tag=${tag.name})}" class="tag-name" th:text="${tag.name}">Tag</a>
+                    <a th:href="@{'/question' + '?q=tag:' + ${tag.name}}" class="tag-name" th:text="${tag.name}">Tag</a>
                 </div>
                 <div class="tag-stats">
                     <span th:text="${tag.questionCount + ' questions'}">0 questions</span>

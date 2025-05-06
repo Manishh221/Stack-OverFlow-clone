@@ -182,7 +182,7 @@
                                 <div class="qwrap" th:utext="${question.description}"></div>
 
                                 <div class="tags">
-                <span th:each="tag : ${question.questionTags}"
+                <span style="background-color:#D3D3D3;" th:each="tag : ${question.questionTags}"
                       th:text="${tag.tag.tagName}">Tag</span>
                                 </div>
                                 <!-- Question Edit/Delete Buttons -->
@@ -190,6 +190,7 @@
                                     <!-- Edit Button -->
                                     <a th:href="@{'/questions/edit/' + ${question.id}}"
                                        class="btn btn-sm btn-outline-secondary me-2"
+                                       style="cursor:pointer; font-size:0.9em; border:none; text-decoration:none; background-color: transparent; color: grey; margin-left: 1em;"
                                        role="button">
                                         Edit
                                     </a>
