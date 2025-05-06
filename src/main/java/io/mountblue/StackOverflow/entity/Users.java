@@ -23,6 +23,9 @@ public class Users {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "reputation")
     private int reputation;
 
@@ -47,11 +50,13 @@ public class Users {
     private LocalDateTime lastLoginAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserTags> userTags;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
-
 
 
     public Long getId() {
@@ -60,6 +65,14 @@ public class Users {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUsername() {
@@ -156,6 +169,33 @@ public class Users {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public List<UserTags> getUserTags() {
+        return userTags;
+    }
+
+    public void setUserTags(List<UserTags> userTags) {
+        this.userTags = userTags;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", reputation=" + reputation +
+                ", role='" + role + '\'' +
+                ", title='" + title + '\'' +
+                ", about='" + about + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", lastLoginAt=" + lastLoginAt +
+                ", answers=" + answers +
+                ", questions=" + questions +
+                '}';
     }
 }
 

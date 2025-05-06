@@ -281,7 +281,6 @@ public String searchQuestionsFromQuery(
             answerVoteCountMap.put(answer.getId(), upvotes - downvotes);
         }
 
-
         model.addAttribute("answerUpvotes", answerUpvoteMap);
         model.addAttribute("answerDownvotes", answerDownvoteMap);
         model.addAttribute("answerVoteCounts", answerVoteCountMap);
@@ -291,8 +290,9 @@ public String searchQuestionsFromQuery(
         model.addAttribute("question",question);
         model.addAttribute("answer",new Answer());
         model.addAttribute("loggedInUser",userInfo.getUser());
+        List<Question> relatedQuestions = questionService.getRelatedQuestions(questionId);
+        model.addAttribute("relatedQuestions", relatedQuestions);
+
         return "QuestionDetail";
     }
-
-
 }

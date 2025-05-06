@@ -46,14 +46,17 @@
 <!--</div>-->
 
 
+<div id="about" th:fragment="question(user)" xmlns:th="http://www.w3.org/1999/xhtml">
 
-<div id="about" th:fragment="question(user)">
-    <h3><span th:text="${#lists.size(user.questions)}">0</span> Questions</h3>
-    <div id="profile-about">
+    <h3><span th:text="${#lists.size(user.questions)}">0</span> questions </h3>
+
+    <div class="empty-question-answer" th:if="${#lists.isEmpty(user.questions)}">
         <p>
-            All your questions are listed here.
-            <a href="/ask">Create a question</a>
+            You have not <a style="text-decoration: none" href="http://localhost:8080/ask-question">ask</a> any question.
         </p>
+    </div>
+
+     <div>
         <ul class="question-list">
             <li class="question-item" th:each="question : ${user.questions}">
                 <div class="question-top">
@@ -72,5 +75,6 @@
             </li>
         </ul>
     </div>
+
 </div>
 

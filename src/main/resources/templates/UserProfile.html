@@ -5,29 +5,29 @@
     <title>User Profile</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/userProfile.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <style>
+        .toastui-editor-tabs {
+        display: none !important;
+        }
+    </style>
 </head>
 <body>
-<!-- Header (no fragment, directly included) -->
 <div th:replace="~{fragments/header :: header(user=${user})}"></div>
-
-<div id="container">
+<div style="display:flex; gap:0.5em; height:100vh;">
+<div th:replace="fragments/Sidebar :: Sidebar"></div>
+<div style="flex:1; padding:2em;" id="container">
     <div id="hero">
-        <!-- sidebar -->
-<!--        <div id="sidebar">-->
-<!--            <ul>-->
-<!--                <li><a href="#">Home</a></li>-->
-<!--                <li><a href="#">Questions</a></li>-->
-<!--                <li><a href="#">Tags</a></li>-->
-<!--                <li><a href="#">Users</a></li>-->
-<!--            </ul>-->
-<!--        </div>-->
-
         <div id="main-content">
-
             <div id="profilebox">
                 <div id="profile-data">
-                    <div id="profile-img"
-                         th:text="${#strings.toUpperCase(#strings.substring(user.username, 0, 1))}"></div>
+                    <div id="profile-img" style="height:8rem;width:8rem; margin-bottom:1rem;">
+                        <img th:src="${user.avatar}"
+                             style="width:100%; height:100%; object-fit:cover; border:0.1px solid gray;">
+                    </div>
                     <div id="profile-title">
                         <p id="profile-name" th:text="${user.username}"></p>
                         <p th:if="${user.title!=null}" id="profile-tl" style="color:grey;" th:text="${user.title}"></p>
@@ -39,24 +39,17 @@
                     </div>
                 </div>
 
-
-<!--                <form id="profile-btn" th:action="@{/updateUser}" method="post">-->
-<!--                    <button type="submit">Edit</button>-->
-<!--                </form>-->
-
                 <div class="button-container">
 
-                    <a href="http://localhost:8080/user/1?profiletab=settings" class="custom-button">
-                        <img src="https://res.cloudinary.com/dtmsrjwaf/image/upload/v1746209274/pencil_dlktla.png" class="icon" alt="Edit icon">
+                    <a th:href="@{'/user/' + ${user.id} + '?profiletab=settings'}"
+                       th:classappend="${profiletab == 'settings'} ? ' active-tab' : ''" class="custom-button">
+                        <img src="https://res.cloudinary.com/dtmsrjwaf/image/upload/v1746209274/pencil_dlktla.png"
+                             class="icon" alt="Edit icon">
                         Edit Profile
                     </a>
 
-                    <a href="/network-profile" class="custom-button">
-                        <img src="https://res.cloudinary.com/dtmsrjwaf/image/upload/v1746209684/computer-icons-stack-exchange-stack-overflow-clip-art-png-favpng-gg65m9N2JvW44R5MAVu7St9gA_t_qqk9n8.jpg" class="icon" alt="Network icon">
-                        Network profile
-                    </a>
-                </div>
 
+                </div>
 
 
             </div>
@@ -76,21 +69,21 @@
 
             </div>
 
-                <div  th:if="${profiletab == 'profile'}">
-                    <div th:replace="~{fragments/profilestat :: profilestat(user=${user})}"></div>
-                </div>
+            <div th:if="${profiletab == 'profile'}">
+                <div th:replace="~{fragments/profilestat :: profilestat(user=${user})}"></div>
+            </div>
 
             <div th:if="${profiletab == 'activity'}">
                 <div th:replace="~{fragments/activitystat :: activitystat(user=${user}, activitytab=${activitytab}, tagList=${tagList})}"></div>
             </div>
 
             <div th:if="${profiletab == 'settings'}">
-                <div th:replace="~{fragments/settingstat :: settingstat(user=${user})}"></div>
+                <div th:replace="~{fragments/settingstat :: settingstat(user=${user} ,settingtab=${settingtab})}"></div>
             </div>
 
         </div>
     </div>
 </div>
-
+</div>
 </body>
 </html>

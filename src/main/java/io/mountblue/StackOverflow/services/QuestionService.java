@@ -28,4 +28,7 @@ public interface QuestionService {
             List<String> tags, // multiple tags for OR filter
             Pageable pageable
     );
+    Page<Question> searchQuestions(String tag, String user, String title, boolean accepted, boolean unanswered, Pageable pageable);
+
+    List<Question> getRelatedQuestions(Long questionId);
 }
