@@ -30,6 +30,13 @@
       <button sec:authorize="isAuthenticated()" class="logoutBtn" type="submit">Logout</button>
     </form>
     <a sec:authorize="isAnonymous()" th:href="@{/signup}">SignUp</a>
-    <a th:if="${user != null}"  th:href="@{'/user/' + ${user.id} + '?profiletab=profile'}">Profile</a>
+    <a th:if="${user != null}"  th:href="@{'/user/' + ${user.id} + '?profiletab=profile'}">
+      <div class="user-card" style="display:flex; gap:0.2em; align-items:center;">
+        <img style="width:30px; margin:0.3em;" th:src="${user.avatar}" alt="Stack Overflow" class="user-avatar"/>
+        <div class="user-info">
+          <strong th:text="${user.reputation}"></strong>
+        </div>
+      </div>
+    </a>
   </div>
 </nav>

@@ -28,7 +28,6 @@
     <div class="list-cont">
 <div th:each="userDto : ${usersPage}" class="user-card">
     <img th:src="${userDto.user.avatar}" alt="Stack Overflow" class="user-avatar"/>
-<!--    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png" alt="Stack Overflow" class="user-avatar"/>-->
   <div class="user-info">
     <a th:href="@{/user/{id}(id=${userDto.user.id}, profiletab='profile')}" th:text="${userDto.user.username}"></a>
     <strong th:text="${userDto.user.reputation}"></strong>
