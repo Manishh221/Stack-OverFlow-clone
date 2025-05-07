@@ -1,14 +1,12 @@
 package io.mountblue.StackOverflow.configs;
 
 import io.mountblue.StackOverflow.repositories.UserRepository;
-import io.mountblue.StackOverflow.services.CustomOauth2UserService;
 import io.mountblue.StackOverflow.services.UsersServiceDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,11 +41,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService(UserRepository userRepo) {
-        return new CustomOauth2UserService(userRepo);
-    }
-
-    @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http
                 .getSharedObject(AuthenticationManagerBuilder.class)
@@ -56,8 +49,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
 
         http
@@ -65,8 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/login", "/signup", "/adduser",
-                                "/ask-question", "/upload-image", "/css/**",
-                                "/oauth2/**", "/login/oauth2/code/**"
+                                "/ask-question", "/upload-image", "/css/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -74,13 +65,6 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
                         .permitAll()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)
-                        )
-                        .defaultSuccessUrl("/", true)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
