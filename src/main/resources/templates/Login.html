@@ -11,13 +11,12 @@
 <!-- Navbar -->
 <div th:replace="~{fragments/header :: header(user=${user} ?: null)}"></div>
 
-
 <!-- Page Content -->
 <div class="login-wrapper">
   <div class="logo">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png" alt="Stack Overflow" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png"
+         alt="Stack Overflow" />
   </div>
-
 
   <!-- Login Form -->
   <div class="login-box">
@@ -39,13 +38,27 @@
       <div th:if="${param.error}" class="error-msg">Invalid username or password.</div>
       <div th:if="${param.logout}" class="logout-msg">You have been logged out.</div>
     </form>
+
+    <!-- OR divider -->
+    <div class="oauth-divider">
+      <span>or</span>
+    </div>
+
+    <!-- Google OAuth2 Login with web-hosted button -->
+    <div class="oauth2-login">
+      <a th:href="@{/oauth2/authorization/google}" class="google-btn">
+        <img
+                src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png"
+                alt="Sign in with Google"
+                style="vertical-align: middle; height: 40px;"/>
+      </a>
+    </div>
   </div>
 
   <div class="signup-link">
-    Don't have an account? <a th:href="@{/signup}">Sign up</a><br>
+    Don't have an account? <a th:href="@{/signup}">Sign up</a>
   </div>
 </div>
 
 </body>
 </html>
-
