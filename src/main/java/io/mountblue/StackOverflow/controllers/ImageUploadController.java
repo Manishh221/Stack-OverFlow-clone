@@ -18,7 +18,6 @@ public class ImageUploadController {
     }
 
     @PostMapping("/upload-image")
-    @ResponseBody
     public Map<String, Object> uploadImage(@RequestParam("image") MultipartFile image) {
         Map<String, Object> result = new HashMap<>();
         try {

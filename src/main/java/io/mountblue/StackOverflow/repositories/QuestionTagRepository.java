@@ -16,7 +16,6 @@ public interface QuestionTagRepository extends JpaRepository<QuestionTag, Long> 
     @Query("DELETE FROM QuestionTag qt WHERE qt.question.id = :questionId")
     void deleteTagsByQuestionId(@Param("questionId") Long questionId);
 
-    @Modifying
     @Query("delete from QuestionTag qt where qt.id = :id")
     void deleteByQuestionId(@Param("id") Long id);
 
