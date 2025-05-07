@@ -1,12 +1,9 @@
 package io.mountblue.StackOverflow.services;
 
 import io.mountblue.StackOverflow.entity.Answer;
-import io.mountblue.StackOverflow.entity.AnswerEdits;
 import io.mountblue.StackOverflow.entity.Users;
 import io.mountblue.StackOverflow.repositories.AnswerRepository;
 import io.mountblue.StackOverflow.security.UserInfo;
-
-import java.util.List;
 
 public interface AnswerService {
     void saveAnswer(Answer answer, Long questionId, UserInfo userClass);
@@ -15,9 +12,5 @@ public interface AnswerService {
 
     Answer findAnswerById(Long answerId);
 
-    void recordEdit(Answer answer, Users user, String newContent);
-
     void updateAnswer(Answer answer);
-
-    List<AnswerEdits> getHistory(Answer answer);
 }

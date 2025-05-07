@@ -3,471 +3,548 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${question.title}">Question Detail</title>
-
-    <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/header.css}"/>
     <link rel="stylesheet" th:href="@{/css/questionDetail.css}"/>
-    <link rel="stylesheet" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-          rel="stylesheet"/>
-
-    <style>
-        .to.toastui-editor-tabs {
-            display: none !important;
-        }
-        .answ img {
-            width:100%; height:auto; display:block; margin:1em 0;
-        }
-    </style>
-
-    <!-- Toast UI & Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Scripts -->
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"></script>
 
-    <!-- Comment toggles & question edit toggles -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Toggle add-comment
-            document.querySelectorAll('.toggle-comment-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.getAttribute('data-answer-id');
-                    const f = document.getElementById('comment-form' + id);
-                    if (f) f.style.display = f.style.display === 'block' ? 'none' : 'block';
-                });
-            });
-            // Toggle update-comment
-            document.querySelectorAll('.toggle-update-comment-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const cid = btn.getAttribute('data-comment-id');
-                    const f = document.getElementById('update-comment-form-' + cid);
-                    if (f) f.style.display = f.style.display === 'block' ? 'none' : 'block';
-                });
-            });
-            // Cancel update-comment
-            document.querySelectorAll('.cancel-update-btn').forEach(btn => {
-                btn.addEventListener('click', e => {
-                    e.preventDefault();
-                    const f = btn.closest('.update-comment-form');
-                    if (f) f.style.display = 'none';
-                });
-            });
-            // Cancel add-comment
-            document.querySelectorAll('.cancel-comment-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const f = btn.closest('.comment-input');
-                    if (f) f.style.display = 'none';
-                });
-            });
-            // Question edit toggle
-            const qBtn = document.querySelector('.toggle-edit-question-btn');
-            const qForm = document.getElementById('question-edit-form');
-            const qCancel = document.querySelector('.cancel-question-edit-btn');
-            if (qBtn && qForm) {
-                qBtn.addEventListener('click', () => {
-                    qForm.style.display = qForm.style.display === 'block' ? 'none' : 'block';
-                });
-            }
-            if (qCancel && qForm) {
-                qCancel.addEventListener('click', () => {
-                    qForm.style.display = 'none';
-                });
+    <style>
+        .to.toastui-editor-tabs {
+        display: none !important;
+    }
+
+    /* Fix image display in answers */
+    .answ img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 1em 0;
+    }
+    </style>
+</head>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Toggle comment form
+      document.querySelectorAll('.toggle-comment-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const id = button.getAttribute('data-answer-id');
+          const form = document.getElementById('comment-form' + id);
+          if (form) {
+            form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+          }
+        });
+      });
+
+      // Toggle update comment form
+      document.querySelectorAll('.toggle-update-comment-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const commentId = button.getAttribute('data-comment-id');
+          const form = document.getElementById('update-comment-form-' + commentId);
+          if (form) {
+            form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+          }
+        });
+      });
+
+      // Cancel update comment
+      document.querySelectorAll('.cancel-update-btn').forEach(button => {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+          const form = button.closest('.update-comment-form');
+          if (form) form.style.display = 'none';
+        });
+      });
+
+      // Cancel comment input
+      document.querySelectorAll('.cancel-comment-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const form = button.closest('.comment-input');
+          if (form) form.style.display = 'none';
+        });
+      });
+
+      // 🔧 Toggle edit form
+      document.querySelectorAll('.toggle-edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const id = button.getAttribute('data-answer-id');
+          const form = document.getElementById('edit-form-' + id);
+          if (form) {
+            form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+          }
+        });
+      });
+
+      // 🔧 Cancel edit form
+      document.querySelectorAll('.cancel-edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const form = button.closest('.edit-form');
+          if (form) {
+            form.style.display = 'none';
+          }
+        });
+      });
+    });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the 'Edit' button and the edit form
+    const editButton = document.querySelector('.toggle-edit-question-btn');
+    const editForm = document.getElementById('question-edit-form');
+    const cancelButton = document.querySelector('.cancel-question-edit-btn');
+
+    // Toggle edit form visibility when 'Edit' is clicked
+    if (editButton) {
+        editButton.addEventListener('click', function () {
+            if (editForm) {
+                // Toggle the form display: show if hidden, hide if shown
+                editForm.style.display = (editForm.style.display === 'block') ? 'none' : 'block';
             }
         });
-    </script>
-</head>
+    }
+
+    // Close the edit form when 'Cancel' is clicked
+    if (cancelButton) {
+        cancelButton.addEventListener('click', function () {
+            if (editForm) {
+                // Hide the edit form
+                editForm.style.display = 'none';
+            }
+        });
+    }
+});
+
+
+
+</script>
+
 
 <body>
 <div th:replace="~{fragments/header :: header(user=${user})}"></div>
+
 <div class="detail-cont">
     <div th:replace="fragments/Sidebar :: Sidebar"></div>
-    <div style="display:flex; flex-direction:row; gap:1.2em; flex:1;">
-<div>
-        <!-- Question -->
-        <div class="question-container" style="margin-left:3rem;">
-            <div class="question-box">
-                <h2 class="qwrap" th:text="${question.title}">Question Title</h2>
-                <div class="meta">
-                    Asked <span th:text="${@dateUtils.format(question.createdAt)}">today</span> •
-                    Modified <span th:text="${@dateUtils.format(question.updatedAt)}">today</span>
-                </div>
-                <hr>
-                <div id="desc-wrap">
-                    <div style="margin-top:2em;" id="vote-cont">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                            <!-- Upvote Button -->
-                            <form th:action="@{'/upvote-question/' + ${question.id}}" method="post"
-                                  style="margin: 0;">
-                                <button type="submit"
-                                        th:style="${questionupvote} ?
+    <div style=" display:flex; flex-direction:column; gap:1.2em; flex:1;">
+
+    <div class="question-container" style="margin-left:3rem;">
+        <div class="question-box">
+            <h2 class="qwrap" th:text="${question.title}">Question Title</h2>
+            <div class="meta">
+                Asked <span th:text="${@dateUtils.format(question.createdAt)}">today</span> •
+                Modified <span th:text="${@dateUtils.format(question.updatedAt)}">today</span>
+            </div>
+            <hr>
+            <div id="desc-wrap" >
+                <div style="margin-top:2em;" id="vote-cont">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <!-- Upvote Button -->
+                        <form th:action="@{'/upvote-question/' + ${question.id}}" method="post"
+                              style="margin: 0;">
+                            <button type="submit"
+                                    th:style="${questionupvote} ?
                       'font-size:1.5em; background: lightgreen; border-color:gray; border-radius:50%; padding:5px; cursor:pointer;' :
                       'font-size:1.5em; background: none; border-color:gray; border-radius:50%; padding:5px; cursor:pointer;'">
-                                    <span style="font-size:25px">▲</span>
-                                </button>
-                            </form>
+                                <span style="font-size:25px">▲</span>
+                            </button>
+                        </form>
 
-                            <!-- Vote Count -->
+                        <!-- Vote Count -->
 
-                            <!-- Question Vote Count -->
-                            <div style="font-size: 24px; font-weight: bold;">
-                                <span th:text="${questionVoteCount}">0</span>
-                            </div>
+                        <!-- Question Vote Count -->
+                        <div style="font-size: 24px; font-weight: bold;">
+                            <span th:text="${questionVoteCount}">0</span>
+                        </div>
 
-                            <!-- Downvote Button -->
-                            <form th:action="@{'/downvote-question/' + ${question.id}}" method="post"
-                                  style="margin: 0;">
-                                <button type="submit"
-                                        th:style="${questiondownvote} ?
+                        <!-- Downvote Button -->
+                        <form th:action="@{'/downvote-question/' + ${question.id}}" method="post"
+                              style="margin: 0;">
+                            <button type="submit"
+                                    th:style="${questiondownvote} ?
                       'font-size:1.5em; background: lightcoral; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;' :
                       'font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;'">
-                                    <span style="font-size:25px">▼</span>
-                                </button>
-                            </form>
+                                <span style="font-size:25px">▼</span>
+                            </button>
+                        </form>
 
-
-                        </div>
 
                     </div>
-                    <div id="desc-cont">
+
+                </div>
+                <div id="desc-cont">
+                    <div class="detail-cont">
                         <div class="question-cont">
-                            <div class="qwrap" th:utext="${question.description}"></div>
-                            <div class="tags">
-                                <span th:each="tag : ${question.questionTags}" th:text="${tag.tag.tagName}">Tag</span>
-                            </div>
-                            <div class="question-actions" style="margin-top:1em;">
-                                <button type="button" class="toggle-edit-question-btn"
-                                        style="background:transparent; border:none; color:grey; cursor:pointer;">
-                                    Edit
-                                </button>
-                                <form th:action="@{'/questions/delete/' + ${question.id}}" method="post" style="display:inline;">
-                                    <button type="submit"
-                                            style="background:transparent; border:none; color:grey; cursor:pointer; margin-left:1em;">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                            <div id="question-edit-form" style="display:none; margin-top:1em; margin-bottom:3em;">
-                                <form th:action="@{'/questions/update/' + ${question.id}}" method="post">
-                    <textarea name="updatedDescription"
-                              style="width:90%; height:200px;"
-                              th:text="${question.description}" required></textarea>
-                                    <div style="text-align:right; margin-top:1em;">
+                            <!-- QUESTION -->
+                            <div class="question-box">
+                                <div class="qwrap" th:utext="${question.description}"></div>
+
+                                <div class="tags">
+                <span style="background-color:#D3D3D3;" th:each="tag : ${question.questionTags}"
+                      th:text="${tag.tag.tagName}">Tag</span>
+                                </div>
+                                <!-- Question Edit/Delete Buttons -->
+                                <div class="question-actions" style="margin-top: 1em;">
+                                    <!-- Edit Button -->
+                                    <a th:href="@{'/questions/edit/' + ${question.id}}"
+                                       class="btn btn-sm btn-outline-secondary me-2"
+                                       style="cursor:pointer; font-size:0.9em; border:none; text-decoration:none; background-color: transparent; color: grey; margin-left: 1em;"
+                                       role="button">
+                                        Edit
+                                    </a>
+
+                                    <!-- Delete Form -->
+                                    <form th:action="@{'/questions/delete/' + ${question.id}}" method="post" style="display: inline;">
                                         <button type="submit"
-                                                style="background:transparent; border:none; color:grey; cursor:pointer;">
-                                            Update
+                                                style="cursor: pointer; border: none; background-color: transparent; color: grey; margin-left: 1em;">
+                                            Delete
                                         </button>
-                                        <button type="button" class="cancel-question-edit-btn"
-                                                style="background:transparent; border:none; color:grey; cursor:pointer; margin-left:1em;">
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
+
+                                <!-- Question Edit Form (Initially hidden) -->
+                                <div id="question-edit-form" style="display: none; margin-top: 1em; margin-bottom:3em;">
+                                    <form th:action="@{'/questions/update/' + ${question.id}}" method="post">
+        <textarea name="updatedDescription" style="width: 90%; height: 200px;"
+                  th:text="${question.description}" required></textarea>
+                                        <div style="text-align: right; margin-top: 1em;">
+                                            <button type="submit"
+                                                    style="cursor: pointer; border: none; background-color: transparent; color: grey;">
+                                                Update
+                                            </button>
+                                            <button type="button"
+                                                    class="cancel-question-edit-btn"
+                                                    style="cursor: pointer; border: none; background-color: transparent; color: grey; margin-left: 1em;">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+
                             </div>
                         </div>
-                        <div class="comment-box" style="position:absolute; bottom:0; left:30rem;">
+                        <div class="comment-box" style="position:absolute; bottom:0; left:30rem; height:fit-content;">
                             <strong th:text="'asked ' + ${@dateUtils.format(question.createdAt)}"></strong>
                             <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}"
                                th:text="${question.user.username}">User Name</a>
                         </div>
+
+                    </div>
+                </div>
+
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Answers -->
-        <div class="answer-box" style="margin-left:2rem;">
-            <h3 th:text="${#lists.size(question.answerList)} + ' Answer(s)'">1 Answer</h3>
-            <div class="answ" th:each="ans : ${question.answerList}">
-                <div id="ans-wrap">
-                    <div id="vote-cnt" style="margin-top:2em; margin-left:2em;">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                            <!-- Upvote Button -->
-                            <form th:action="@{'/upvote-answer/' + ${ans.id} +'/'+ ${question.id}}" method="post" style="margin: 0;">
-                                <button type="submit"
-                                        th:style="${answerUpvotes[ans.id]} ?
+    <div class="answer-box" style="margin-left:2rem;" >
+        <h3 th:text="${#lists.size(question.answerList)} + ' Answer(s)'">1 Answer</h3>
+
+        <div class="answ" th:each="ans : ${question.answerList}">
+            <div id="ans-wrap">
+                <div id="vote-cnt" style="margin-top:2em; margin-left:2em;">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <!-- Upvote Button -->
+                        <form th:action="@{'/upvote-answer/' + ${ans.id} +'/'+ ${question.id}}" method="post" style="margin: 0;">
+                            <button type="submit"
+                                    th:style="${answerUpvotes[ans.id]} ?
                       'font-size:1.5em; background: lightgreen; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;' :
                       'font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;'">
-                                    <span style="font-size:25px">▲</span>
-                                </button>
-                            </form>
+                                <span style="font-size:25px">▲</span>
+                            </button>
+                        </form>
 
-                            <div style="font-size: 24px; font-weight: bold;">
-                                <span th:text="${answerVoteCounts[ans.id]}">0</span>
-                            </div>
-                            <form th:action="@{'/downvote-answer/' + ${ans.id} +'/'+ ${question.id}}" method="post" style="margin: 0;">
-                                <button type="submit"
-                                        th:style="${answerDownvotes[ans.id]} ?
+                        <div style="font-size: 24px; font-weight: bold;">
+                            <span th:text="${answerVoteCounts[ans.id]}">0</span>
+                        </div>
+                        <form th:action="@{'/downvote-answer/' + ${ans.id} +'/'+ ${question.id}}" method="post" style="margin: 0;">
+                            <button type="submit"
+                                    th:style="${answerDownvotes[ans.id]} ?
                       'font-size:1.5em; background: lightcoral; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;' :
                       'font-size:1.5em; background: none; border-color:grey; border-radius:50%; padding:5px; cursor:pointer;'">
-                                    <span style="font-size:25px">▼</span>
-                                </button>
-                            </form>
-                            <div>
+                                <span style="font-size:25px">▼</span>
+                            </button>
+                        </form>
+                        <div>
                             <span th:if="${ans.accepted}">
                                 <i class="fa-solid fa-check" style="font-weight:bold; font-size:2em; color: #55f452;"></i>
                             </span>
-                            </div>
                         </div>
                     </div>
-                    <div id="ans-cont" style="margin-top:2em; margin-left:1.5em;">
-                        <div th:utext="${ans.content}"></div>
-                    </div>
                 </div>
+                <div id="ans-cont" style="margin-top:2em; margin-left:1.5em;">
+                    <div id="ans-content" th:utext="${ans.content}"></div>
+                </div>
+            </div>
 
-                <!-- 1) hidden raw HTML -->
-                <div th:id="'answer-data-' + ${ans.id}"
-                     style="display:none;"
-                     th:utext="${ans.content}"></div>
+            <!-- Hide/Show Edit Form -->
+            <button type="button"
+                    style="cursor:pointer; margin-top:2em; color:grey; border:none; background-color:transparent;"
+                    class="toggle-edit-btn" th:attr="data-answer-id=${ans.id}">Edit
+            </button>
 
-                <!-- 2) edit button -->
-                <button type="button"
-                        class="toggle-edit-btn"
-                        th:attr="data-answer-id=${ans.id}"
-                        style="background:transparent; border:none; color:grey; cursor:pointer; margin-top:2em;">
-                    Edit
+            <!-- Delete Button -->
+            <form th:action="@{'/answer/delete/' + ${ans.id}}" method="post" style="display: inline;">
+                <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
+                        type="submit">Delete
                 </button>
+            </form>
+            <form th:if="${loggedInUser.email==question.user.email}"  th:action="@{'/answer/accept/' + ${ans.id}}" method="post" style="display: inline;">
+                <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
+                        type="submit" th:text="${ans.accepted ? 'Reject' : 'Accept'}">Accept
+                </button>
+            </form>
 
-                <!-- 3) edit form -->
-                <div th:id="'edit-form-' + ${ans.id}" class="edit-form" style="display:none;">
-                    <form th:id="'edit-answer-form-' + ${ans.id}"
-                          th:action="@{'/answer/update/' + ${ans.id}}"
-                          method="post">
-                        <!-- ToastUI mount -->
-                        <div th:id="'editor-answer-' + ${ans.id}" style="margin:1em 0;"></div>
-                        <!-- hidden textarea -->
-                        <textarea th:id="'answer-content-' + ${ans.id}"
-                                  name="updatedContent"
-                                  style="display:none;"></textarea>
-                        <div style="text-align:right;">
-                            <button type="submit"
-                                    style="background:transparent; border:none; color:grey; cursor:pointer;">
+            <!-- Add Comment Button -->
+            <button style="margin-left:1em; cursor:pointer; border:none; background-color:transparent; color:grey;"
+                    type="button" class="toggle-comment-btn"
+                    th:attr="data-answer-id=${ans.id}">Add Comment
+            </button>
+
+            <!-- Edit Form (Initially Hidden) -->
+            <div class="edit-form" th:attr="id='edit-form-' + ${ans.id}" style="display: none;">
+                <form th:action="@{'/answer/update/' + ${ans.id}}" method="post">
+                                    <textarea style="width:80%; margin:2em; max-height:300px; overflow:auto;" name="updatedContent"
+                                              th:utext="${ans.content}" required></textarea>
+                    <div id="edit-form-btn" style="text-align: right; margin-bottom:1rem;">
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                                type="submit">Update
+                        </button>
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey; margin-left:1em;"
+                                type="button" class="cancel-edit-btn">Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Comment Input Box (Initially hidden) -->
+            <div class="comment-input" th:attr="id='comment-form' + ${ans.id}" style="display: none;">
+                <form th:action="@{'/answers/' + ${ans.id} + '/comment/create'}" method="post">
+                                    <textarea style="width:80%; margin:2em; height:fit-content;" name="commentText"
+                                              placeholder="Add your comment..." required></textarea>
+                    <div style="text-align: right; margin-bottom:1rem;">
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                                type="submit">Submit
+                        </button>
+                        <button style="cursor:pointer; border:none; background-color:transparent; color:grey;"
+                                type="button" class="cancel-comment-btn">Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Display Comments -->
+            <div class="comments" th:if="${ans.comments != null}">
+
+                <div th:each="comment : ${ans.comments}">
+                    <div id="comment">
+                        <p id="comment-content">
+                            <strong th:text="${comment.name}">User</strong>:
+                            <span th:text="${comment.content}">Comment text</span>
+                        </p>
+                        <!--            comment buttons-->
+                        <div>
+                            <small th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy hh:mm')}"></small>
+                            <!-- Update Comment Button -->
+                            <button type="button" class="toggle-update-comment-btn"
+                                    th:attr="data-comment-id=${comment.id}">
                                 Update
                             </button>
-                            <button type="button"
-                                    class="cancel-edit-btn"
-                                    style="background:transparent; border:none; color:grey; cursor:pointer; margin-left:1em;">
-                                Cancel
-                            </button>
+                            <!-- Delete Comment Button -->
+                            <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/delete'}"
+                                  method="post" style="display: inline;">
+
+                                <button type="submit">Delete</button>
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                    <!-- Update Comment Form (Initially hidden) -->
+                    <div class="update-comment-form" th:attr="id='update-comment-form-' + ${comment.id}"
+                         style="display: none;">
+                        <form th:action="@{'/answers/' + ${ans.id} + '/comment/' + ${comment.id} + '/update'}"
+                              method="post">
+                                            <textarea style="width:80%; margin:2em; height:fit-content;"
+                                                      name="updatedComment" required
+                                                      th:text="${comment.content}"></textarea>
+                            <div style="text-align: right; margin-bottom:1rem;">
+                                <button type="submit">Save</button>
+                                <button type="button" class="cancel-update-btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr/>
                 </div>
+            </div>
 
-                <!-- delete, accept, comment buttons -->
-                <form th:action="@{'/answer/delete/' + ${ans.id}}" method="post" style="display:inline;">
-                    <button type="submit"
-                            style="background:transparent; border:none; color:grey; cursor:pointer; margin-left:1em;">
-                        Delete
-                    </button>
-                </form>
-                <form th:if="${loggedInUser.email==question.user.email}"
-                      th:action="@{'/answer/accept/' + ${ans.id}}"
-                      method="post"
-                      style="display:inline;">
-                    <button type="submit"
-                            style="background:transparent; border:none; color:grey; cursor:pointer; margin-left:1em;"
-                            th:text="${ans.accepted ? 'Reject' : 'Accept'}">Accept
-                    </button>
-                </form>
-                <button type="button"
-                        class="toggle-comment-btn"
-                        th:attr="data-answer-id=${ans.id}"
-                        style="background:transparent; border:none; color:grey; cursor:pointer; margin-left:1em;">
-                    Add Comment
-                </button>
-
-                <!-- comments omitted -->
-                <div class="footer">
+            <div class="footer">
+                <div class="user">
                     <div class="user-info">
-                        <a href="#" th:text="${ans.user.username}">Answer User</a><br>
-                        <small th:text="${@dateUtils.format(ans.createdAt)}"></small>
+                        <a th:href="@{'/user/' + ${question.user.id} + '?profiletab=profile'}" th:text="${ans.user.username}">Answer User</a><br>
+                        <!-- Example placeholder for score if available -->
+                        <span th:text="${@dateUtils.format(ans.createdAt)}">179k ● 28 ● 182 ● 240</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Your Answer -->
-            <h2>Your Answer</h2>
-            <form id="answerForm" method="post" th:object="${answer}"
-                  th:action="@{'/answer/create/' + ${question.id}}">
-                <input type="hidden" th:field="*{id}"/>
-                <div id="editor" style="margin-bottom:1em; width:90%;"></div>
-                <textarea id="answerContent" name="content" style="display:none;"
-                          th:field="*{content}"></textarea>
-                <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></div>
-                <p>By clicking “Post Your Answer”, you agree to our
-                    <a href="/terms">terms of service</a> and
-                    acknowledge you have read our <a href="/privacy">privacy policy</a>.
-                </p>
-                <button class="postbtn" type="submit" style="margin:2rem 0;">Post Your Answer</button>
-            </form>
         </div>
+
+        <h2>Your Answer</h2>
+        <form id="answerForm" method="post" th:object="${answer}"
+              th:action="@{'/answer/create/' + ${question.id}}">
+            <input type="hidden" th:field="*{id}"/>
+
+            <!-- Toast UI Editor Container -->
+            <div id="editor" style="margin-bottom: 1em; width:90%;"></div>
+
+            <!-- Hidden Textarea (will be filled with HTML) -->
+            <textarea id="answerContent" name="content" style="display: none;"
+                      th:field="*{content}"></textarea>
+
+            <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></div>
+
+            <p>By clicking “Post Your Answer”, you agree to our
+                <a href="/">terms of service</a> and
+                acknowledge you have read our <a href="/">privacy policy</a>.
+            </p>
+
+            <button style="margin:2rem 0 2rem 0;" class="postbtn" type="submit">Post Your Answer</button>
+        </form>
     </div>
+
     </div>
-        <!-- Sidebar content -->
-        <div class="sidebar">
-            <div class="sidebar-card">
-                <div class="sidebar-section">
-                    <h4>The Overflow Blog</h4>
-                    <div class="sidebar-item">
-                        <i>✏️</i>
-                        <span>How self-supervised language revolutionized natural language processing and...</span>
+            <div class="sidebar">
+                <div class="sidebar-card">
+                    <div class="sidebar-section">
+                        <h4>The Overflow Blog</h4>
+                        <div class="sidebar-item">
+                            <i>✏️</i>
+                            <span>How self-supervised language revolutionized natural language processing and...</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i>✏️</i>
+                            <span>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</span>
+                        </div>
                     </div>
-                    <div class="sidebar-item">
-                        <i>✏️</i>
-                        <span>“We’re not replacing you; we’re with you”: Where AI meets infrastructure</span>
+
+                    <div class="divider"></div>
+
+                    <div class="sidebar-section" style="">
+                        <h4>Featured on Meta</h4>
+                        <div class="sidebar-item">
+                            <i>💬</i>
+                            <span>Updates to advertising guidelines</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i>💬</i>
+                            <span>Evolving comments: An experiment to encourage engagement and follow-up questions</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i>📄</i>
+                            <span>Policy: Generative AI (e.g., ChatGPT) is banned</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i>📄</i>
+                            <span>Discussions learnings and potential next steps</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="divider"></div>
 
-                <div class="sidebar-section" style="">
-                    <h4>Featured on Meta</h4>
-                    <div class="sidebar-item">
-                        <i>💬</i>
-                        <span>Updates to advertising guidelines</span>
+                <div class="related-section" style="max-width:350px;">
+                    <div class="related-title">Related</div>
+
+                        <h3>Related Questions</h3>
+
+                       <div class="related-item">
+                        <ul th:if="${not #lists.isEmpty(relatedQuestions)}">
+                            <li style="max-width:350px;" th:each="question, stat : ${relatedQuestions}"
+                                th:if="${stat.index < 5}">
+                                <div th:text="${question.upvote}" class="vote-box">0</div>
+                                <a style="max-width:280px; overflow-wrap:break-word;" th:href="@{/question/{id}(id=${question.id})}"
+                                   th:text="${question.title}" class="related-title"></a><br>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="sidebar-item">
-                        <i>💬</i>
-                        <span>Evolving comments: An experiment to encourage engagement and follow-up questions</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <i>📄</i>
-                        <span>Policy: Generative AI (e.g., ChatGPT) is banned</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <i>📄</i>
-                        <span>Discussions learnings and potential next steps</span>
-                    </div>
+
+                        <p th:if="${#lists.isEmpty(relatedQuestions)}">No related questions found.</p>
+
                 </div>
-            </div>
-
-
-            <div class="related-section" style="max-width:350px;">
-                <div class="related-title">Related</div>
-
-                <h3>Related Questions</h3>
-
-                <div class="related-item">
-                    <ul th:if="${not #lists.isEmpty(relatedQuestions)}">
-                        <li style="max-width:350px;" th:each="question, stat : ${relatedQuestions}"
-                            th:if="${stat.index < 5}">
-                            <div th:text="${question.upvote}" class="vote-box">0</div>
-                            <a style="max-width:280px; overflow-wrap:break-word;" th:href="@{/question/{id}(id=${question.id})}"
-                               th:text="${question.title}" class="related-title"></a><br>
-                        </li>
-                    </ul>
-                </div>
-
-                <p th:if="${#lists.isEmpty(relatedQuestions)}">No related questions found.</p>
-
-            </div>
-            <div th:replace="~{fragments/Modal :: Modal}"></div>
-            <div th:replace="~{fragments/CommentModal :: CommentModal}"></div>
-            <div th:replace="~{fragments/AnswerModal :: AnswerModal}"></div>
-
-            <div th:replace="~{fragments/AnswerEdits :: AnswerEdits}"></div>
-
-    </div>
-</div>
-
-<!-- Initialize the “Your Answer” editor -->
-<script>
-    const editor = new toastui.Editor({
-        el: document.querySelector('#editor'),
-        height: '400px',
-        initialEditType: 'markdown',
-        previewStyle: 'tab',
-        placeholder: 'Include the problem…',
-        plugins: [toastui.Editor.plugin.codeSyntaxHighlight],
-        toolbarItems: [
-            ['heading','bold','italic'],
-            ['code','codeblock'],
-            ['link','quote','image','table'],
-            ['ul','ol']
-        ],
-        hooks: {
-            addImageBlobHook: async (blob, cb) => {
-                const fd = new FormData(); fd.append('image', blob);
-                try {
-                    const res = await fetch('/upload-image', {method:'POST', body:fd});
-                    const j = await res.json();
-                    cb(j.url,'Image');
-                } catch {
-                    alert('Image upload failed.');
-                }
-            },
-            afterPreviewRender: () => {
-                document.querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
-            }
-        }
-    });
-    document.querySelector('#answerForm').addEventListener('submit', e => {
-        const html = editor.getHTML();
-        const md   = editor.getMarkdown();
-        if (!md || md.trim().length < 20) {
-            e.preventDefault(); alert('Description is too short.');
-            return;
-        }
-        document.querySelector('#answerContent').value = html;
-    });
-</script>
-
-<!-- Initialize each answer’s edit‐editor & highlight code -->
-<script>
-    const answerEditors = {};
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.toggle-edit-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id      = btn.getAttribute('data-answer-id');
-                const form    = document.getElementById(`edit-form-${id}`);
-                const dataDiv = document.getElementById(`answer-data-${id}`);
-                const edDiv   = document.getElementById(`editor-answer-${id}`);
-                const ta      = document.getElementById(`answer-content-${id}`);
-                form.style.display = form.style.display === 'block' ? 'none' : 'block';
-                if (!answerEditors[id] && form.style.display === 'block') {
-                    const raw = dataDiv.innerHTML.trim();
-                    answerEditors[id] = new toastui.Editor({
-                        el: edDiv,
-                        height: '300px',
-                        initialEditType: 'wysiwyg',
-                        previewStyle: 'vertical',
-                        initialValue: raw,
+                <div th:replace="~{fragments/Modal :: Modal}"></div>
+                <div th:replace="~{fragments/CommentModal :: CommentModal}"></div>
+                <div th:replace="~{fragments/AnswerModal :: AnswerModal}"></div>
+                <script>
+                    const editor = new toastui.Editor({
+                        el: document.querySelector('#editor'),
+                        height: '400px',
+                        initialEditType: 'markdown',
+                        previewStyle: 'tab',
+                        placeholder: 'Include the problem and expand on what you put in the title. Minimum 20 characters.',
                         plugins: [toastui.Editor.plugin.codeSyntaxHighlight],
                         toolbarItems: [
-                            ['heading','bold','italic'],
-                            ['code','codeblock'],
-                            ['link','quote','image','table'],
-                            ['ul','ol']
+                            ['heading', 'bold', 'italic'],
+                            ['code', 'codeblock'],
+                            ['link', 'quote', 'image', 'table'],
+                            ['ul', 'ol']
                         ],
                         hooks: {
-                            addImageBlobHook: async (blob, cb) => {
-                                const fd = new FormData(); fd.append('image', blob);
+                            addImageBlobHook: async (blob, callback) => {
+                                const formData = new FormData();
+                                formData.append('image', blob);
+
                                 try {
-                                    const res = await fetch('/upload-image', {method:'POST', body:fd});
-                                    const j   = await res.json();
-                                    cb(j.url,'Image');
-                                } catch {
-                                    alert('Upload failed');
+                                    const response = await fetch('/upload-image', {
+                                        method: 'POST',
+                                        body: formData
+                                    });
+                                    const data = await response.json();
+                                    callback(data.url, 'Image');
+                                } catch (err) {
+                                    console.error('Image upload failed:', err);
+                                    alert("Failed to upload image.");
                                 }
+                            },
+                            afterPreviewRender: () => {
+                                document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
                             }
                         }
                     });
-                    document.getElementById(`edit-answer-form-${id}`)
-                        .addEventListener('submit', () => {
-                            ta.value = answerEditors[id].getHTML();
+
+                    document.querySelector('#answerForm').addEventListener('submit', function (e) {
+                        const html = editor.getHTML();
+                        const markdown = editor.getMarkdown();
+                        const hiddenInput = document.getElementById('answerContent');
+
+                        if (!markdown || markdown.trim().length < 20) {
+                            e.preventDefault();
+                            alert("Description is too short.");
+                            return;
+                        }
+
+                        const linkified = html.replace(/(?<!["'>])\b((https?:\/\/|www\.)[^\s<]+)/g, match => {
+                            const href = match.startsWith('http') ? match : 'https://' + match;
+                            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${match}</a>`;
                         });
-                }
-            });
-        });
-        document.querySelectorAll('.cancel-edit-btn').forEach(b => {
-            b.addEventListener('click', () => {
-                b.closest('.edit-form').style.display = 'none';
-            });
-        });
-        document.querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
-    });
-</script>
+
+                        const fixedLinks = linkified.replace(/<a\s+[^>]*href="(?!https?:\/\/)(www\.[^"]+)"[^>]*>(.*?)<\/a>/g,
+                            (_, href, text) => `<a href="https://${href}" target="_blank" rel="noopener noreferrer">${text}</a>`
+                        );
+
+                        hiddenInput.value = fixedLinks;
+                    });
+                </script>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+                    });
+                </script>
+            </div>
+
+
+
+</div>
 </body>
 </html>

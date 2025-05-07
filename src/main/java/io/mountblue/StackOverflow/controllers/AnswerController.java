@@ -118,31 +118,40 @@ public class AnswerController {
       }
 
 
-    @PostMapping("/answer/update/{answerId}")
+    @PostMapping("answer/update/{answerId}")
     public String updateAnswer(@PathVariable Long answerId,
                                @RequestParam("updatedContent") String updatedContent,
-                               @AuthenticationPrincipal UserInfo userInfo,
-                               RedirectAttributes redirect) {
-        if (userInfo == null) return "redirect:/login";
-        Answer answer = answerService.findAnswerById(answerId);
-        Users current = userInfo.getUser();
+                               @AuthenticationPrincipal UserInfo userClass,
+                               Model model, RedirectAttributes redirectAttributes) {
 
-        boolean isAuthor = answer.getUser().getEmail().equals(current.getEmail());
-        boolean isSenior  = current.getReputation() >= 200;
+        if (userClass == null) {
+            return "redirect:/login";
+        }
+        Answer existedAnswer = answerService.findAnswerById(answerId);
+        if(userClass != null){
+            Users user = userClass.getUser();
+            if(user.getReputation() < Reputations.ANSWER_EVERYWHERE){
+                redirectAttributes.addFlashAttribute("reputationAnswerError", "You need at least 200 reputation to answer.");
+                return "redirect:/question/" + existedAnswer.getQuestion().getId();
+            }
+        }
 
-        if (!isAuthor && !isSenior) {
-            redirect.addFlashAttribute("errorAnswerEdit",
-                    "Only the author or users with ≥200 reputation can edit.");
-            return "redirect:/question/" + answer.getQuestion().getId();
+        if (existedAnswer == null) {
+            model.addAttribute("errorMessage", "Answer not found.");
+            return "error";
         }
 
 
-        answerService.recordEdit(answer, current, answer.getContent());
+        // Update content
+        existedAnswer.setContent(updatedContent);
 
-        answer.setContent(updatedContent);
-        answerService.updateAnswer(answer);
+        try {
+            answerService.updateAnswer(existedAnswer);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error saving answer: " + e.getMessage());
+        }
 
-        return "redirect:/question/" + answer.getQuestion().getId();
+        return "redirect:/question/" + existedAnswer.getQuestion().getId();
     }
 
 }
