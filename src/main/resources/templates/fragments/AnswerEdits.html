@@ -1,0 +1,138 @@
+<div th:fragment="AnswerEdits">
+    <div th:if="${errorAnswerEdit}" id="reputationModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="close-button" onclick="closeReputationModal()">&times;</button>
+            <div class="vote-illustration">
+                <div class="vote-box">
+                    <div class="up-arrow">&#9650;</div>
+                    <div class="score">200</div>
+                    <div class="down-arrow">&#9660;</div>
+                </div>
+            </div>
+            <h2 class="modal-title">Hang on, you can't edit just yet.</h2>
+            <p class="modal-text">
+                You'll need to complete a few actions and gain <strong>200 reputation points</strong> before being able to edit the answer.<br><br>
+
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function closeReputationModal() {
+            document.getElementById('reputationModal').style.display = 'none';
+        }
+    </script>
+
+    <script>
+        function closeReputationModal() {
+            document.getElementById('reputationModal').style.display = 'none';
+        }
+    </script>
+
+    <style>
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            position: relative;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .vote-illustration {
+            margin-bottom: 20px;
+        }
+
+        .vote-box {
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            padding: 10px 15px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .up-arrow, .down-arrow {
+            font-size: 24px;
+            color: #f48024;
+        }
+
+        .score {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .modal-text {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .modal-text a {
+            color: #0074cc;
+            text-decoration: underline;
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .primary-button {
+            background-color: #0074cc;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .primary-button:hover {
+            background-color: #005fa3;
+        }
+
+        .link-button {
+            background: none;
+            border: none;
+            color: #0074cc;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</div>
