@@ -32,9 +32,8 @@
 
 10. **Pagination**  
     Implement pagination for lists of questions, users, and tags to optimize performance and user experience.
-
-## Group Members
-1. Yogesh Singh
-2. Ishan Gupta
-3. Saikat Pattnaik
-4. Manish Singh
+    
+11. **Security**  
+    A logged-in user isn't able to delete or edit other users' posts the user can only answer and comment on posts if he has a valid reputation.
+    Only the users who can edit or delete the post are the post belong to him.
+    and many other securities....
