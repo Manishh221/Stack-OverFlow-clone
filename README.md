@@ -37,3 +37,7 @@
     A logged-in user isn't able to delete or edit other users' posts the user can only answer and comment on posts if he has a valid reputation.
     Only the users who can edit or delete the post are the post belong to him.
     and many other securities....
+
+Postgres database 
+
+PGPASSWORD=FlBjFBDRNtmlsEw0qRcB4jR9XcR1Wwti psql -h dpg-d083lp49c44c73bg6a80-a.singapore-postgres.render.com -U root stackdb_d9vc
